@@ -7,6 +7,9 @@ python-docx>=1.2.0
 ezdxf>=1.4.0
 ifcopenshell>=0.9.0
 numpy>=1.26.0
+# Agent dựng CAD (tools/cad_drafting): shapely — hình học tường/cửa/xung đột; matplotlib — xuất PDF/PNG từ DXF
+shapely>=2.0
+matplotlib>=3.7
 
 # Environment & configuration
 python-dotenv>=1.0.0

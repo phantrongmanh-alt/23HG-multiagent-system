@@ -1,0 +1,83 @@
+{
+ "schema": "23hg-cad-store/1",
+ "nguon_mac_dinh": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+ "project": {
+  "name": "NHÀ Ở MẪU (DỮ LIỆU MINH HOẠ)",
+  "drawing_title": "MẶT BẰNG TẦNG 1",
+  "drawing_no": "KT-01",
+  "scale": 100,
+  "sheet": "A3",
+  "revision": "00",
+  "level_name": "TẦNG 1"
+ },
+ "axes": {
+  "V": {"names": ["1", "2", "3", "4"], "spans": [3600, null, 3600], "overall": 10800,
+        "overall_prov": {"source": "nguoi_nhap", "ref": "kích thước tổng trục 1–4 (minh hoạ); nhịp 2–3 cố ý để trống để chạy thử nội suy"}},
+  "H": {"names": ["A", "B", "C"], "spans": [4200, 4200], "overall": 8400}
+ },
+ "column_types": {"C1": {"b": 220, "h": 220, "ref": "bảng loại cột C1 (minh hoạ)"}},
+ "columns": [
+  {"id": "C-1A", "axis_v": "1", "axis_h": "A", "mark": "C1"},
+  {"id": "C-2A", "axis_v": "2", "axis_h": "A", "mark": "C1"},
+  {"id": "C-3A", "axis_v": "3", "axis_h": "A", "mark": "C1"},
+  {"id": "C-4A", "axis_v": "4", "axis_h": "A", "mark": "C1"},
+  {"id": "C-1B", "axis_v": "1", "axis_h": "B", "mark": "C1"},
+  {"id": "C-2B", "axis_v": "2", "axis_h": "B", "mark": "C1"},
+  {"id": "C-3B", "axis_v": "3", "axis_h": "B", "mark": "C1"},
+  {"id": "C-4B", "axis_v": "4", "axis_h": "B", "mark": "C1"},
+  {"id": "C-1C", "axis_v": "1", "axis_h": "C", "mark": "C1"},
+  {"id": "C-2C", "axis_v": "2", "axis_h": "C", "mark": "C1"},
+  {"id": "C-3C", "axis_v": "3", "axis_h": "C", "mark": "C1"},
+  {"id": "C-4C", "axis_v": "4", "axis_h": "C", "mark": "C1"}
+ ],
+ "walls": [
+  {"id": "W1", "start": "1/A", "end": "4/A", "thickness": 220, "kind": "xay"},
+  {"id": "W2", "start": "4/A", "end": "4/C", "thickness": 220, "kind": "xay"},
+  {"id": "W3", "start": "4/C", "end": "1/C", "thickness": 220, "kind": "xay"},
+  {"id": "W4", "start": "1/C", "end": "1/A", "thickness": 220, "kind": "xay"},
+  {"id": "W5", "start": "1/B", "end": "2/B", "thickness": 110, "kind": "xay"},
+  {"id": "W6", "start": "3/B", "end": "4/B", "thickness": 110, "kind": "xay"},
+  {"id": "W7", "start": "2/B", "end": "2/C", "thickness": 110, "kind": "xay"},
+  {"id": "W8", "start": "3/B", "end": "3/C", "thickness": 110, "kind": "xay"},
+  {"id": "W9", "start": "3/B@0,2000", "end": "4/B@0,2000", "thickness": 110, "kind": "xay"}
+ ],
+ "openings": [
+  {"id": "CD1", "wall_id": "W1", "kind": "cua_di", "offset": 1000, "width": 1600, "height": 2700, "leaves": 2, "hinge": "dau", "opens_to": "trai", "mark": "D1"},
+  {"id": "CD2", "wall_id": "W5", "kind": "cua_di", "offset": 2400, "width": 900, "height": 2200, "hinge": "cuoi", "opens_to": "trai", "mark": "D2"},
+  {"id": "CD3", "wall_id": "W8", "kind": "cua_di", "offset": 600, "width": 700, "height": 2100, "hinge": "dau", "opens_to": "phai", "mark": "D3"},
+  {"id": "CD4", "wall_id": "W8", "kind": "cua_di", "offset": 2600, "width": null, "height": 2200, "hinge": "dau", "opens_to": "phai", "mark": "D2"},
+  {"id": "CS1", "wall_id": "W1", "kind": "cua_so", "offset": 8100, "width": 1500, "height": 1500, "sill": 900, "mark": "S1"},
+  {"id": "CS2", "wall_id": "W1", "kind": "cua_so", "offset": 4600, "width": 1800, "height": 1500, "sill": 900, "mark": "S2"},
+  {"id": "CS3", "wall_id": "W4", "kind": "cua_so", "offset": 1500, "width": 1200, "height": 1500, "sill": 900, "mark": "S3"},
+  {"id": "CS4", "wall_id": "W3", "kind": "cua_so", "offset": 4800, "width": 1200, "height": 1500, "sill": 900, "mark": "S3"}
+ ],
+ "stairs": [
+  {"id": "ST1", "label": "LÊN", "flights": [
+   {"origin": "2/B@300,700", "angle": 90, "width": 1000, "going": 260, "n_treads": 11, "riser": 170}
+  ]}
+ ],
+ "rooms": [
+  {"id": "P1", "name": "PHÒNG KHÁCH", "boundary": ["1/A", "3/A", "3/B", "1/B"], "hatch": "gach_600", "floor_level": 0,
+   "floor_finish": "Lát gạch granite 600×600", "wall_finish": "Sơn nước 1 lót 2 phủ", "ceiling_finish": "Trần thạch cao"},
+  {"id": "P2", "name": "BẾP + ĂN", "boundary": ["3/A", "4/A", "4/B", "3/B"], "hatch": "gach_600", "floor_level": 0,
+   "floor_finish": "Lát gạch granite 600×600", "wall_finish": "Ốp gạch men cao 1,5 m", "ceiling_finish": "Trần thạch cao"},
+  {"id": "P3", "name": "PHÒNG NGỦ", "boundary": ["1/B", "2/B", "2/C", "1/C"], "hatch": "go", "floor_level": 0,
+   "floor_finish": "Sàn gỗ công nghiệp", "wall_finish": "Sơn nước 1 lót 2 phủ", "ceiling_finish": "Trần thạch cao"},
+  {"id": "P4", "name": "SẢNH THANG", "boundary": ["2/B", "3/B", "3/C", "2/C"], "hatch": "gach_600", "floor_level": 0,
+   "floor_finish": "Lát gạch granite 600×600", "wall_finish": "Sơn nước 1 lót 2 phủ", "ceiling_finish": "Trát trần, sơn"},
+  {"id": "P5", "name": "WC", "boundary": ["3/B", "4/B", "4/B@0,2000", "3/B@0,2000"], "hatch": "gach_300", "floor_level": -20,
+   "floor_finish": "Lát gạch chống trơn 300×300", "wall_finish": "Ốp gạch men cao 2,4 m", "ceiling_finish": "Trần nhựa"},
+  {"id": "P6", "name": "KHO", "boundary": ["3/B@0,2000", "4/B@0,2000", "4/C", "3/C"], "hatch": "gach_600", "floor_level": 0,
+   "floor_finish": "Lát gạch granite 600×600", "wall_finish": "Sơn nước 1 lót 2 phủ", "ceiling_finish": "Trát trần, sơn"}
+ ],
+ "furniture": [
+  {"id": "F1", "block": "GIUONG_DOI", "insert": [1000, 6250], "rotation": 0, "room_id": "P3"},
+  {"id": "F2", "block": "TU_AO", "insert": [3545, 6800], "rotation": 90, "room_id": "P3"},
+  {"id": "F3", "block": "SOFA_3", "insert": [600, 3200], "rotation": 0, "room_id": "P1"},
+  {"id": "F4", "block": "BAN_TRA", "insert": [1150, 2200], "rotation": 0, "room_id": "P1"},
+  {"id": "F5", "block": "BAN_AN_4", "insert": [8300, 1500], "rotation": 0, "room_id": "P2"},
+  {"id": "F6", "block": "TU_BEP", "insert": [10690, 800], "rotation": 90, "room_id": "P2"},
+  {"id": "F7", "block": "BON_CAU", "insert": [10690, 5300], "rotation": 90, "room_id": "P5"},
+  {"id": "F8", "block": "LAVABO", "insert": [8800, 4255], "rotation": 0, "room_id": "P5"}
+ ]
+}
