@@ -1,0 +1,433 @@
+{
+ "schema": "23hg-cad-report/1",
+ "base": "KT-01_NOI_SUY",
+ "ket_luan": "CHƯA ĐẠT: 0 lỗi, 2 nghi vấn, 0 đối tượng chưa vẽ, 1 cảnh báo",
+ "dat": false,
+ "dem": {
+  "LOI": 0,
+  "NGHI_VAN": 2,
+  "CANH_BAO": 1,
+  "doi_tuong_chua_ve": 0
+ },
+ "trang_thai_du_lieu": {
+  "trang_thai": "CHO_XAC_NHAN_NOI_SUY",
+  "so_lieu_thieu": 0,
+  "noi_suy_chua_xac_nhan": 2,
+  "duyet_boi": "",
+  "data_hash": "bb5d8234b444073b984ac55b235261a858caa09f14e9b422cf494aeee914e3fe"
+ },
+ "noi_suy": [
+  {
+   "key": "axes:V.spans[1]",
+   "value": 3600.0,
+   "method": "tong_tru_nhip",
+   "reason": "10800 − (3600 + 3600) từ kích thước tổng trục V (1–4)"
+  },
+  {
+   "key": "openings:CD4.width",
+   "value": 900.0,
+   "method": "cung_ky_hieu",
+   "reason": "width = 900 lấy từ cửa cùng ký hiệu D2: CD2"
+  }
+ ],
+ "kiem_tra_truoc_khi_ve": [
+  {
+   "severity": "NGHI_VAN",
+   "code": "NOI_SUY_CHUA_XAC_NHAN",
+   "message": "Số liệu nội suy CHƯA xác nhận: axes:V.spans[1] = 3600 (nguồn: 10800 − (3600 + 3600) từ kích thước tổng trục V (1–4)) — cần người có thẩm quyền xác nhận hoặc nhập giá trị đo từ bản vẽ.",
+   "skill": "VAL",
+   "eids": [
+    "axes:V.spans[1]"
+   ],
+   "where": [
+    5400.0,
+    0.0
+   ]
+  },
+  {
+   "severity": "NGHI_VAN",
+   "code": "NOI_SUY_CHUA_XAC_NHAN",
+   "message": "Số liệu nội suy CHƯA xác nhận: openings:CD4.width = 900 (nguồn: width = 900 lấy từ cửa cùng ký hiệu D2: CD2) — cần người có thẩm quyền xác nhận hoặc nhập giá trị đo từ bản vẽ.",
+   "skill": "VAL",
+   "eids": [
+    "openings:CD4.width"
+   ],
+   "where": [
+    7200.0,
+    7250.0
+   ]
+  }
+ ],
+ "cac_buoc": [
+  {
+   "code": "01",
+   "name": "Lưới trục",
+   "ran": true,
+   "ops": 35,
+   "skipped": [],
+   "notes": [
+    "trục đứng (V): đã vẽ 4/4 trục",
+    "trục ngang (H): đã vẽ 3/3 trục",
+    "trục 3: toạ độ dựa trên số liệu nội suy CHƯA xác nhận (axes:V.spans[1])",
+    "trục 4: toạ độ dựa trên số liệu nội suy CHƯA xác nhận (axes:V.spans[1])"
+   ],
+   "issues": []
+  },
+  {
+   "code": "02",
+   "name": "Cột",
+   "ran": true,
+   "ops": 12,
+   "skipped": [],
+   "notes": [
+    "đã vẽ 12/12 cột",
+    "cột dựa trên số liệu nội suy CHƯA xác nhận: C-3A (axes:V.spans[1]); C-4A (axes:V.spans[1]); C-3B (axes:V.spans[1]); C-4B (axes:V.spans[1]); C-3C (axes:V.spans[1]); C-4C (axes:V.spans[1])"
+   ],
+   "issues": []
+  },
+  {
+   "code": "03",
+   "name": "Tường",
+   "ran": true,
+   "ops": 24,
+   "skipped": [],
+   "notes": [
+    "đã vẽ 9/9 tường",
+    "đường bao thân tường: 24 đường (0 đường kín)",
+    "tường dựa trên số liệu nội suy CHƯA xác nhận: W1 (axes:V.spans[1]); W2 (axes:V.spans[1]); W3 (axes:V.spans[1]); W6 (axes:V.spans[1]); W8 (axes:V.spans[1]); W9 (axes:V.spans[1])",
+    "ô cửa trừ khỏi tường theo số liệu nội suy CHƯA xác nhận: CD4 (openings:CD4.width)"
+   ],
+   "issues": []
+  },
+  {
+   "code": "04",
+   "name": "Cửa",
+   "ran": true,
+   "ops": 42,
+   "skipped": [],
+   "notes": [
+    "đã vẽ 8/8 ô cửa (cửa đi: 4/4, cửa sổ: 4/4)",
+    "ô cửa dựa trên số liệu nội suy CHƯA xác nhận: CD1 (axes:V.spans[1]); CD3 (axes:V.spans[1]); CD4 (openings:CD4.width, axes:V.spans[1]); CS1 (axes:V.spans[1]); CS2 (axes:V.spans[1]); CS4 (axes:V.spans[1])"
+   ],
+   "issues": []
+  },
+  {
+   "code": "05",
+   "name": "Cầu thang",
+   "ran": true,
+   "ops": 15,
+   "skipped": [],
+   "notes": [
+    "ST1 vế 1: bậc: 11 × 260, cao bậc 170",
+    "đã vẽ 1/1 vế thang, 0/0 chiếu nghỉ (1 thang)"
+   ],
+   "issues": []
+  },
+  {
+   "code": "06",
+   "name": "Nội thất",
+   "ran": true,
+   "ops": 8,
+   "skipped": [],
+   "notes": [
+    "đã chèn 8/8 đồ vật nội thất"
+   ],
+   "issues": []
+  },
+  {
+   "code": "07",
+   "name": "Hatch",
+   "ran": true,
+   "ops": 39,
+   "skipped": [],
+   "notes": [
+    "hatch cột: 12/12 cột",
+    "hatch tường: 9/9 tường — 21 vùng tường xây, 0 vùng tường BTCT",
+    "hatch sàn: 6/6 phòng",
+    "hatch dựa trên số liệu nội suy CHƯA xác nhận: cột C-3A (axes:V.spans[1]); cột C-4A (axes:V.spans[1]); cột C-3B (axes:V.spans[1]); cột C-4B (axes:V.spans[1]); cột C-3C (axes:V.spans[1]); cột C-4C (axes:V.spans[1]); tường W1 (axes:V.spans[1]); tường W2 (axes:V.spans[1]); tường W3 (axes:V.spans[1]); tường W6 (axes:V.spans[1]); tường W8 (axes:V.spans[1]); tường W9 (axes:V.spans[1]); phòng P1 (axes:V.spans[1]); phòng P2 (axes:V.spans[1]); phòng P4 (axes:V.spans[1]); phòng P5 (axes:V.spans[1]); phòng P6 (axes:V.spans[1])"
+   ],
+   "issues": []
+  },
+  {
+   "code": "08",
+   "name": "Kích thước",
+   "ran": true,
+   "ops": 42,
+   "skipped": [],
+   "notes": [
+    "đã ghi 42 kích thước DIMENSION (kiểu TCVN_KT_100): cấp 1: 28, cấp 2: 10, cấp 3: 4; không có text_override",
+    "kích thước ghi theo số liệu NỘI SUY CHƯA xác nhận axes:V.spans[1] (8 kích thước, Skill 10 đánh dấu): dim/L2/duoi/1, dim/L3/duoi/0, dim/L1/duoi/6, dim/L1/duoi/7, dim/L1/duoi/9, dim/L2/tren/1, dim/L3/tren/0, dim/L1/tren/2"
+   ],
+   "issues": []
+  },
+  {
+   "code": "09",
+   "name": "Hoàn thiện",
+   "ran": true,
+   "ops": 99,
+   "skipped": [],
+   "notes": [
+    "đã ghi nhãn (tên, diện tích, cote) 6/6 phòng",
+    "CẢNH BÁO không còn chỗ trống đủ cho nhãn, nhãn đè lên nội thất/thang/cửa (vẫn trong sàn) — đặt room.label_at để chỉnh: P4",
+    "diện tích tính theo đường bao nhập; 6/6 phòng có đường bao trùng tim trục/tim tường — chưa trừ chiều dày tường, KHÔNG phải diện tích thông thủy.",
+    "bảng hoàn thiện: 6 hàng phòng, góc trên-trái (16800, 12200); tổng diện tích 90,72* m² (tính 6/6 phòng)",
+    "diện tích/cote dựa trên số liệu nội suy CHƯA xác nhận (đánh dấu *): P1 (axes:V.spans[1]); P2 (axes:V.spans[1]); P4 (axes:V.spans[1]); P5 (axes:V.spans[1]); P6 (axes:V.spans[1])"
+   ],
+   "issues": [
+    {
+     "severity": "CANH_BAO",
+     "code": "SKILL_CANH_BAO",
+     "message": "CẢNH BÁO không còn chỗ trống đủ cho nhãn, nhãn đè lên nội thất/thang/cửa (vẫn trong sàn) — đặt room.label_at để chỉnh: P4",
+     "skill": "09",
+     "eids": [],
+     "where": null
+    }
+   ]
+  },
+  {
+   "code": "10",
+   "name": "Kiểm tra & xuất",
+   "ran": true,
+   "ops": 33,
+   "skipped": [],
+   "notes": [
+    "khổ A3 1:100: khung giấy 42000 × 29700 mm (model); khối nội dung + tên bản vẽ 376 × 192 mm giấy đặt trên khung tên",
+    "khung tên: trạng thái số liệu TÍNH từ store.status() = CHO_XAC_NHAN_NOI_SUY → \"CHỜ XÁC NHẬN 2 SỐ LIỆU NỘI SUY\"",
+    "khung tên: để trống ô THIẾT KẾ, KIỂM TRA, NGÀY vì ProjectInfo chưa có số liệu (không tự điền)",
+    "đánh dấu kiểm tra (layer không in): 0 số liệu thiếu định vị được, 0 thiếu chưa định vị (liệt kê ở góc khung), 2 số liệu nội suy chưa xác nhận, 0 phát hiện của Validator"
+   ],
+   "issues": []
+  }
+ ],
+ "kiem_tra_cuoi": [
+  {
+   "severity": "NGHI_VAN",
+   "code": "NOI_SUY_CHUA_XAC_NHAN",
+   "message": "Số liệu nội suy CHƯA xác nhận: axes:V.spans[1] = 3600 (nguồn: 10800 − (3600 + 3600) từ kích thước tổng trục V (1–4)) — cần người có thẩm quyền xác nhận hoặc nhập giá trị đo từ bản vẽ.",
+   "skill": "VAL",
+   "eids": [
+    "axes:V.spans[1]"
+   ],
+   "where": [
+    5400.0,
+    0.0
+   ]
+  },
+  {
+   "severity": "NGHI_VAN",
+   "code": "NOI_SUY_CHUA_XAC_NHAN",
+   "message": "Số liệu nội suy CHƯA xác nhận: openings:CD4.width = 900 (nguồn: width = 900 lấy từ cửa cùng ký hiệu D2: CD2) — cần người có thẩm quyền xác nhận hoặc nhập giá trị đo từ bản vẽ.",
+   "skill": "VAL",
+   "eids": [
+    "openings:CD4.width"
+   ],
+   "where": [
+    7200.0,
+    7250.0
+   ]
+  }
+ ],
+ "kiem_tra_xuat": [],
+ "skill_chay_lai": [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10"
+ ],
+ "skill_giu_nguyen": [],
+ "section_hashes": {
+  "project": "974ef02c892fde6f763490136afbafa3c76d6766791a2ea9512dbab621e2b469",
+  "axes": "0b9d1cc3ac7178002ea331997b6171860a6be492b2c6da30a7bbfa0f4259632f",
+  "columns": "1a0d4e71aed09388f348b6100717b3faa8c6bd7619b12248b34bae6b459b9a0d",
+  "walls": "c4ba4d2c92bc94dd0f545d6c81060980ac7da1dbd5d53105b5aedcd8e19d8483",
+  "openings": "a21580381d45407e11a5bd6e47eacaa364533be5d5f6ed3ff40f4215876ac146",
+  "stairs": "a123db760d4225254896862a436db39adbe83e30b6fdc70aca58a3e5ab0264ce",
+  "furniture": "b55ddde18742dca412e1cfb4f8fd26d5bf8cb6553e63285c9a7a78e0ef407754",
+  "rooms": "df0017811c3534124c5c1e9e3f2c0f4859b173d3a40024f9f243f940623f89e8",
+  "measured_dims": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "layers": "a3cf936dcf4665ee9ef3ca6f7861d9af738844092a3a0c45460b2da7c6c903d7",
+  "blocks": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+ },
+ "dau_ra": {
+  "lenh_ve_json": {
+   "file": "KT-01_NOI_SUY_lenh_ve.json",
+   "bytes": 119914
+  },
+  "du_lieu_du_an": {
+   "file": "KT-01_NOI_SUY_du_lieu_du_an.json",
+   "bytes": 26551
+  },
+  "dxf": {
+   "file": "KT-01_NOI_SUY.dxf",
+   "tom_tat": {
+    "file": "KT-01_NOI_SUY.dxf",
+    "dxfversion": "AC1032",
+    "insunits": 4,
+    "ltscale": 50.0,
+    "so_lenh": 349,
+    "da_ve": 349,
+    "so_thuc_the": 349,
+    "theo_loai": {
+     "ARC": 5,
+     "CIRCLE": 16,
+     "DIMENSION": 42,
+     "HATCH": 39,
+     "INSERT": 8,
+     "LINE": 70,
+     "LWPOLYLINE": 44,
+     "TEXT": 125
+    },
+    "theo_layer": {
+     "KC-COT": 12,
+     "KT-CUA": 34,
+     "KT-CUA-KH": 8,
+     "KT-DIM": 42,
+     "KT-HATCH": 39,
+     "KT-HOAN-THIEN": 99,
+     "KT-KHUNG-TEN": 29,
+     "KT-KIEM-TRA": 4,
+     "KT-NOI-THAT": 8,
+     "KT-THANG": 15,
+     "KT-TRUC": 7,
+     "KT-TRUC-KH": 28,
+     "KT-TUONG": 24
+    },
+    "layers": 14,
+    "blocks": [
+     "GIUONG_DOI",
+     "TU_AO",
+     "SOFA_3",
+     "BAN_TRA",
+     "BAN_AN_4",
+     "TU_BEP",
+     "BON_CAU",
+     "LAVABO"
+    ],
+    "dimstyles": [
+     "TCVN_KT_100"
+    ],
+    "underlays": [],
+    "bo_qua": [],
+    "canh_bao": [],
+    "audit_errors": 0,
+    "audit_fixes": 0,
+    "audit_chi_tiet": []
+   },
+   "bytes": 190951
+  },
+  "lisp": {
+   "file": "KT-01_NOI_SUY.lsp",
+   "tom_tat": {
+    "file": "KT-01_NOI_SUY.lsp",
+    "lenh": "23HG_VE",
+    "so_lenh": 349,
+    "theo_loai": {
+     "arc": 5,
+     "circle": 16,
+     "dim_linear": 42,
+     "hatch": 39,
+     "insert": 8,
+     "line": 70,
+     "pline": 44,
+     "text": 125
+    },
+    "layers": 14,
+    "blocks": [
+     "BAN_AN_4",
+     "BAN_TRA",
+     "BON_CAU",
+     "GIUONG_DOI",
+     "LAVABO",
+     "SOFA_3",
+     "TU_AO",
+     "TU_BEP"
+    ],
+    "dimstyles": [
+     "TCVN_KT_100"
+    ],
+    "ltscale": 50.0,
+    "bytes": 100027,
+    "thuan_ascii": true,
+    "loi_cu_phap_tinh": [],
+    "canh_bao": [],
+    "bo_qua": [],
+    "chay_tren_autocad": "CHƯA chạy thử — chỉ kiểm tra cú pháp tĩnh"
+   },
+   "kiem_tra_tinh": "không phát hiện lỗi cú pháp tĩnh",
+   "chay_tren_autocad": "CHƯA chạy thử",
+   "bytes": 100027
+  },
+  "pdf": {
+   "file": "KT-01_NOI_SUY.pdf",
+   "tom_tat": {
+    "file": "KT-01_NOI_SUY.pdf",
+    "dinh_dang": "pdf",
+    "dung_ty_le": true,
+    "ty_le_in": 100.0,
+    "paper_mm": [
+     420.0,
+     297.0
+    ],
+    "frame": [
+     -7900.0,
+     -13400.0,
+     34100.0,
+     16300.0
+    ],
+    "dpi": 300,
+    "monochrome": true,
+    "an_layer": [
+     "00-ANH-NEN",
+     "DEFPOINTS",
+     "KT-KIEM-TRA"
+    ],
+    "canh_bao": []
+   },
+   "bytes": 340141
+  },
+  "png": {
+   "file": "KT-01_NOI_SUY.png",
+   "tom_tat": {
+    "file": "KT-01_NOI_SUY.png",
+    "dinh_dang": "png",
+    "dung_ty_le": true,
+    "ty_le_in": 100.0,
+    "paper_mm": [
+     420.0,
+     297.0
+    ],
+    "frame": [
+     -7900.0,
+     -13400.0,
+     34100.0,
+     16300.0
+    ],
+    "dpi": 200,
+    "monochrome": true,
+    "an_layer": [
+     "00-ANH-NEN",
+     "DEFPOINTS"
+    ],
+    "canh_bao": [],
+    "kich_thuoc_px": [
+     3307,
+     2338
+    ]
+   },
+   "bytes": 569356
+  },
+  "dwg": {
+   "file": "",
+   "ghi_chu": "Không sinh DWG: cần AutoCAD (mở DXF → SAVEAS, hoặc máy chủ cad-mcp)."
+  },
+  "bao_cao": {
+   "file": "KT-01_NOI_SUY_BAO_CAO_KIEM_TRA.md"
+  }
+ }
+}

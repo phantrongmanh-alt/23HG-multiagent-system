@@ -6,7 +6,8 @@ Mỗi skill:
   - đọc ProjectStore (không sửa store);
   - chỉ ghi Op vào các vai trò layer của mình (layers.roles_of(code)) — `self.add` từ chối vai trò khác;
   - chạy lại được: `run` xoá Op cũ của chính skill rồi vẽ lại (chỉ sửa phần liên quan);
-  - đối tượng thiếu số liệu → ghi vào result.skipped kèm lý do, KHÔNG bỏ im lặng.
+  - đối tượng thiếu số liệu → ghi vào result.skipped kèm lý do, KHÔNG bỏ im lặng;
+  - vẽ được nhưng cần kỹ sư xem → result.warn(...) (ghi chú tiền tố "CẢNH BÁO", Master đếm thành Issue CANH_BAO).
 
 `reads` liệt kê các mục dữ liệu trong store mà skill dùng (xem store.DATA_SECTIONS); Master dùng nó để
 biết skill nào phải chạy lại khi một mục dữ liệu thay đổi.
@@ -34,6 +35,9 @@ def new_plan(store: ProjectStore) -> DrawingPlan:
     )
 
 
+WARN_PREFIX = "CẢNH BÁO"     # ghi chú bắt đầu bằng tiền tố này là cảnh báo: Master đếm thành Issue CANH_BAO
+
+
 @dataclass
 class SkillResult:
     code: str
@@ -44,6 +48,13 @@ class SkillResult:
 
     def skip(self, item_id: str, reason: str) -> None:
         self.skipped.append({"id": item_id, "ly_do": reason})
+
+    def warn(self, message: str) -> None:
+        """Cảnh báo cho kỹ sư (vẫn vẽ được nhưng cần xem) — lưu như ghi chú có tiền tố WARN_PREFIX."""
+        self.notes.append(message if message.startswith(WARN_PREFIX) else f"{WARN_PREFIX} {message}")
+
+    def warnings(self) -> List[str]:
+        return [n for n in self.notes if n.startswith(WARN_PREFIX)]
 
     def to_dict(self) -> Dict[str, Any]:
         return {"code": self.code, "name": self.name, "ops_added": self.ops_added,

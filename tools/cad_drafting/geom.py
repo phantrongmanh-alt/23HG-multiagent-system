@@ -3,7 +3,8 @@
 HÌNH HỌC DÙNG CHUNG cho skill dựng hình và Validator (shapely).
 
 Mọi hàm nhận ProjectStore và trả None khi đối tượng chưa đủ số liệu (thiếu kích thước, trục chưa có
-toạ độ) — người gọi phải ghi đối tượng đó vào danh sách "bỏ qua kèm lý do", không được bỏ im lặng.
+toạ độ) hoặc dữ liệu sai cấu trúc (tham chiếu trục không tồn tại...) — các hàm *_reason trả lý do tương ứng,
+không ném StoreError. Người gọi phải ghi đối tượng đó vào danh sách "bỏ qua kèm lý do", không được bỏ im lặng.
 
 Quy ước tường: tim tường từ start → end; u = vectơ đơn vị dọc tường, n = pháp tuyến TRÁI (xoay u +90°).
 Ở đầu tường gặp tường khác, hình chữ nhật tường được kéo dài thêm nửa chiều dày lớn nhất của các tường
@@ -20,7 +21,8 @@ from shapely.geometry import LineString, MultiLineString, Point as ShPoint, Poly
 from shapely.geometry.base import BaseGeometry
 from shapely.ops import linemerge, unary_union
 
-from tools.cad_drafting.store import Column, Furniture, Opening, ProjectStore, Room, StairFlight, Wall
+from tools.cad_drafting.store import (Column, Furniture, Opening, ProjectStore, Room, StairFlight, StoreError,
+                                      Wall)
 
 TOL = 1.0          # mm — dung sai coi hai điểm trùng nhau / điểm nằm trên đường
 Point = Tuple[float, float]
@@ -91,14 +93,31 @@ def wall_axis(store: ProjectStore, wall: Wall) -> Optional[Tuple[Point, Point]]:
     return a, b
 
 
+def _num(value) -> Optional[float]:
+    """Số hữu hạn hoặc None (giá trị không phải số / NaN / vô cực)."""
+    if isinstance(value, bool):
+        return None
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return None
+    return v if math.isfinite(v) else None
+
+
 def wall_reason(store: ProjectStore, wall: Wall) -> str:
     """Lý do tường chưa vẽ được ("" nếu vẽ được)."""
     if wall.thickness is None:
         return "thiếu chiều dày tường"
-    if wall.thickness <= 0:
+    t = _num(wall.thickness)
+    if t is None:
+        return f"chiều dày tường {wall.thickness!r} không phải số"
+    if t <= 0:
         return "chiều dày tường ≤ 0"
     for ref in (wall.start, wall.end):
-        p, why = store.point_or_reason(ref)
+        try:
+            p, why = store.point_or_reason(ref)
+        except StoreError as e:
+            return f"dữ liệu sai cấu trúc: {e}"
         if p is None:
             return why
     a, b = store.point(wall.start), store.point(wall.end)
@@ -107,33 +126,51 @@ def wall_reason(store: ProjectStore, wall: Wall) -> str:
     return ""
 
 
-def _walls_through(store: ProjectStore, p: Point, exclude: Wall) -> List[Wall]:
+def _drawable_axes(store: ProjectStore) -> List[Tuple[Wall, Point, Point]]:
+    """(tường, đầu, cuối) của mọi tường vẽ được — tính một lần cho cả lượt dựng hợp tường."""
     out = []
     for w in store.walls:
-        if w is exclude or wall_reason(store, w):
+        if not wall_reason(store, w):
+            a, b = wall_axis(store, w)
+            out.append((w, a, b))
+    return out
+
+
+def _walls_through(axes: List[Tuple[Wall, Point, Point]], p: Point, exclude: Wall) -> List[Wall]:
+    out = []
+    for w, a, b in axes:
+        if w is exclude:
             continue
-        a, b = wall_axis(store, w)
-        if dist_point_segment(p, a, b) <= TOL:
+        if (min(a[0], b[0]) - TOL <= p[0] <= max(a[0], b[0]) + TOL and
+                min(a[1], b[1]) - TOL <= p[1] <= max(a[1], b[1]) + TOL and dist_point_segment(p, a, b) <= TOL):
             out.append(w)
     return out
 
 
-def wall_polygon(store: ProjectStore, wall: Wall) -> Optional[Polygon]:
+def wall_polygon(store: ProjectStore, wall: Wall,
+                 _axes: Optional[List[Tuple[Wall, Point, Point]]] = None) -> Optional[Polygon]:
     if wall_reason(store, wall):
         return None
+    axes = _drawable_axes(store) if _axes is None else _axes
     a, b = wall_axis(store, wall)
     u = unit(sub(b, a))
     n = left_normal(u)
-    ext_a = max((w.thickness / 2.0 for w in _walls_through(store, a, wall)), default=0.0)
-    ext_b = max((w.thickness / 2.0 for w in _walls_through(store, b, wall)), default=0.0)
+    ext_a = max((float(w.thickness) / 2.0 for w in _walls_through(axes, a, wall)), default=0.0)
+    ext_b = max((float(w.thickness) / 2.0 for w in _walls_through(axes, b, wall)), default=0.0)
     start = sub(a, mul(u, ext_a))
     total = length(sub(b, a)) + ext_a + ext_b
     t = float(wall.thickness)
     return rect_polygon(start, u, total, n, -t / 2.0, t / 2.0)
 
 
+def wall_polygons(store: ProjectStore) -> Dict[str, Polygon]:
+    """Hình chữ nhật (đã kéo dài ở chỗ giao) của mọi tường vẽ được, theo mã tường."""
+    axes = _drawable_axes(store)
+    return {w.id: wall_polygon(store, w, axes) for w, _, _ in axes}
+
+
 def walls_union(store: ProjectStore) -> BaseGeometry:
-    polys = [p for p in (wall_polygon(store, w) for w in store.walls) if p is not None]
+    polys = list(wall_polygons(store).values())
     return unary_union(polys) if polys else Polygon()
 
 
@@ -150,7 +187,11 @@ def opening_reason(store: ProjectStore, op: Opening) -> str:
         return "thiếu vị trí cửa (offset)"
     if op.width is None:
         return "thiếu bề rộng cửa"
-    if op.width <= 0:
+    if _num(op.offset) is None:
+        return f"vị trí cửa {op.offset!r} không phải số"
+    if _num(op.width) is None:
+        return f"bề rộng cửa {op.width!r} không phải số"
+    if float(op.width) <= 0:
         return "bề rộng cửa ≤ 0"
     return ""
 
@@ -231,9 +272,14 @@ def openings_union(store: ProjectStore) -> BaseGeometry:
 def column_reason(store: ProjectStore, col: Column) -> str:
     if col.b is None or col.h is None:
         return "thiếu kích thước cột"
-    if col.b <= 0 or col.h <= 0:
+    if any(_num(v) is None for v in (col.b, col.h, col.dx, col.dy)):
+        return "kích thước / độ lệch cột không phải số"
+    if float(col.b) <= 0 or float(col.h) <= 0:
         return "kích thước cột ≤ 0"
-    p, why = store.point_or_reason(f"{col.axis_v}/{col.axis_h}")
+    try:
+        p, why = store.point_or_reason(f"{col.axis_v}/{col.axis_h}")
+    except StoreError as e:
+        return f"dữ liệu sai cấu trúc: {e}"
     return why if p is None else ""
 
 
@@ -260,7 +306,8 @@ def wall_body(store: ProjectStore) -> BaseGeometry:
 
 def wall_body_by_kind(store: ProjectStore, kind: str) -> BaseGeometry:
     """Thân tường của một loại ("xay" | "btct"), đã trừ ô cửa và cột."""
-    polys = [p for w in store.walls if w.kind == kind for p in [wall_polygon(store, w)] if p is not None]
+    by_id = wall_polygons(store)
+    polys = [by_id[w.id] for w in store.walls if w.kind == kind and w.id in by_id]
     if not polys:
         return Polygon()
     return unary_union(polys).difference(openings_union(store)).difference(columns_union(store))
@@ -277,18 +324,47 @@ def wall_outline_lines(store: ProjectStore) -> List[List[Point]]:
 
 # ── phòng, thang, nội thất ───────────────────────────────────────────────────
 
+def _safe_point(store: ProjectStore, ref) -> Optional[Point]:
+    try:
+        return store.point(ref)
+    except (StoreError, TypeError, ValueError):
+        return None
+
+
 def room_polygon(store: ProjectStore, room: Room) -> Optional[Polygon]:
-    pts = [store.point(r) for r in room.boundary]
+    pts = [_safe_point(store, r) for r in room.boundary]
     if len(pts) < 3 or any(p is None for p in pts):
         return None
     poly = Polygon(pts)
     return poly if poly.is_valid and poly.area > 0 else None
 
 
+def flight_reason(store: ProjectStore, fl: StairFlight) -> str:
+    """Lý do vế thang chưa dựng được ("" nếu dựng được). Chi tiết kèm khoá: skills/s05_cau_thang.flight_skip_reason."""
+    missing = [f for f in ("width", "going", "n_treads") if getattr(fl, f) is None]
+    if missing:
+        return "thiếu " + ", ".join(missing)
+    try:
+        width, going, n, angle = float(fl.width), float(fl.going), float(fl.n_treads), float(fl.angle)
+    except (TypeError, ValueError):
+        return "số liệu vế thang không phải số"
+    if not all(math.isfinite(v) for v in (width, going, n, angle)):
+        return "số liệu vế thang không hữu hạn"
+    if width <= 0 or going <= 0:
+        return "bề rộng vế / bề rộng bậc phải > 0"
+    if n != int(n) or n < 1:
+        return "số bậc phải là số nguyên ≥ 1"
+    try:
+        p, why = store.point_or_reason(fl.origin)
+    except StoreError as e:
+        return f"dữ liệu sai cấu trúc: {e}"
+    return why if p is None else ""
+
+
 def flight_polygon(store: ProjectStore, fl: StairFlight) -> Optional[Polygon]:
-    o = store.point(fl.origin)
-    if o is None or fl.width is None or fl.going is None or fl.n_treads is None:
+    if flight_reason(store, fl):
         return None
+    o = store.point(fl.origin)
     u = dir_from_angle(fl.angle)
     right = (u[1], -u[0])
     return rect_polygon(o, u, fl.n_treads * float(fl.going), right, 0.0, float(fl.width))

@@ -1,0 +1,1195 @@
+{
+ "schema": "23hg-cad-store/1",
+ "project": {
+  "name": "NHÀ Ở MẪU (DỮ LIỆU MINH HOẠ)",
+  "drawing_title": "MẶT BẰNG TẦNG 1",
+  "drawing_no": "KT-01",
+  "scale": 100,
+  "sheet": "A3",
+  "revision": "00",
+  "level_name": "TẦNG 1",
+  "designer": "",
+  "checker": "",
+  "date": ""
+ },
+ "axes": {
+  "H": {
+   "orientation": "H",
+   "names": [
+    "A",
+    "B",
+    "C"
+   ],
+   "spans": [
+    4200.0,
+    4200.0
+   ],
+   "overall": 8400.0,
+   "origin": 0.0,
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "span_prov": [
+    null,
+    null
+   ],
+   "overall_prov": null
+  },
+  "V": {
+   "orientation": "V",
+   "names": [
+    "1",
+    "2",
+    "3",
+    "4"
+   ],
+   "spans": [
+    3600.0,
+    3600.0,
+    3600.0
+   ],
+   "overall": 10800.0,
+   "origin": 0.0,
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "span_prov": [
+    null,
+    {
+     "source": "nguoi_nhap",
+     "ref": "Đề bài minh hoạ — giá trị người dùng nhập để chạy thử, không phải hồ sơ thật (hồ sơ thật phải ghi số trang và số hiệu bản vẽ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    null
+   ],
+   "overall_prov": {
+    "source": "nguoi_nhap",
+    "ref": "kích thước tổng trục 1–4 (minh hoạ); nhịp 2–3 cố ý để trống để chạy thử nội suy",
+    "confirmed": true,
+    "confirmed_by": ""
+   }
+  }
+ },
+ "columns": [
+  {
+   "id": "C-1A",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "1",
+   "axis_h": "A",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  },
+  {
+   "id": "C-2A",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "2",
+   "axis_h": "A",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  },
+  {
+   "id": "C-3A",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "3",
+   "axis_h": "A",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  },
+  {
+   "id": "C-4A",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "4",
+   "axis_h": "A",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  },
+  {
+   "id": "C-1B",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "1",
+   "axis_h": "B",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  },
+  {
+   "id": "C-2B",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "2",
+   "axis_h": "B",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  },
+  {
+   "id": "C-3B",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "3",
+   "axis_h": "B",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  },
+  {
+   "id": "C-4B",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "4",
+   "axis_h": "B",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  },
+  {
+   "id": "C-1C",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "1",
+   "axis_h": "C",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  },
+  {
+   "id": "C-2C",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "2",
+   "axis_h": "C",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  },
+  {
+   "id": "C-3C",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "3",
+   "axis_h": "C",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  },
+  {
+   "id": "C-4C",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "b": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    },
+    "h": {
+     "source": "nguoi_nhap",
+     "ref": "bảng loại cột C1 (minh hoạ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "axis_v": "4",
+   "axis_h": "C",
+   "b": 220.0,
+   "h": 220.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "mark": "C1"
+  }
+ ],
+ "walls": [
+  {
+   "id": "W1",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "start": "1/A",
+   "end": "4/A",
+   "thickness": 220,
+   "kind": "xay",
+   "height": null
+  },
+  {
+   "id": "W2",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "start": "4/A",
+   "end": "4/C",
+   "thickness": 220,
+   "kind": "xay",
+   "height": null
+  },
+  {
+   "id": "W3",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "start": "4/C",
+   "end": "1/C",
+   "thickness": 220,
+   "kind": "xay",
+   "height": null
+  },
+  {
+   "id": "W4",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "start": "1/C",
+   "end": "1/A",
+   "thickness": 220,
+   "kind": "xay",
+   "height": null
+  },
+  {
+   "id": "W5",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "start": "1/B",
+   "end": "2/B",
+   "thickness": 110,
+   "kind": "xay",
+   "height": null
+  },
+  {
+   "id": "W6",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "start": "3/B",
+   "end": "4/B",
+   "thickness": 110,
+   "kind": "xay",
+   "height": null
+  },
+  {
+   "id": "W7",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "start": "2/B",
+   "end": "2/C",
+   "thickness": 110,
+   "kind": "xay",
+   "height": null
+  },
+  {
+   "id": "W8",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "start": "3/B",
+   "end": "3/C",
+   "thickness": 110,
+   "kind": "xay",
+   "height": null
+  },
+  {
+   "id": "W9",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "start": "3/B@0,2000",
+   "end": "4/B@0,2000",
+   "thickness": 110,
+   "kind": "xay",
+   "height": null
+  }
+ ],
+ "openings": [
+  {
+   "id": "CD1",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "wall_id": "W1",
+   "kind": "cua_di",
+   "offset": 1000,
+   "width": 1600,
+   "height": 2700,
+   "sill": 0.0,
+   "hinge": "dau",
+   "opens_to": "trai",
+   "leaves": 2,
+   "mark": "D1"
+  },
+  {
+   "id": "CD2",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "wall_id": "W5",
+   "kind": "cua_di",
+   "offset": 2400,
+   "width": 900,
+   "height": 2200,
+   "sill": 0.0,
+   "hinge": "cuoi",
+   "opens_to": "trai",
+   "leaves": 1,
+   "mark": "D2"
+  },
+  {
+   "id": "CD3",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "wall_id": "W8",
+   "kind": "cua_di",
+   "offset": 600,
+   "width": 700,
+   "height": 2100,
+   "sill": 0.0,
+   "hinge": "dau",
+   "opens_to": "phai",
+   "leaves": 1,
+   "mark": "D3"
+  },
+  {
+   "id": "CD4",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {
+    "width": {
+     "source": "nguoi_nhap",
+     "ref": "Đề bài minh hoạ — giá trị người dùng nhập để chạy thử, không phải hồ sơ thật (hồ sơ thật phải ghi số trang và số hiệu bản vẽ)",
+     "confirmed": true,
+     "confirmed_by": ""
+    }
+   },
+   "wall_id": "W8",
+   "kind": "cua_di",
+   "offset": 2600,
+   "width": 900.0,
+   "height": 2200,
+   "sill": 0.0,
+   "hinge": "dau",
+   "opens_to": "phai",
+   "leaves": 1,
+   "mark": "D2"
+  },
+  {
+   "id": "CS1",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "wall_id": "W1",
+   "kind": "cua_so",
+   "offset": 8100,
+   "width": 1500,
+   "height": 1500,
+   "sill": 900,
+   "hinge": "dau",
+   "opens_to": "trai",
+   "leaves": 1,
+   "mark": "S1"
+  },
+  {
+   "id": "CS2",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "wall_id": "W1",
+   "kind": "cua_so",
+   "offset": 4600,
+   "width": 1800,
+   "height": 1500,
+   "sill": 900,
+   "hinge": "dau",
+   "opens_to": "trai",
+   "leaves": 1,
+   "mark": "S2"
+  },
+  {
+   "id": "CS3",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "wall_id": "W4",
+   "kind": "cua_so",
+   "offset": 1500,
+   "width": 1200,
+   "height": 1500,
+   "sill": 900,
+   "hinge": "dau",
+   "opens_to": "trai",
+   "leaves": 1,
+   "mark": "S3"
+  },
+  {
+   "id": "CS4",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "wall_id": "W3",
+   "kind": "cua_so",
+   "offset": 4800,
+   "width": 1200,
+   "height": 1500,
+   "sill": 900,
+   "hinge": "dau",
+   "opens_to": "trai",
+   "leaves": 1,
+   "mark": "S3"
+  }
+ ],
+ "stairs": [
+  {
+   "id": "ST1",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "flights": [
+    {
+     "origin": "2/B@300,700",
+     "angle": 90,
+     "width": 1000,
+     "going": 260,
+     "n_treads": 11,
+     "riser": 170
+    }
+   ],
+   "landings": [],
+   "label": "LÊN"
+  }
+ ],
+ "furniture": [
+  {
+   "id": "F1",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "block": "GIUONG_DOI",
+   "insert": [
+    1000,
+    6250
+   ],
+   "rotation": 0,
+   "room_id": "P3"
+  },
+  {
+   "id": "F2",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "block": "TU_AO",
+   "insert": [
+    3545,
+    6800
+   ],
+   "rotation": 90,
+   "room_id": "P3"
+  },
+  {
+   "id": "F3",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "block": "SOFA_3",
+   "insert": [
+    600,
+    3200
+   ],
+   "rotation": 0,
+   "room_id": "P1"
+  },
+  {
+   "id": "F4",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "block": "BAN_TRA",
+   "insert": [
+    1150,
+    2200
+   ],
+   "rotation": 0,
+   "room_id": "P1"
+  },
+  {
+   "id": "F5",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "block": "BAN_AN_4",
+   "insert": [
+    8300,
+    1500
+   ],
+   "rotation": 0,
+   "room_id": "P2"
+  },
+  {
+   "id": "F6",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "block": "TU_BEP",
+   "insert": [
+    10690,
+    800
+   ],
+   "rotation": 90,
+   "room_id": "P2"
+  },
+  {
+   "id": "F7",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "block": "BON_CAU",
+   "insert": [
+    10690,
+    5300
+   ],
+   "rotation": 90,
+   "room_id": "P5"
+  },
+  {
+   "id": "F8",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "block": "LAVABO",
+   "insert": [
+    8800,
+    4255
+   ],
+   "rotation": 0,
+   "room_id": "P5"
+  }
+ ],
+ "rooms": [
+  {
+   "id": "P1",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "name": "PHÒNG KHÁCH",
+   "boundary": [
+    "1/A",
+    "3/A",
+    "3/B",
+    "1/B"
+   ],
+   "floor_finish": "Lát gạch granite 600×600",
+   "wall_finish": "Sơn nước 1 lót 2 phủ",
+   "ceiling_finish": "Trần thạch cao",
+   "floor_level": 0,
+   "hatch": "gach_600",
+   "label_at": null
+  },
+  {
+   "id": "P2",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "name": "BẾP + ĂN",
+   "boundary": [
+    "3/A",
+    "4/A",
+    "4/B",
+    "3/B"
+   ],
+   "floor_finish": "Lát gạch granite 600×600",
+   "wall_finish": "Ốp gạch men cao 1,5 m",
+   "ceiling_finish": "Trần thạch cao",
+   "floor_level": 0,
+   "hatch": "gach_600",
+   "label_at": null
+  },
+  {
+   "id": "P3",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "name": "PHÒNG NGỦ",
+   "boundary": [
+    "1/B",
+    "2/B",
+    "2/C",
+    "1/C"
+   ],
+   "floor_finish": "Sàn gỗ công nghiệp",
+   "wall_finish": "Sơn nước 1 lót 2 phủ",
+   "ceiling_finish": "Trần thạch cao",
+   "floor_level": 0,
+   "hatch": "go",
+   "label_at": null
+  },
+  {
+   "id": "P4",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "name": "SẢNH THANG",
+   "boundary": [
+    "2/B",
+    "3/B",
+    "3/C",
+    "2/C"
+   ],
+   "floor_finish": "Lát gạch granite 600×600",
+   "wall_finish": "Sơn nước 1 lót 2 phủ",
+   "ceiling_finish": "Trát trần, sơn",
+   "floor_level": 0,
+   "hatch": "gach_600",
+   "label_at": null
+  },
+  {
+   "id": "P5",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "name": "WC",
+   "boundary": [
+    "3/B",
+    "4/B",
+    "4/B@0,2000",
+    "3/B@0,2000"
+   ],
+   "floor_finish": "Lát gạch chống trơn 300×300",
+   "wall_finish": "Ốp gạch men cao 2,4 m",
+   "ceiling_finish": "Trần nhựa",
+   "floor_level": -20,
+   "hatch": "gach_300",
+   "label_at": null
+  },
+  {
+   "id": "P6",
+   "prov": {
+    "source": "nguoi_nhap",
+    "ref": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+    "confirmed": true,
+    "confirmed_by": ""
+   },
+   "field_prov": {},
+   "name": "KHO",
+   "boundary": [
+    "3/B@0,2000",
+    "4/B@0,2000",
+    "4/C",
+    "3/C"
+   ],
+   "floor_finish": "Lát gạch granite 600×600",
+   "wall_finish": "Sơn nước 1 lót 2 phủ",
+   "ceiling_finish": "Trát trần, sơn",
+   "floor_level": 0,
+   "hatch": "gach_600",
+   "label_at": null
+  }
+ ],
+ "measured_dims": [],
+ "layers": {
+  "anh_nen": {
+   "name": "00-ANH-NEN",
+   "color": 8,
+   "linetype": "Continuous",
+   "lineweight": 9,
+   "plot": false,
+   "description": "Ảnh/PDF nền tham chiếu (không in)"
+  },
+  "cot": {
+   "name": "KC-COT",
+   "color": 7,
+   "linetype": "Continuous",
+   "lineweight": 50,
+   "plot": true,
+   "description": "Đường bao cột"
+  },
+  "cua": {
+   "name": "KT-CUA",
+   "color": 3,
+   "linetype": "Continuous",
+   "lineweight": 25,
+   "plot": true,
+   "description": "Cánh cửa, cung mở, khung cửa sổ"
+  },
+  "cua_kh": {
+   "name": "KT-CUA-KH",
+   "color": 3,
+   "linetype": "Continuous",
+   "lineweight": 18,
+   "plot": true,
+   "description": "Ký hiệu cửa D1/S1"
+  },
+  "dim": {
+   "name": "KT-DIM",
+   "color": 3,
+   "linetype": "Continuous",
+   "lineweight": 18,
+   "plot": true,
+   "description": "Kích thước (DIMENSION nguyên bản)"
+  },
+  "hatch": {
+   "name": "KT-HATCH",
+   "color": 8,
+   "linetype": "Continuous",
+   "lineweight": 9,
+   "plot": true,
+   "description": "Hatch cột, tường, sàn"
+  },
+  "hoan_thien": {
+   "name": "KT-HOAN-THIEN",
+   "color": 2,
+   "linetype": "Continuous",
+   "lineweight": 18,
+   "plot": true,
+   "description": "Tên phòng, diện tích, cote, hoàn thiện"
+  },
+  "khung_ten": {
+   "name": "KT-KHUNG-TEN",
+   "color": 7,
+   "linetype": "Continuous",
+   "lineweight": 35,
+   "plot": true,
+   "description": "Khung tên, khung bản vẽ"
+  },
+  "kiem_tra": {
+   "name": "KT-KIEM-TRA",
+   "color": 1,
+   "linetype": "Continuous",
+   "lineweight": 25,
+   "plot": false,
+   "description": "Đánh dấu lỗi của Validator (không in)"
+  },
+  "noi_that": {
+   "name": "KT-NOI-THAT",
+   "color": 8,
+   "linetype": "Continuous",
+   "lineweight": 13,
+   "plot": true,
+   "description": "Nội thất, thiết bị vệ sinh"
+  },
+  "thang": {
+   "name": "KT-THANG",
+   "color": 6,
+   "linetype": "Continuous",
+   "lineweight": 25,
+   "plot": true,
+   "description": "Cầu thang: bậc, mũi tên, đường cắt"
+  },
+  "truc": {
+   "name": "KT-TRUC",
+   "color": 1,
+   "linetype": "CENTER",
+   "lineweight": 18,
+   "plot": true,
+   "description": "Đường trục định vị"
+  },
+  "truc_kh": {
+   "name": "KT-TRUC-KH",
+   "color": 1,
+   "linetype": "Continuous",
+   "lineweight": 18,
+   "plot": true,
+   "description": "Vòng tròn và tên trục"
+  },
+  "tuong": {
+   "name": "KT-TUONG",
+   "color": 7,
+   "linetype": "Continuous",
+   "lineweight": 50,
+   "plot": true,
+   "description": "Đường bao tường (đã trừ ô cửa, cột)"
+  }
+ },
+ "blocks": {},
+ "sources": [
+  {
+   "name": "de_bai_mat_bang_tang1.json",
+   "kind": "json",
+   "sha256": "82df5f320096ac239e5cc2153a68b804bd3caaac7fa3cd7df783b919c80ea405",
+   "used_for": "du_lieu",
+   "note": "Đề bài minh hoạ — số liệu tự đặt để chạy thử, KHÔNG phải hồ sơ thiết kế thật",
+   "underlay": null
+  },
+  {
+   "name": "kich_thuoc_nhap.json",
+   "kind": "kich_thuoc_nhap",
+   "sha256": "7c7ee3d25f47a19bca31068b76103618da5ac4eb2f1ae71573f2a33e0b7372c7",
+   "used_for": "du_lieu",
+   "note": "Đề bài minh hoạ — giá trị người dùng nhập để chạy thử, không phải hồ sơ thật (hồ sơ thật phải ghi số trang và số hiệu bản vẽ); 2 giá trị nhập, 0 xác nhận nội suy",
+   "underlay": null
+  }
+ ],
+ "issues": [
+  {
+   "severity": "CANH_BAO",
+   "code": "NGUON_NHAP_THIEU_TRANG",
+   "message": "kich_thuoc_nhap.json: nguồn nhập tay 'Đề bài minh hoạ — giá trị người dùng nhập để chạy thử, không phải hồ sơ thật (hồ sơ thật phải ghi số trang và số hiệu bản vẽ)' chưa ghi trang dạng [Trang N] kèm số hiệu bản vẽ (quy ước repo cho số liệu trích từ bản vẽ).",
+   "skill": "00",
+   "eids": [],
+   "where": null
+  }
+ ],
+ "approvals": []
+}

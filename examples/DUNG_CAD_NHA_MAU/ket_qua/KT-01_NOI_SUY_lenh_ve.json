@@ -1,0 +1,8474 @@
+{
+ "schema": "23hg-cad-plan/1",
+ "units": "mm",
+ "meta": {
+  "project": {
+   "name": "NHÀ Ở MẪU (DỮ LIỆU MINH HOẠ)",
+   "drawing_title": "MẶT BẰNG TẦNG 1",
+   "drawing_no": "KT-01",
+   "scale": 100,
+   "sheet": "A3",
+   "revision": "00",
+   "level_name": "TẦNG 1",
+   "designer": "",
+   "checker": "",
+   "date": ""
+  },
+  "scale": 100,
+  "sheet_frame": [
+   -7900.0,
+   -13400.0,
+   34100.0,
+   16300.0
+  ],
+  "sheet": {
+   "size": "A3",
+   "scale": 100,
+   "paper_mm": [
+    420.0,
+    297.0
+   ]
+  }
+ },
+ "text_style": {
+  "name": "VN_ARIAL",
+  "font": "arial.ttf"
+ },
+ "layers": {
+  "anh_nen": {
+   "name": "00-ANH-NEN",
+   "color": 8,
+   "linetype": "Continuous",
+   "lineweight": 9,
+   "plot": false,
+   "description": "Ảnh/PDF nền tham chiếu (không in)"
+  },
+  "truc": {
+   "name": "KT-TRUC",
+   "color": 1,
+   "linetype": "CENTER",
+   "lineweight": 18,
+   "plot": true,
+   "description": "Đường trục định vị"
+  },
+  "truc_kh": {
+   "name": "KT-TRUC-KH",
+   "color": 1,
+   "linetype": "Continuous",
+   "lineweight": 18,
+   "plot": true,
+   "description": "Vòng tròn và tên trục"
+  },
+  "cot": {
+   "name": "KC-COT",
+   "color": 7,
+   "linetype": "Continuous",
+   "lineweight": 50,
+   "plot": true,
+   "description": "Đường bao cột"
+  },
+  "tuong": {
+   "name": "KT-TUONG",
+   "color": 7,
+   "linetype": "Continuous",
+   "lineweight": 50,
+   "plot": true,
+   "description": "Đường bao tường (đã trừ ô cửa, cột)"
+  },
+  "cua": {
+   "name": "KT-CUA",
+   "color": 3,
+   "linetype": "Continuous",
+   "lineweight": 25,
+   "plot": true,
+   "description": "Cánh cửa, cung mở, khung cửa sổ"
+  },
+  "cua_kh": {
+   "name": "KT-CUA-KH",
+   "color": 3,
+   "linetype": "Continuous",
+   "lineweight": 18,
+   "plot": true,
+   "description": "Ký hiệu cửa D1/S1"
+  },
+  "thang": {
+   "name": "KT-THANG",
+   "color": 6,
+   "linetype": "Continuous",
+   "lineweight": 25,
+   "plot": true,
+   "description": "Cầu thang: bậc, mũi tên, đường cắt"
+  },
+  "noi_that": {
+   "name": "KT-NOI-THAT",
+   "color": 8,
+   "linetype": "Continuous",
+   "lineweight": 13,
+   "plot": true,
+   "description": "Nội thất, thiết bị vệ sinh"
+  },
+  "hatch": {
+   "name": "KT-HATCH",
+   "color": 8,
+   "linetype": "Continuous",
+   "lineweight": 9,
+   "plot": true,
+   "description": "Hatch cột, tường, sàn"
+  },
+  "dim": {
+   "name": "KT-DIM",
+   "color": 3,
+   "linetype": "Continuous",
+   "lineweight": 18,
+   "plot": true,
+   "description": "Kích thước (DIMENSION nguyên bản)"
+  },
+  "hoan_thien": {
+   "name": "KT-HOAN-THIEN",
+   "color": 2,
+   "linetype": "Continuous",
+   "lineweight": 18,
+   "plot": true,
+   "description": "Tên phòng, diện tích, cote, hoàn thiện"
+  },
+  "khung_ten": {
+   "name": "KT-KHUNG-TEN",
+   "color": 7,
+   "linetype": "Continuous",
+   "lineweight": 35,
+   "plot": true,
+   "description": "Khung tên, khung bản vẽ"
+  },
+  "kiem_tra": {
+   "name": "KT-KIEM-TRA",
+   "color": 1,
+   "linetype": "Continuous",
+   "lineweight": 25,
+   "plot": false,
+   "description": "Đánh dấu lỗi của Validator (không in)"
+  }
+ },
+ "dimstyles": {
+  "TCVN_KT_100": {
+   "dimblk": "ARCHTICK",
+   "dimtad": 1,
+   "dimexo": 2.0,
+   "dimexe": 1.5,
+   "dimtxt": 2.2,
+   "dimasz": 1.5,
+   "dimgap": 0.8,
+   "dimdec": 0,
+   "dimlunit": 2,
+   "dimzin": 8,
+   "dimtih": 0,
+   "dimtoh": 0,
+   "dimtxsty": "VN_ARIAL",
+   "dimclrd": 3,
+   "dimclre": 3,
+   "dimclrt": 7,
+   "dimscale": 100.0
+  }
+ },
+ "blocks": {
+  "GIUONG_DOI": {
+   "name": "GIUONG_DOI",
+   "ops": [
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        0.0,
+        0.0
+       ],
+       [
+        1600.0,
+        0.0
+       ],
+       [
+        1600.0,
+        2000.0
+       ],
+       [
+        0.0,
+        2000.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       0.0,
+       1920.0
+      ],
+      "p2": [
+       1600.0,
+       1920.0
+      ]
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        170.0,
+        1530.0
+       ],
+       [
+        710.0,
+        1530.0
+       ],
+       [
+        760.0,
+        1580.0
+       ],
+       [
+        760.0,
+        1830.0
+       ],
+       [
+        710.0,
+        1880.0
+       ],
+       [
+        170.0,
+        1880.0
+       ],
+       [
+        120.0,
+        1830.0
+       ],
+       [
+        120.0,
+        1580.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        890.0,
+        1530.0
+       ],
+       [
+        1430.0,
+        1530.0
+       ],
+       [
+        1480.0,
+        1580.0
+       ],
+       [
+        1480.0,
+        1830.0
+       ],
+       [
+        1430.0,
+        1880.0
+       ],
+       [
+        890.0,
+        1880.0
+       ],
+       [
+        840.0,
+        1830.0
+       ],
+       [
+        840.0,
+        1580.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       0.0,
+       1400.0
+      ],
+      "p2": [
+       1600.0,
+       1400.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       1150.0,
+       1400.0
+      ],
+      "p2": [
+       1600.0,
+       950.0
+      ]
+     }
+    }
+   ],
+   "size": [
+    1600.0,
+    2000.0
+   ],
+   "description": "Giường đôi 1600×2000 (đầu giường, 2 gối ở cạnh y lớn)",
+   "source": "thu_vien"
+  },
+  "TU_AO": {
+   "name": "TU_AO",
+   "ops": [
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        0.0,
+        0.0
+       ],
+       [
+        1200.0,
+        0.0
+       ],
+       [
+        1200.0,
+        600.0
+       ],
+       [
+        0.0,
+        600.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       60.0,
+       300.0
+      ],
+      "p2": [
+       1140.0,
+       300.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       140.0,
+       120.0
+      ],
+      "p2": [
+       220.0,
+       480.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       280.0,
+       120.0
+      ],
+      "p2": [
+       360.0,
+       480.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       420.0,
+       120.0
+      ],
+      "p2": [
+       500.0,
+       480.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       560.0,
+       120.0
+      ],
+      "p2": [
+       640.0,
+       480.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       700.0,
+       120.0
+      ],
+      "p2": [
+       780.0,
+       480.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       840.0,
+       120.0
+      ],
+      "p2": [
+       920.0,
+       480.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       980.0,
+       120.0
+      ],
+      "p2": [
+       1060.0,
+       480.0
+      ]
+     }
+    }
+   ],
+   "size": [
+    1200.0,
+    600.0
+   ],
+   "description": "Tủ áo 1200×600 (thanh treo + móc áo)",
+   "source": "thu_vien"
+  },
+  "SOFA_3": {
+   "name": "SOFA_3",
+   "ops": [
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        0.0,
+        0.0
+       ],
+       [
+        2100.0,
+        0.0
+       ],
+       [
+        2100.0,
+        850.0
+       ],
+       [
+        0.0,
+        850.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       150.0,
+       0.0
+      ],
+      "p2": [
+       150.0,
+       850.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       1950.0,
+       0.0
+      ],
+      "p2": [
+       1950.0,
+       850.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       150.0,
+       650.0
+      ],
+      "p2": [
+       1950.0,
+       650.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       750.0,
+       0.0
+      ],
+      "p2": [
+       750.0,
+       650.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       1350.0,
+       0.0
+      ],
+      "p2": [
+       1350.0,
+       650.0
+      ]
+     }
+    }
+   ],
+   "size": [
+    2100.0,
+    850.0
+   ],
+   "description": "Sofa 3 chỗ 2100×850 (tựa lưng ở cạnh y lớn)",
+   "source": "thu_vien"
+  },
+  "BAN_TRA": {
+   "name": "BAN_TRA",
+   "ops": [
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        0.0,
+        0.0
+       ],
+       [
+        1000.0,
+        0.0
+       ],
+       [
+        1000.0,
+        600.0
+       ],
+       [
+        0.0,
+        600.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        60.0,
+        60.0
+       ],
+       [
+        940.0,
+        60.0
+       ],
+       [
+        940.0,
+        540.0
+       ],
+       [
+        60.0,
+        540.0
+       ]
+      ],
+      "closed": true
+     }
+    }
+   ],
+   "size": [
+    1000.0,
+    600.0
+   ],
+   "description": "Bàn trà 1000×600",
+   "source": "thu_vien"
+  },
+  "BAN_AN_4": {
+   "name": "BAN_AN_4",
+   "ops": [
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        0.0,
+        400.0
+       ],
+       [
+        1200.0,
+        400.0
+       ],
+       [
+        1200.0,
+        1200.0
+       ],
+       [
+        0.0,
+        1200.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        145.0,
+        0.0
+       ],
+       [
+        515.0,
+        0.0
+       ],
+       [
+        555.0,
+        40.0
+       ],
+       [
+        555.0,
+        360.0
+       ],
+       [
+        515.0,
+        400.0
+       ],
+       [
+        145.0,
+        400.0
+       ],
+       [
+        105.0,
+        360.0
+       ],
+       [
+        105.0,
+        40.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        105.0,
+        0.0
+       ],
+       [
+        555.0,
+        0.0
+       ],
+       [
+        555.0,
+        80.0
+       ],
+       [
+        105.0,
+        80.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        145.0,
+        1200.0
+       ],
+       [
+        515.0,
+        1200.0
+       ],
+       [
+        555.0,
+        1240.0
+       ],
+       [
+        555.0,
+        1560.0
+       ],
+       [
+        515.0,
+        1600.0
+       ],
+       [
+        145.0,
+        1600.0
+       ],
+       [
+        105.0,
+        1560.0
+       ],
+       [
+        105.0,
+        1240.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        105.0,
+        1520.0
+       ],
+       [
+        555.0,
+        1520.0
+       ],
+       [
+        555.0,
+        1600.0
+       ],
+       [
+        105.0,
+        1600.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        685.0,
+        0.0
+       ],
+       [
+        1055.0,
+        0.0
+       ],
+       [
+        1095.0,
+        40.0
+       ],
+       [
+        1095.0,
+        360.0
+       ],
+       [
+        1055.0,
+        400.0
+       ],
+       [
+        685.0,
+        400.0
+       ],
+       [
+        645.0,
+        360.0
+       ],
+       [
+        645.0,
+        40.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        645.0,
+        0.0
+       ],
+       [
+        1095.0,
+        0.0
+       ],
+       [
+        1095.0,
+        80.0
+       ],
+       [
+        645.0,
+        80.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        685.0,
+        1200.0
+       ],
+       [
+        1055.0,
+        1200.0
+       ],
+       [
+        1095.0,
+        1240.0
+       ],
+       [
+        1095.0,
+        1560.0
+       ],
+       [
+        1055.0,
+        1600.0
+       ],
+       [
+        685.0,
+        1600.0
+       ],
+       [
+        645.0,
+        1560.0
+       ],
+       [
+        645.0,
+        1240.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        645.0,
+        1520.0
+       ],
+       [
+        1095.0,
+        1520.0
+       ],
+       [
+        1095.0,
+        1600.0
+       ],
+       [
+        645.0,
+        1600.0
+       ]
+      ],
+      "closed": true
+     }
+    }
+   ],
+   "size": [
+    1200.0,
+    1600.0
+   ],
+   "description": "Bàn ăn 1200×800 + 4 ghế (2 trên, 2 dưới)",
+   "source": "thu_vien"
+  },
+  "TU_BEP": {
+   "name": "TU_BEP",
+   "ops": [
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        0.0,
+        0.0
+       ],
+       [
+        2400.0,
+        0.0
+       ],
+       [
+        2400.0,
+        600.0
+       ],
+       [
+        0.0,
+        600.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       0.0,
+       560.0
+      ],
+      "p2": [
+       2400.0,
+       560.0
+      ]
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        350.0,
+        80.0
+       ],
+       [
+        1150.0,
+        80.0
+       ],
+       [
+        1150.0,
+        500.0
+       ],
+       [
+        350.0,
+        500.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        460.0,
+        120.0
+       ],
+       [
+        1040.0,
+        120.0
+       ],
+       [
+        1100.0,
+        180.0
+       ],
+       [
+        1100.0,
+        400.0
+       ],
+       [
+        1040.0,
+        460.0
+       ],
+       [
+        460.0,
+        460.0
+       ],
+       [
+        400.0,
+        400.0
+       ],
+       [
+        400.0,
+        180.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "circle",
+     "data": {
+      "center": [
+       750.0,
+       290.0
+      ],
+      "r": 25.0
+     }
+    },
+    {
+     "kind": "circle",
+     "data": {
+      "center": [
+       750.0,
+       45.0
+      ],
+      "r": 20.0
+     }
+    },
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        1500.0,
+        80.0
+       ],
+       [
+        2200.0,
+        80.0
+       ],
+       [
+        2200.0,
+        500.0
+       ],
+       [
+        1500.0,
+        500.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "circle",
+     "data": {
+      "center": [
+       1675.0,
+       290.0
+      ],
+      "r": 120.0
+     }
+    },
+    {
+     "kind": "circle",
+     "data": {
+      "center": [
+       1675.0,
+       290.0
+      ],
+      "r": 60.0
+     }
+    },
+    {
+     "kind": "circle",
+     "data": {
+      "center": [
+       2025.0,
+       290.0
+      ],
+      "r": 120.0
+     }
+    },
+    {
+     "kind": "circle",
+     "data": {
+      "center": [
+       2025.0,
+       290.0
+      ],
+      "r": 60.0
+     }
+    }
+   ],
+   "size": [
+    2400.0,
+    600.0
+   ],
+   "description": "Tủ bếp 2400×600 (chậu rửa + bếp 2 vùng nấu, lưng ở y = 0)",
+   "source": "thu_vien"
+  },
+  "BON_CAU": {
+   "name": "BON_CAU",
+   "ops": [
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        50.0,
+        0.0
+       ],
+       [
+        350.0,
+        0.0
+       ],
+       [
+        380.0,
+        30.0
+       ],
+       [
+        380.0,
+        150.0
+       ],
+       [
+        350.0,
+        180.0
+       ],
+       [
+        50.0,
+        180.0
+       ],
+       [
+        20.0,
+        150.0
+       ],
+       [
+        20.0,
+        30.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "circle",
+     "data": {
+      "center": [
+       200.0,
+       90.0
+      ],
+      "r": 25.0
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       70.0,
+       180.0
+      ],
+      "p2": [
+       0.0,
+       500.0
+      ]
+     }
+    },
+    {
+     "kind": "line",
+     "data": {
+      "p1": [
+       330.0,
+       180.0
+      ],
+      "p2": [
+       400.0,
+       500.0
+      ]
+     }
+    },
+    {
+     "kind": "arc",
+     "data": {
+      "center": [
+       200.0,
+       500.0
+      ],
+      "r": 200.0,
+      "start_angle": 0.0,
+      "end_angle": 180.0
+     }
+    },
+    {
+     "kind": "circle",
+     "data": {
+      "center": [
+       200.0,
+       480.0
+      ],
+      "r": 120.0
+     }
+    }
+   ],
+   "size": [
+    400.0,
+    700.0
+   ],
+   "description": "Bồn cầu 400×700 (két nước ở cạnh y nhỏ, sát tường)",
+   "source": "thu_vien"
+  },
+  "LAVABO": {
+   "name": "LAVABO",
+   "ops": [
+    {
+     "kind": "pline",
+     "data": {
+      "points": [
+       [
+        0.0,
+        0.0
+       ],
+       [
+        500.0,
+        0.0
+       ],
+       [
+        500.0,
+        320.0
+       ],
+       [
+        420.0,
+        400.0
+       ],
+       [
+        80.0,
+        400.0
+       ],
+       [
+        0.0,
+        320.0
+       ]
+      ],
+      "closed": true
+     }
+    },
+    {
+     "kind": "circle",
+     "data": {
+      "center": [
+       250.0,
+       220.0
+      ],
+      "r": 150.0
+     }
+    },
+    {
+     "kind": "circle",
+     "data": {
+      "center": [
+       250.0,
+       220.0
+      ],
+      "r": 20.0
+     }
+    },
+    {
+     "kind": "circle",
+     "data": {
+      "center": [
+       250.0,
+       40.0
+      ],
+      "r": 20.0
+     }
+    }
+   ],
+   "size": [
+    500.0,
+    400.0
+   ],
+   "description": "Lavabo 500×400 (lưng sát tường ở y = 0)",
+   "source": "thu_vien"
+  }
+ },
+ "ops": [
+  {
+   "kind": "line",
+   "role": "truc",
+   "skill": "01",
+   "eid": "01/truc/V/1/line",
+   "data": {
+    "p1": [
+     0.0,
+     -3400.0
+    ],
+    "p2": [
+     0.0,
+     11800.0
+    ]
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/1/bubble/0",
+   "data": {
+    "center": [
+     0.0,
+     -3800.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/1/name/0",
+   "data": {
+    "insert": [
+     0.0,
+     -3800.0
+    ],
+    "text": "1",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/1/bubble/1",
+   "data": {
+    "center": [
+     0.0,
+     12200.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/1/name/1",
+   "data": {
+    "insert": [
+     0.0,
+     12200.0
+    ],
+    "text": "1",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "truc",
+   "skill": "01",
+   "eid": "01/truc/V/2/line",
+   "data": {
+    "p1": [
+     3600.0,
+     -3400.0
+    ],
+    "p2": [
+     3600.0,
+     11800.0
+    ]
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/2/bubble/0",
+   "data": {
+    "center": [
+     3600.0,
+     -3800.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/2/name/0",
+   "data": {
+    "insert": [
+     3600.0,
+     -3800.0
+    ],
+    "text": "2",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/2/bubble/1",
+   "data": {
+    "center": [
+     3600.0,
+     12200.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/2/name/1",
+   "data": {
+    "insert": [
+     3600.0,
+     12200.0
+    ],
+    "text": "2",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "truc",
+   "skill": "01",
+   "eid": "01/truc/V/3/line",
+   "data": {
+    "p1": [
+     7200.0,
+     -3400.0
+    ],
+    "p2": [
+     7200.0,
+     11800.0
+    ]
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/3/bubble/0",
+   "data": {
+    "center": [
+     7200.0,
+     -3800.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/3/name/0",
+   "data": {
+    "insert": [
+     7200.0,
+     -3800.0
+    ],
+    "text": "3",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/3/bubble/1",
+   "data": {
+    "center": [
+     7200.0,
+     12200.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/3/name/1",
+   "data": {
+    "insert": [
+     7200.0,
+     12200.0
+    ],
+    "text": "3",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "truc",
+   "skill": "01",
+   "eid": "01/truc/V/4/line",
+   "data": {
+    "p1": [
+     10800.0,
+     -3400.0
+    ],
+    "p2": [
+     10800.0,
+     11800.0
+    ]
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/4/bubble/0",
+   "data": {
+    "center": [
+     10800.0,
+     -3800.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/4/name/0",
+   "data": {
+    "insert": [
+     10800.0,
+     -3800.0
+    ],
+    "text": "4",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/4/bubble/1",
+   "data": {
+    "center": [
+     10800.0,
+     12200.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/V/4/name/1",
+   "data": {
+    "insert": [
+     10800.0,
+     12200.0
+    ],
+    "text": "4",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "truc",
+   "skill": "01",
+   "eid": "01/truc/H/A/line",
+   "data": {
+    "p1": [
+     -3400.0,
+     0.0
+    ],
+    "p2": [
+     14200.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/A/bubble/0",
+   "data": {
+    "center": [
+     -3800.0,
+     0.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/A/name/0",
+   "data": {
+    "insert": [
+     -3800.0,
+     0.0
+    ],
+    "text": "A",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/A/bubble/1",
+   "data": {
+    "center": [
+     14600.0,
+     0.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/A/name/1",
+   "data": {
+    "insert": [
+     14600.0,
+     0.0
+    ],
+    "text": "A",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "truc",
+   "skill": "01",
+   "eid": "01/truc/H/B/line",
+   "data": {
+    "p1": [
+     -3400.0,
+     4200.0
+    ],
+    "p2": [
+     14200.0,
+     4200.0
+    ]
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/B/bubble/0",
+   "data": {
+    "center": [
+     -3800.0,
+     4200.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/B/name/0",
+   "data": {
+    "insert": [
+     -3800.0,
+     4200.0
+    ],
+    "text": "B",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/B/bubble/1",
+   "data": {
+    "center": [
+     14600.0,
+     4200.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/B/name/1",
+   "data": {
+    "insert": [
+     14600.0,
+     4200.0
+    ],
+    "text": "B",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "truc",
+   "skill": "01",
+   "eid": "01/truc/H/C/line",
+   "data": {
+    "p1": [
+     -3400.0,
+     8400.0
+    ],
+    "p2": [
+     14200.0,
+     8400.0
+    ]
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/C/bubble/0",
+   "data": {
+    "center": [
+     -3800.0,
+     8400.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/C/name/0",
+   "data": {
+    "insert": [
+     -3800.0,
+     8400.0
+    ],
+    "text": "C",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/C/bubble/1",
+   "data": {
+    "center": [
+     14600.0,
+     8400.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "truc_kh",
+   "skill": "01",
+   "eid": "01/truc/H/C/name/1",
+   "data": {
+    "insert": [
+     14600.0,
+     8400.0
+    ],
+    "text": "C",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-1A",
+   "data": {
+    "points": [
+     [
+      -110.0,
+      -110.0
+     ],
+     [
+      110.0,
+      -110.0
+     ],
+     [
+      110.0,
+      110.0
+     ],
+     [
+      -110.0,
+      110.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-2A",
+   "data": {
+    "points": [
+     [
+      3490.0,
+      -110.0
+     ],
+     [
+      3710.0,
+      -110.0
+     ],
+     [
+      3710.0,
+      110.0
+     ],
+     [
+      3490.0,
+      110.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-3A",
+   "data": {
+    "points": [
+     [
+      7090.0,
+      -110.0
+     ],
+     [
+      7310.0,
+      -110.0
+     ],
+     [
+      7310.0,
+      110.0
+     ],
+     [
+      7090.0,
+      110.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-4A",
+   "data": {
+    "points": [
+     [
+      10690.0,
+      -110.0
+     ],
+     [
+      10910.0,
+      -110.0
+     ],
+     [
+      10910.0,
+      110.0
+     ],
+     [
+      10690.0,
+      110.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-1B",
+   "data": {
+    "points": [
+     [
+      -110.0,
+      4090.0
+     ],
+     [
+      110.0,
+      4090.0
+     ],
+     [
+      110.0,
+      4310.0
+     ],
+     [
+      -110.0,
+      4310.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-2B",
+   "data": {
+    "points": [
+     [
+      3490.0,
+      4090.0
+     ],
+     [
+      3710.0,
+      4090.0
+     ],
+     [
+      3710.0,
+      4310.0
+     ],
+     [
+      3490.0,
+      4310.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-3B",
+   "data": {
+    "points": [
+     [
+      7090.0,
+      4090.0
+     ],
+     [
+      7310.0,
+      4090.0
+     ],
+     [
+      7310.0,
+      4310.0
+     ],
+     [
+      7090.0,
+      4310.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-4B",
+   "data": {
+    "points": [
+     [
+      10690.0,
+      4090.0
+     ],
+     [
+      10910.0,
+      4090.0
+     ],
+     [
+      10910.0,
+      4310.0
+     ],
+     [
+      10690.0,
+      4310.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-1C",
+   "data": {
+    "points": [
+     [
+      -110.0,
+      8290.0
+     ],
+     [
+      110.0,
+      8290.0
+     ],
+     [
+      110.0,
+      8510.0
+     ],
+     [
+      -110.0,
+      8510.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-2C",
+   "data": {
+    "points": [
+     [
+      3490.0,
+      8290.0
+     ],
+     [
+      3710.0,
+      8290.0
+     ],
+     [
+      3710.0,
+      8510.0
+     ],
+     [
+      3490.0,
+      8510.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-3C",
+   "data": {
+    "points": [
+     [
+      7090.0,
+      8290.0
+     ],
+     [
+      7310.0,
+      8290.0
+     ],
+     [
+      7310.0,
+      8510.0
+     ],
+     [
+      7090.0,
+      8510.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "cot",
+   "skill": "02",
+   "eid": "02/cot/C-4C",
+   "data": {
+    "points": [
+     [
+      10690.0,
+      8290.0
+     ],
+     [
+      10910.0,
+      8290.0
+     ],
+     [
+      10910.0,
+      8510.0
+     ],
+     [
+      10690.0,
+      8510.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/0",
+   "data": {
+    "points": [
+     [
+      -110.0,
+      110.0
+     ],
+     [
+      -110.0,
+      4090.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/1",
+   "data": {
+    "points": [
+     [
+      -110.0,
+      4310.0
+     ],
+     [
+      -110.0,
+      5700.0
+     ],
+     [
+      110.0,
+      5700.0
+     ],
+     [
+      110.0,
+      4310.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/2",
+   "data": {
+    "points": [
+     [
+      3490.0,
+      8290.0
+     ],
+     [
+      110.0,
+      8290.0
+     ],
+     [
+      110.0,
+      6900.0
+     ],
+     [
+      -110.0,
+      6900.0
+     ],
+     [
+      -110.0,
+      8290.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/3",
+   "data": {
+    "points": [
+     [
+      110.0,
+      4090.0
+     ],
+     [
+      110.0,
+      110.0
+     ],
+     [
+      1000.0,
+      110.0
+     ],
+     [
+      1000.0,
+      -110.0
+     ],
+     [
+      110.0,
+      -110.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/4",
+   "data": {
+    "points": [
+     [
+      110.0,
+      4255.0
+     ],
+     [
+      2400.0,
+      4255.0
+     ],
+     [
+      2400.0,
+      4145.0
+     ],
+     [
+      110.0,
+      4145.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/5",
+   "data": {
+    "points": [
+     [
+      110.0,
+      8510.0
+     ],
+     [
+      3490.0,
+      8510.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/6",
+   "data": {
+    "points": [
+     [
+      3490.0,
+      -110.0
+     ],
+     [
+      2600.0,
+      -110.0
+     ],
+     [
+      2600.0,
+      110.0
+     ],
+     [
+      3490.0,
+      110.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/7",
+   "data": {
+    "points": [
+     [
+      3490.0,
+      4145.0
+     ],
+     [
+      3300.0,
+      4145.0
+     ],
+     [
+      3300.0,
+      4255.0
+     ],
+     [
+      3490.0,
+      4255.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/8",
+   "data": {
+    "points": [
+     [
+      3545.0,
+      4310.0
+     ],
+     [
+      3545.0,
+      8290.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/9",
+   "data": {
+    "points": [
+     [
+      3655.0,
+      8290.0
+     ],
+     [
+      3655.0,
+      4310.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/10",
+   "data": {
+    "points": [
+     [
+      3710.0,
+      110.0
+     ],
+     [
+      4600.0,
+      110.0
+     ],
+     [
+      4600.0,
+      -110.0
+     ],
+     [
+      3710.0,
+      -110.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/11",
+   "data": {
+    "points": [
+     [
+      3710.0,
+      8510.0
+     ],
+     [
+      4800.0,
+      8510.0
+     ],
+     [
+      4800.0,
+      8290.0
+     ],
+     [
+      3710.0,
+      8290.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/12",
+   "data": {
+    "points": [
+     [
+      7090.0,
+      8290.0
+     ],
+     [
+      6000.0,
+      8290.0
+     ],
+     [
+      6000.0,
+      8510.0
+     ],
+     [
+      7090.0,
+      8510.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/13",
+   "data": {
+    "points": [
+     [
+      7090.0,
+      -110.0
+     ],
+     [
+      6400.0,
+      -110.0
+     ],
+     [
+      6400.0,
+      110.0
+     ],
+     [
+      7090.0,
+      110.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/14",
+   "data": {
+    "points": [
+     [
+      7145.0,
+      4310.0
+     ],
+     [
+      7145.0,
+      4800.0
+     ],
+     [
+      7255.0,
+      4800.0
+     ],
+     [
+      7255.0,
+      4310.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/15",
+   "data": {
+    "points": [
+     [
+      10690.0,
+      4310.0
+     ],
+     [
+      10690.0,
+      6145.0
+     ],
+     [
+      7255.0,
+      6145.0
+     ],
+     [
+      7255.0,
+      5500.0
+     ],
+     [
+      7145.0,
+      5500.0
+     ],
+     [
+      7145.0,
+      6145.0
+     ],
+     [
+      7145.0,
+      6255.0
+     ],
+     [
+      7145.0,
+      6800.0
+     ],
+     [
+      7255.0,
+      6800.0
+     ],
+     [
+      7255.0,
+      6255.0
+     ],
+     [
+      10690.0,
+      6255.0
+     ],
+     [
+      10690.0,
+      8290.0
+     ],
+     [
+      7310.0,
+      8290.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/16",
+   "data": {
+    "points": [
+     [
+      7255.0,
+      8290.0
+     ],
+     [
+      7255.0,
+      7700.0
+     ],
+     [
+      7145.0,
+      7700.0
+     ],
+     [
+      7145.0,
+      8290.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/17",
+   "data": {
+    "points": [
+     [
+      7310.0,
+      110.0
+     ],
+     [
+      8100.0,
+      110.0
+     ],
+     [
+      8100.0,
+      -110.0
+     ],
+     [
+      7310.0,
+      -110.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/18",
+   "data": {
+    "points": [
+     [
+      10690.0,
+      4145.0
+     ],
+     [
+      7310.0,
+      4145.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/19",
+   "data": {
+    "points": [
+     [
+      7310.0,
+      4255.0
+     ],
+     [
+      10690.0,
+      4255.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/20",
+   "data": {
+    "points": [
+     [
+      7310.0,
+      8510.0
+     ],
+     [
+      10690.0,
+      8510.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/21",
+   "data": {
+    "points": [
+     [
+      10690.0,
+      -110.0
+     ],
+     [
+      9600.0,
+      -110.0
+     ],
+     [
+      9600.0,
+      110.0
+     ],
+     [
+      10690.0,
+      110.0
+     ],
+     [
+      10690.0,
+      4090.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/22",
+   "data": {
+    "points": [
+     [
+      10910.0,
+      4090.0
+     ],
+     [
+      10910.0,
+      110.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "tuong",
+   "skill": "03",
+   "eid": "03/tuong/outline/23",
+   "data": {
+    "points": [
+     [
+      10910.0,
+      8290.0
+     ],
+     [
+      10910.0,
+      6255.0
+     ],
+     [
+      10910.0,
+      6145.0
+     ],
+     [
+      10910.0,
+      4310.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CD1/leaf/0",
+   "data": {
+    "p1": [
+     1000.0,
+     110.0
+    ],
+    "p2": [
+     1000.0,
+     910.0
+    ]
+   }
+  },
+  {
+   "kind": "arc",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CD1/arc/0",
+   "data": {
+    "center": [
+     1000.0,
+     110.0
+    ],
+    "r": 800.0,
+    "start_angle": 0.0,
+    "end_angle": 90.0
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CD1/leaf/1",
+   "data": {
+    "p1": [
+     2600.0,
+     110.0
+    ],
+    "p2": [
+     2600.0,
+     910.0
+    ]
+   }
+  },
+  {
+   "kind": "arc",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CD1/arc/1",
+   "data": {
+    "center": [
+     2600.0,
+     110.0
+    ],
+    "r": 800.0,
+    "start_angle": 90.0,
+    "end_angle": 180.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "cua_kh",
+   "skill": "04",
+   "eid": "04/cua_kh/CD1",
+   "data": {
+    "insert": [
+     1800.0,
+     -360.0
+    ],
+    "text": "D1",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CD2/leaf/0",
+   "data": {
+    "p1": [
+     3300.0,
+     4255.0
+    ],
+    "p2": [
+     3300.0,
+     5155.0
+    ]
+   }
+  },
+  {
+   "kind": "arc",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CD2/arc/0",
+   "data": {
+    "center": [
+     3300.0,
+     4255.0
+    ],
+    "r": 900.0,
+    "start_angle": 90.0,
+    "end_angle": 180.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "cua_kh",
+   "skill": "04",
+   "eid": "04/cua_kh/CD2",
+   "data": {
+    "insert": [
+     2850.0,
+     3895.0
+    ],
+    "text": "D2",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CD3/leaf/0",
+   "data": {
+    "p1": [
+     7255.0,
+     4800.0
+    ],
+    "p2": [
+     7955.0,
+     4800.0
+    ]
+   }
+  },
+  {
+   "kind": "arc",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CD3/arc/0",
+   "data": {
+    "center": [
+     7255.0,
+     4800.0
+    ],
+    "r": 700.0,
+    "start_angle": 0.0,
+    "end_angle": 90.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "cua_kh",
+   "skill": "04",
+   "eid": "04/cua_kh/CD3",
+   "data": {
+    "insert": [
+     6895.0,
+     5150.0
+    ],
+    "text": "D3",
+    "height": 200.0,
+    "rotation": 90.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CD4/leaf/0",
+   "data": {
+    "p1": [
+     7255.0,
+     6800.0
+    ],
+    "p2": [
+     8155.0,
+     6800.0
+    ]
+   }
+  },
+  {
+   "kind": "arc",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CD4/arc/0",
+   "data": {
+    "center": [
+     7255.0,
+     6800.0
+    ],
+    "r": 900.0,
+    "start_angle": 0.0,
+    "end_angle": 90.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "cua_kh",
+   "skill": "04",
+   "eid": "04/cua_kh/CD4",
+   "data": {
+    "insert": [
+     6895.0,
+     7250.0
+    ],
+    "text": "D2",
+    "height": 200.0,
+    "rotation": 90.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS1/line/0",
+   "data": {
+    "p1": [
+     8100.0,
+     -110.0
+    ],
+    "p2": [
+     9600.0,
+     -110.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS1/line/1",
+   "data": {
+    "p1": [
+     8100.0,
+     -25.0
+    ],
+    "p2": [
+     9600.0,
+     -25.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS1/line/2",
+   "data": {
+    "p1": [
+     8100.0,
+     25.0
+    ],
+    "p2": [
+     9600.0,
+     25.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS1/line/3",
+   "data": {
+    "p1": [
+     8100.0,
+     110.0
+    ],
+    "p2": [
+     9600.0,
+     110.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS1/line/4",
+   "data": {
+    "p1": [
+     8100.0,
+     -110.0
+    ],
+    "p2": [
+     8100.0,
+     110.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS1/line/5",
+   "data": {
+    "p1": [
+     9600.0,
+     -110.0
+    ],
+    "p2": [
+     9600.0,
+     110.0
+    ]
+   }
+  },
+  {
+   "kind": "text",
+   "role": "cua_kh",
+   "skill": "04",
+   "eid": "04/cua_kh/CS1",
+   "data": {
+    "insert": [
+     8850.0,
+     -360.0
+    ],
+    "text": "S1",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS2/line/0",
+   "data": {
+    "p1": [
+     4600.0,
+     -110.0
+    ],
+    "p2": [
+     6400.0,
+     -110.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS2/line/1",
+   "data": {
+    "p1": [
+     4600.0,
+     -25.0
+    ],
+    "p2": [
+     6400.0,
+     -25.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS2/line/2",
+   "data": {
+    "p1": [
+     4600.0,
+     25.0
+    ],
+    "p2": [
+     6400.0,
+     25.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS2/line/3",
+   "data": {
+    "p1": [
+     4600.0,
+     110.0
+    ],
+    "p2": [
+     6400.0,
+     110.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS2/line/4",
+   "data": {
+    "p1": [
+     4600.0,
+     -110.0
+    ],
+    "p2": [
+     4600.0,
+     110.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS2/line/5",
+   "data": {
+    "p1": [
+     6400.0,
+     -110.0
+    ],
+    "p2": [
+     6400.0,
+     110.0
+    ]
+   }
+  },
+  {
+   "kind": "text",
+   "role": "cua_kh",
+   "skill": "04",
+   "eid": "04/cua_kh/CS2",
+   "data": {
+    "insert": [
+     5500.0,
+     -360.0
+    ],
+    "text": "S2",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS3/line/0",
+   "data": {
+    "p1": [
+     -110.0,
+     6900.0
+    ],
+    "p2": [
+     -110.0,
+     5700.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS3/line/1",
+   "data": {
+    "p1": [
+     -25.0,
+     6900.0
+    ],
+    "p2": [
+     -25.0,
+     5700.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS3/line/2",
+   "data": {
+    "p1": [
+     25.0,
+     6900.0
+    ],
+    "p2": [
+     25.0,
+     5700.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS3/line/3",
+   "data": {
+    "p1": [
+     110.0,
+     6900.0
+    ],
+    "p2": [
+     110.0,
+     5700.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS3/line/4",
+   "data": {
+    "p1": [
+     -110.0,
+     6900.0
+    ],
+    "p2": [
+     110.0,
+     6900.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS3/line/5",
+   "data": {
+    "p1": [
+     -110.0,
+     5700.0
+    ],
+    "p2": [
+     110.0,
+     5700.0
+    ]
+   }
+  },
+  {
+   "kind": "text",
+   "role": "cua_kh",
+   "skill": "04",
+   "eid": "04/cua_kh/CS3",
+   "data": {
+    "insert": [
+     -360.0,
+     6300.0
+    ],
+    "text": "S3",
+    "height": 200.0,
+    "rotation": 90.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS4/line/0",
+   "data": {
+    "p1": [
+     6000.0,
+     8510.0
+    ],
+    "p2": [
+     4800.0,
+     8510.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS4/line/1",
+   "data": {
+    "p1": [
+     6000.0,
+     8425.0
+    ],
+    "p2": [
+     4800.0,
+     8425.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS4/line/2",
+   "data": {
+    "p1": [
+     6000.0,
+     8375.0
+    ],
+    "p2": [
+     4800.0,
+     8375.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS4/line/3",
+   "data": {
+    "p1": [
+     6000.0,
+     8290.0
+    ],
+    "p2": [
+     4800.0,
+     8290.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS4/line/4",
+   "data": {
+    "p1": [
+     6000.0,
+     8510.0
+    ],
+    "p2": [
+     6000.0,
+     8290.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "cua",
+   "skill": "04",
+   "eid": "04/cua/CS4/line/5",
+   "data": {
+    "p1": [
+     4800.0,
+     8510.0
+    ],
+    "p2": [
+     4800.0,
+     8290.0
+    ]
+   }
+  },
+  {
+   "kind": "text",
+   "role": "cua_kh",
+   "skill": "04",
+   "eid": "04/cua_kh/CS4",
+   "data": {
+    "insert": [
+     5400.0,
+     8760.0
+    ],
+    "text": "S3",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/bao",
+   "data": {
+    "points": [
+     [
+      3900.0,
+      4900.0
+     ],
+     [
+      3900.0,
+      7760.0
+     ],
+     [
+      4900.0,
+      7760.0
+     ],
+     [
+      4900.0,
+      4900.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "line",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/bac/1",
+   "data": {
+    "p1": [
+     3900.0,
+     5160.0
+    ],
+    "p2": [
+     4900.0,
+     5160.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/bac/2",
+   "data": {
+    "p1": [
+     3900.0,
+     5420.0
+    ],
+    "p2": [
+     4900.0,
+     5420.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/bac/3",
+   "data": {
+    "p1": [
+     3900.0,
+     5680.0
+    ],
+    "p2": [
+     4900.0,
+     5680.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/bac/4",
+   "data": {
+    "p1": [
+     3900.0,
+     5940.0
+    ],
+    "p2": [
+     4900.0,
+     5940.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/bac/5",
+   "data": {
+    "p1": [
+     3900.0,
+     6200.0
+    ],
+    "p2": [
+     4900.0,
+     6200.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/bac/6",
+   "data": {
+    "p1": [
+     3900.0,
+     6460.0
+    ],
+    "p2": [
+     4900.0,
+     6460.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/bac/7",
+   "data": {
+    "p1": [
+     3900.0,
+     6720.0
+    ],
+    "p2": [
+     4900.0,
+     6720.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/bac/8",
+   "data": {
+    "p1": [
+     3900.0,
+     6980.0
+    ],
+    "p2": [
+     4900.0,
+     6980.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/bac/9",
+   "data": {
+    "p1": [
+     3900.0,
+     7240.0
+    ],
+    "p2": [
+     4900.0,
+     7240.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/bac/10",
+   "data": {
+    "p1": [
+     3900.0,
+     7500.0
+    ],
+    "p2": [
+     4900.0,
+     7500.0
+    ]
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/duong_di",
+   "data": {
+    "points": [
+     [
+      4400.0,
+      5030.0
+     ],
+     [
+      4400.0,
+      7630.0
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/0/mui_ten",
+   "data": {
+    "points": [
+     [
+      4400.0,
+      7630.0
+     ],
+     [
+      4483.333333,
+      7380.0
+     ],
+     [
+      4316.666667,
+      7380.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/cat",
+   "data": {
+    "points": [
+     [
+      3900.0,
+      6327.324865
+     ],
+     [
+      4335.048095,
+      6578.5
+     ],
+     [
+      4415.849365,
+      6538.548095
+     ],
+     [
+      4384.150635,
+      6693.451905
+     ],
+     [
+      4464.951905,
+      6653.5
+     ],
+     [
+      4900.0,
+      6904.675135
+     ]
+    ],
+    "closed": false
+   }
+  },
+  {
+   "kind": "text",
+   "role": "thang",
+   "skill": "05",
+   "eid": "05/thang/ST1/chu",
+   "data": {
+    "insert": [
+     4400.0,
+     4675.0
+    ],
+    "text": "LÊN",
+    "height": 250.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "insert",
+   "role": "noi_that",
+   "skill": "06",
+   "eid": "06/noi_that/F1",
+   "data": {
+    "block": "GIUONG_DOI",
+    "insert": [
+     1000.0,
+     6250.0
+    ],
+    "rotation": 0.0,
+    "scale": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "kind": "insert",
+   "role": "noi_that",
+   "skill": "06",
+   "eid": "06/noi_that/F2",
+   "data": {
+    "block": "TU_AO",
+    "insert": [
+     3545.0,
+     6800.0
+    ],
+    "rotation": 90.0,
+    "scale": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "kind": "insert",
+   "role": "noi_that",
+   "skill": "06",
+   "eid": "06/noi_that/F3",
+   "data": {
+    "block": "SOFA_3",
+    "insert": [
+     600.0,
+     3200.0
+    ],
+    "rotation": 0.0,
+    "scale": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "kind": "insert",
+   "role": "noi_that",
+   "skill": "06",
+   "eid": "06/noi_that/F4",
+   "data": {
+    "block": "BAN_TRA",
+    "insert": [
+     1150.0,
+     2200.0
+    ],
+    "rotation": 0.0,
+    "scale": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "kind": "insert",
+   "role": "noi_that",
+   "skill": "06",
+   "eid": "06/noi_that/F5",
+   "data": {
+    "block": "BAN_AN_4",
+    "insert": [
+     8300.0,
+     1500.0
+    ],
+    "rotation": 0.0,
+    "scale": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "kind": "insert",
+   "role": "noi_that",
+   "skill": "06",
+   "eid": "06/noi_that/F6",
+   "data": {
+    "block": "TU_BEP",
+    "insert": [
+     10690.0,
+     800.0
+    ],
+    "rotation": 90.0,
+    "scale": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "kind": "insert",
+   "role": "noi_that",
+   "skill": "06",
+   "eid": "06/noi_that/F7",
+   "data": {
+    "block": "BON_CAU",
+    "insert": [
+     10690.0,
+     5300.0
+    ],
+    "rotation": 90.0,
+    "scale": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "kind": "insert",
+   "role": "noi_that",
+   "skill": "06",
+   "eid": "06/noi_that/F8",
+   "data": {
+    "block": "LAVABO",
+    "insert": [
+     8800.0,
+     4255.0
+    ],
+    "rotation": 0.0,
+    "scale": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-1A",
+   "data": {
+    "boundaries": [
+     [
+      [
+       -110.0,
+       -110.0
+      ],
+      [
+       110.0,
+       -110.0
+      ],
+      [
+       110.0,
+       110.0
+      ],
+      [
+       -110.0,
+       110.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-2A",
+   "data": {
+    "boundaries": [
+     [
+      [
+       3490.0,
+       -110.0
+      ],
+      [
+       3710.0,
+       -110.0
+      ],
+      [
+       3710.0,
+       110.0
+      ],
+      [
+       3490.0,
+       110.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-3A",
+   "data": {
+    "boundaries": [
+     [
+      [
+       7090.0,
+       -110.0
+      ],
+      [
+       7310.0,
+       -110.0
+      ],
+      [
+       7310.0,
+       110.0
+      ],
+      [
+       7090.0,
+       110.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-4A",
+   "data": {
+    "boundaries": [
+     [
+      [
+       10690.0,
+       -110.0
+      ],
+      [
+       10910.0,
+       -110.0
+      ],
+      [
+       10910.0,
+       110.0
+      ],
+      [
+       10690.0,
+       110.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-1B",
+   "data": {
+    "boundaries": [
+     [
+      [
+       -110.0,
+       4090.0
+      ],
+      [
+       110.0,
+       4090.0
+      ],
+      [
+       110.0,
+       4310.0
+      ],
+      [
+       -110.0,
+       4310.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-2B",
+   "data": {
+    "boundaries": [
+     [
+      [
+       3490.0,
+       4090.0
+      ],
+      [
+       3710.0,
+       4090.0
+      ],
+      [
+       3710.0,
+       4310.0
+      ],
+      [
+       3490.0,
+       4310.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-3B",
+   "data": {
+    "boundaries": [
+     [
+      [
+       7090.0,
+       4090.0
+      ],
+      [
+       7310.0,
+       4090.0
+      ],
+      [
+       7310.0,
+       4310.0
+      ],
+      [
+       7090.0,
+       4310.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-4B",
+   "data": {
+    "boundaries": [
+     [
+      [
+       10690.0,
+       4090.0
+      ],
+      [
+       10910.0,
+       4090.0
+      ],
+      [
+       10910.0,
+       4310.0
+      ],
+      [
+       10690.0,
+       4310.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-1C",
+   "data": {
+    "boundaries": [
+     [
+      [
+       -110.0,
+       8290.0
+      ],
+      [
+       110.0,
+       8290.0
+      ],
+      [
+       110.0,
+       8510.0
+      ],
+      [
+       -110.0,
+       8510.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-2C",
+   "data": {
+    "boundaries": [
+     [
+      [
+       3490.0,
+       8290.0
+      ],
+      [
+       3710.0,
+       8290.0
+      ],
+      [
+       3710.0,
+       8510.0
+      ],
+      [
+       3490.0,
+       8510.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-3C",
+   "data": {
+    "boundaries": [
+     [
+      [
+       7090.0,
+       8290.0
+      ],
+      [
+       7310.0,
+       8290.0
+      ],
+      [
+       7310.0,
+       8510.0
+      ],
+      [
+       7090.0,
+       8510.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/cot/C-4C",
+   "data": {
+    "boundaries": [
+     [
+      [
+       10690.0,
+       8290.0
+      ],
+      [
+       10910.0,
+       8290.0
+      ],
+      [
+       10910.0,
+       8510.0
+      ],
+      [
+       10690.0,
+       8510.0
+      ]
+     ]
+    ],
+    "pattern": "SOLID",
+    "pattern_scale": 1.0,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/0",
+   "data": {
+    "boundaries": [
+     [
+      [
+       110.0,
+       110.0
+      ],
+      [
+       110.0,
+       4090.0
+      ],
+      [
+       -110.0,
+       4090.0
+      ],
+      [
+       -110.0,
+       110.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/1",
+   "data": {
+    "boundaries": [
+     [
+      [
+       -110.0,
+       5700.0
+      ],
+      [
+       -110.0,
+       4310.0
+      ],
+      [
+       110.0,
+       4310.0
+      ],
+      [
+       110.0,
+       5700.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/2",
+   "data": {
+    "boundaries": [
+     [
+      [
+       110.0,
+       6900.0
+      ],
+      [
+       110.0,
+       8290.0
+      ],
+      [
+       -110.0,
+       8290.0
+      ],
+      [
+       -110.0,
+       6900.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/3",
+   "data": {
+    "boundaries": [
+     [
+      [
+       1000.0,
+       110.0
+      ],
+      [
+       110.0,
+       110.0
+      ],
+      [
+       110.0,
+       -110.0
+      ],
+      [
+       1000.0,
+       -110.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/4",
+   "data": {
+    "boundaries": [
+     [
+      [
+       2400.0,
+       4255.0
+      ],
+      [
+       110.0,
+       4255.0
+      ],
+      [
+       110.0,
+       4145.0
+      ],
+      [
+       2400.0,
+       4145.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/5",
+   "data": {
+    "boundaries": [
+     [
+      [
+       3490.0,
+       8510.0
+      ],
+      [
+       110.0,
+       8510.0
+      ],
+      [
+       110.0,
+       8290.0
+      ],
+      [
+       3490.0,
+       8290.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/6",
+   "data": {
+    "boundaries": [
+     [
+      [
+       2600.0,
+       110.0
+      ],
+      [
+       2600.0,
+       -110.0
+      ],
+      [
+       3490.0,
+       -110.0
+      ],
+      [
+       3490.0,
+       110.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/7",
+   "data": {
+    "boundaries": [
+     [
+      [
+       3300.0,
+       4145.0
+      ],
+      [
+       3490.0,
+       4145.0
+      ],
+      [
+       3490.0,
+       4255.0
+      ],
+      [
+       3300.0,
+       4255.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/8",
+   "data": {
+    "boundaries": [
+     [
+      [
+       3655.0,
+       4310.0
+      ],
+      [
+       3655.0,
+       8290.0
+      ],
+      [
+       3545.0,
+       8290.0
+      ],
+      [
+       3545.0,
+       4310.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/9",
+   "data": {
+    "boundaries": [
+     [
+      [
+       4600.0,
+       110.0
+      ],
+      [
+       3710.0,
+       110.0
+      ],
+      [
+       3710.0,
+       -110.0
+      ],
+      [
+       4600.0,
+       -110.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/10",
+   "data": {
+    "boundaries": [
+     [
+      [
+       4800.0,
+       8510.0
+      ],
+      [
+       3710.0,
+       8510.0
+      ],
+      [
+       3710.0,
+       8290.0
+      ],
+      [
+       4800.0,
+       8290.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/11",
+   "data": {
+    "boundaries": [
+     [
+      [
+       6000.0,
+       8290.0
+      ],
+      [
+       7090.0,
+       8290.0
+      ],
+      [
+       7090.0,
+       8510.0
+      ],
+      [
+       6000.0,
+       8510.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/12",
+   "data": {
+    "boundaries": [
+     [
+      [
+       6400.0,
+       110.0
+      ],
+      [
+       6400.0,
+       -110.0
+      ],
+      [
+       7090.0,
+       -110.0
+      ],
+      [
+       7090.0,
+       110.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/13",
+   "data": {
+    "boundaries": [
+     [
+      [
+       7145.0,
+       4800.0
+      ],
+      [
+       7145.0,
+       4310.0
+      ],
+      [
+       7255.0,
+       4310.0
+      ],
+      [
+       7255.0,
+       4800.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/14",
+   "data": {
+    "boundaries": [
+     [
+      [
+       10910.0,
+       6255.0
+      ],
+      [
+       10910.0,
+       8290.0
+      ],
+      [
+       10690.0,
+       8290.0
+      ],
+      [
+       10690.0,
+       6255.0
+      ],
+      [
+       7255.0,
+       6255.0
+      ],
+      [
+       7255.0,
+       6800.0
+      ],
+      [
+       7145.0,
+       6800.0
+      ],
+      [
+       7145.0,
+       6255.0
+      ],
+      [
+       7145.0,
+       6145.0
+      ],
+      [
+       7145.0,
+       5500.0
+      ],
+      [
+       7255.0,
+       5500.0
+      ],
+      [
+       7255.0,
+       6145.0
+      ],
+      [
+       10690.0,
+       6145.0
+      ],
+      [
+       10690.0,
+       4310.0
+      ],
+      [
+       10910.0,
+       4310.0
+      ],
+      [
+       10910.0,
+       6145.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/15",
+   "data": {
+    "boundaries": [
+     [
+      [
+       7255.0,
+       7700.0
+      ],
+      [
+       7255.0,
+       8290.0
+      ],
+      [
+       7145.0,
+       8290.0
+      ],
+      [
+       7145.0,
+       7700.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/16",
+   "data": {
+    "boundaries": [
+     [
+      [
+       8100.0,
+       110.0
+      ],
+      [
+       7310.0,
+       110.0
+      ],
+      [
+       7310.0,
+       -110.0
+      ],
+      [
+       8100.0,
+       -110.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/17",
+   "data": {
+    "boundaries": [
+     [
+      [
+       7310.0,
+       4145.0
+      ],
+      [
+       10690.0,
+       4145.0
+      ],
+      [
+       10690.0,
+       4255.0
+      ],
+      [
+       7310.0,
+       4255.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/18",
+   "data": {
+    "boundaries": [
+     [
+      [
+       10690.0,
+       8510.0
+      ],
+      [
+       7310.0,
+       8510.0
+      ],
+      [
+       7310.0,
+       8290.0
+      ],
+      [
+       10690.0,
+       8290.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/19",
+   "data": {
+    "boundaries": [
+     [
+      [
+       9600.0,
+       -110.0
+      ],
+      [
+       10690.0,
+       -110.0
+      ],
+      [
+       10690.0,
+       110.0
+      ],
+      [
+       9600.0,
+       110.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/tuong/xay/20",
+   "data": {
+    "boundaries": [
+     [
+      [
+       10910.0,
+       110.0
+      ],
+      [
+       10910.0,
+       4090.0
+      ],
+      [
+       10690.0,
+       4090.0
+      ],
+      [
+       10690.0,
+       110.0
+      ]
+     ]
+    ],
+    "pattern": "ANSI31",
+    "pattern_scale": 31.496062992125985,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/san/P1/0",
+   "data": {
+    "boundaries": [
+     [
+      [
+       7200.0,
+       110.0
+      ],
+      [
+       7200.0,
+       4090.0
+      ],
+      [
+       7090.0,
+       4090.0
+      ],
+      [
+       7090.0,
+       4200.0
+      ],
+      [
+       3710.0,
+       4200.0
+      ],
+      [
+       3710.0,
+       4090.0
+      ],
+      [
+       3490.0,
+       4090.0
+      ],
+      [
+       3490.0,
+       4145.0
+      ],
+      [
+       110.0,
+       4145.0
+      ],
+      [
+       110.0,
+       4090.0
+      ],
+      [
+       110.0,
+       110.0
+      ],
+      [
+       3490.0,
+       110.0
+      ],
+      [
+       3710.0,
+       110.0
+      ],
+      [
+       7090.0,
+       110.0
+      ]
+     ],
+     [
+      [
+       2150.0,
+       2800.0
+      ],
+      [
+       2150.0,
+       2200.0
+      ],
+      [
+       1150.0,
+       2200.0
+      ],
+      [
+       1150.0,
+       2800.0
+      ]
+     ],
+     [
+      [
+       2700.0,
+       3200.0
+      ],
+      [
+       600.0,
+       3200.0
+      ],
+      [
+       600.0,
+       4050.0
+      ],
+      [
+       2700.0,
+       4050.0
+      ]
+     ]
+    ],
+    "pattern": "NET",
+    "pattern_scale": 188.9763779527559,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/san/P2/0",
+   "data": {
+    "boundaries": [
+     [
+      [
+       7200.0,
+       4090.0
+      ],
+      [
+       7200.0,
+       110.0
+      ],
+      [
+       7310.0,
+       110.0
+      ],
+      [
+       10690.0,
+       110.0
+      ],
+      [
+       10690.0,
+       800.0
+      ],
+      [
+       10090.0,
+       800.0
+      ],
+      [
+       10090.0,
+       3200.0
+      ],
+      [
+       10690.0,
+       3200.0
+      ],
+      [
+       10690.0,
+       4090.0
+      ],
+      [
+       10690.0,
+       4145.0
+      ],
+      [
+       7310.0,
+       4145.0
+      ],
+      [
+       7310.0,
+       4090.0
+      ]
+     ],
+     [
+      [
+       9500.0,
+       1500.0
+      ],
+      [
+       8300.0,
+       1500.0
+      ],
+      [
+       8300.0,
+       3100.0
+      ],
+      [
+       9500.0,
+       3100.0
+      ]
+     ]
+    ],
+    "pattern": "NET",
+    "pattern_scale": 188.9763779527559,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/san/P3/0",
+   "data": {
+    "boundaries": [
+     [
+      [
+       110.0,
+       4310.0
+      ],
+      [
+       110.0,
+       4255.0
+      ],
+      [
+       3490.0,
+       4255.0
+      ],
+      [
+       3490.0,
+       4310.0
+      ],
+      [
+       3545.0,
+       4310.0
+      ],
+      [
+       3545.0,
+       6800.0
+      ],
+      [
+       2945.0,
+       6800.0
+      ],
+      [
+       2945.0,
+       8000.0
+      ],
+      [
+       3545.0,
+       8000.0
+      ],
+      [
+       3545.0,
+       8290.0
+      ],
+      [
+       3490.0,
+       8290.0
+      ],
+      [
+       110.0,
+       8290.0
+      ]
+     ],
+     [
+      [
+       2600.0,
+       6250.0
+      ],
+      [
+       1000.0,
+       6250.0
+      ],
+      [
+       1000.0,
+       8250.0
+      ],
+      [
+       2600.0,
+       8250.0
+      ]
+     ]
+    ],
+    "pattern": "LINE",
+    "pattern_scale": 47.24409448818898,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/san/P4/0",
+   "data": {
+    "boundaries": [
+     [
+      [
+       3710.0,
+       4200.0
+      ],
+      [
+       7090.0,
+       4200.0
+      ],
+      [
+       7090.0,
+       4310.0
+      ],
+      [
+       7145.0,
+       4310.0
+      ],
+      [
+       7145.0,
+       6145.0
+      ],
+      [
+       7145.0,
+       6255.0
+      ],
+      [
+       7145.0,
+       8290.0
+      ],
+      [
+       7090.0,
+       8290.0
+      ],
+      [
+       3710.0,
+       8290.0
+      ],
+      [
+       3655.0,
+       8290.0
+      ],
+      [
+       3655.0,
+       4310.0
+      ],
+      [
+       3710.0,
+       4310.0
+      ]
+     ],
+     [
+      [
+       3900.0,
+       4900.0
+      ],
+      [
+       3900.0,
+       7760.0
+      ],
+      [
+       4900.0,
+       7760.0
+      ],
+      [
+       4900.0,
+       4900.0
+      ]
+     ]
+    ],
+    "pattern": "NET",
+    "pattern_scale": 188.9763779527559,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/san/P5/0",
+   "data": {
+    "boundaries": [
+     [
+      [
+       8800.0,
+       4255.0
+      ],
+      [
+       8800.0,
+       4655.0
+      ],
+      [
+       9300.0,
+       4655.0
+      ],
+      [
+       9300.0,
+       4255.0
+      ],
+      [
+       10690.0,
+       4255.0
+      ],
+      [
+       10690.0,
+       4310.0
+      ],
+      [
+       10690.0,
+       5300.0
+      ],
+      [
+       9990.0,
+       5300.0
+      ],
+      [
+       9990.0,
+       5700.0
+      ],
+      [
+       10690.0,
+       5700.0
+      ],
+      [
+       10690.0,
+       6145.0
+      ],
+      [
+       7255.0,
+       6145.0
+      ],
+      [
+       7255.0,
+       4310.0
+      ],
+      [
+       7310.0,
+       4310.0
+      ],
+      [
+       7310.0,
+       4255.0
+      ]
+     ]
+    ],
+    "pattern": "NET",
+    "pattern_scale": 94.48818897637796,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "hatch",
+   "role": "hatch",
+   "skill": "07",
+   "eid": "07/hatch/san/P6/0",
+   "data": {
+    "boundaries": [
+     [
+      [
+       10690.0,
+       8290.0
+      ],
+      [
+       7310.0,
+       8290.0
+      ],
+      [
+       7255.0,
+       8290.0
+      ],
+      [
+       7255.0,
+       6255.0
+      ],
+      [
+       10690.0,
+       6255.0
+      ]
+     ]
+    ],
+    "pattern": "NET",
+    "pattern_scale": 188.9763779527559,
+    "angle": 0.0
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L2/duoi/0",
+   "data": {
+    "p1": [
+     0.0,
+     0.0
+    ],
+    "p2": [
+     3600.0,
+     0.0
+    ],
+    "base": [
+     1800.0,
+     -2000.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L2/duoi/1",
+   "data": {
+    "p1": [
+     3600.0,
+     0.0
+    ],
+    "p2": [
+     7200.0,
+     0.0
+    ],
+    "base": [
+     5400.0,
+     -2000.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L2/duoi/2",
+   "data": {
+    "p1": [
+     7200.0,
+     0.0
+    ],
+    "p2": [
+     10800.0,
+     0.0
+    ],
+    "base": [
+     9000.0,
+     -2000.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L3/duoi/0",
+   "data": {
+    "p1": [
+     0.0,
+     0.0
+    ],
+    "p2": [
+     10800.0,
+     0.0
+    ],
+    "base": [
+     5400.0,
+     -2800.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/duoi/0",
+   "data": {
+    "p1": [
+     -110.0,
+     -110.0
+    ],
+    "p2": [
+     0.0,
+     -110.0
+    ],
+    "base": [
+     -55.0,
+     -1200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/duoi/1",
+   "data": {
+    "p1": [
+     0.0,
+     -110.0
+    ],
+    "p2": [
+     1000.0,
+     -110.0
+    ],
+    "base": [
+     500.0,
+     -1200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/duoi/2",
+   "data": {
+    "p1": [
+     1000.0,
+     -110.0
+    ],
+    "p2": [
+     2600.0,
+     -110.0
+    ],
+    "base": [
+     1800.0,
+     -1200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/duoi/3",
+   "data": {
+    "p1": [
+     2600.0,
+     -110.0
+    ],
+    "p2": [
+     3600.0,
+     -110.0
+    ],
+    "base": [
+     3100.0,
+     -1200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/duoi/4",
+   "data": {
+    "p1": [
+     3600.0,
+     -110.0
+    ],
+    "p2": [
+     4600.0,
+     -110.0
+    ],
+    "base": [
+     4100.0,
+     -1200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/duoi/5",
+   "data": {
+    "p1": [
+     4600.0,
+     -110.0
+    ],
+    "p2": [
+     6400.0,
+     -110.0
+    ],
+    "base": [
+     5500.0,
+     -1200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/duoi/6",
+   "data": {
+    "p1": [
+     6400.0,
+     -110.0
+    ],
+    "p2": [
+     7200.0,
+     -110.0
+    ],
+    "base": [
+     6800.0,
+     -1200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/duoi/7",
+   "data": {
+    "p1": [
+     7200.0,
+     -110.0
+    ],
+    "p2": [
+     8100.0,
+     -110.0
+    ],
+    "base": [
+     7650.0,
+     -1200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/duoi/8",
+   "data": {
+    "p1": [
+     8100.0,
+     -110.0
+    ],
+    "p2": [
+     9600.0,
+     -110.0
+    ],
+    "base": [
+     8850.0,
+     -1200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/duoi/9",
+   "data": {
+    "p1": [
+     9600.0,
+     -110.0
+    ],
+    "p2": [
+     10800.0,
+     -110.0
+    ],
+    "base": [
+     10200.0,
+     -1200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/duoi/10",
+   "data": {
+    "p1": [
+     10800.0,
+     -110.0
+    ],
+    "p2": [
+     10910.0,
+     -110.0
+    ],
+    "base": [
+     10855.0,
+     -1200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L2/tren/0",
+   "data": {
+    "p1": [
+     0.0,
+     8400.0
+    ],
+    "p2": [
+     3600.0,
+     8400.0
+    ],
+    "base": [
+     1800.0,
+     10400.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L2/tren/1",
+   "data": {
+    "p1": [
+     3600.0,
+     8400.0
+    ],
+    "p2": [
+     7200.0,
+     8400.0
+    ],
+    "base": [
+     5400.0,
+     10400.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L2/tren/2",
+   "data": {
+    "p1": [
+     7200.0,
+     8400.0
+    ],
+    "p2": [
+     10800.0,
+     8400.0
+    ],
+    "base": [
+     9000.0,
+     10400.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L3/tren/0",
+   "data": {
+    "p1": [
+     0.0,
+     8400.0
+    ],
+    "p2": [
+     10800.0,
+     8400.0
+    ],
+    "base": [
+     5400.0,
+     11200.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/tren/0",
+   "data": {
+    "p1": [
+     -110.0,
+     8510.0
+    ],
+    "p2": [
+     0.0,
+     8510.0
+    ],
+    "base": [
+     -55.0,
+     9600.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/tren/1",
+   "data": {
+    "p1": [
+     0.0,
+     8510.0
+    ],
+    "p2": [
+     3600.0,
+     8510.0
+    ],
+    "base": [
+     1800.0,
+     9600.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/tren/2",
+   "data": {
+    "p1": [
+     3600.0,
+     8510.0
+    ],
+    "p2": [
+     4800.0,
+     8510.0
+    ],
+    "base": [
+     4200.0,
+     9600.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/tren/3",
+   "data": {
+    "p1": [
+     4800.0,
+     8510.0
+    ],
+    "p2": [
+     6000.0,
+     8510.0
+    ],
+    "base": [
+     5400.0,
+     9600.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/tren/4",
+   "data": {
+    "p1": [
+     6000.0,
+     8510.0
+    ],
+    "p2": [
+     7200.0,
+     8510.0
+    ],
+    "base": [
+     6600.0,
+     9600.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/tren/5",
+   "data": {
+    "p1": [
+     7200.0,
+     8510.0
+    ],
+    "p2": [
+     10800.0,
+     8510.0
+    ],
+    "base": [
+     9000.0,
+     9600.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/tren/6",
+   "data": {
+    "p1": [
+     10800.0,
+     8510.0
+    ],
+    "p2": [
+     10910.0,
+     8510.0
+    ],
+    "base": [
+     10855.0,
+     9600.0
+    ],
+    "angle": 0.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L2/trai/0",
+   "data": {
+    "p1": [
+     0.0,
+     0.0
+    ],
+    "p2": [
+     0.0,
+     4200.0
+    ],
+    "base": [
+     -2000.0,
+     2100.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L2/trai/1",
+   "data": {
+    "p1": [
+     0.0,
+     4200.0
+    ],
+    "p2": [
+     0.0,
+     8400.0
+    ],
+    "base": [
+     -2000.0,
+     6300.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L3/trai/0",
+   "data": {
+    "p1": [
+     0.0,
+     0.0
+    ],
+    "p2": [
+     0.0,
+     8400.0
+    ],
+    "base": [
+     -2800.0,
+     4200.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/trai/0",
+   "data": {
+    "p1": [
+     -110.0,
+     -110.0
+    ],
+    "p2": [
+     -110.0,
+     0.0
+    ],
+    "base": [
+     -1200.0,
+     -55.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/trai/1",
+   "data": {
+    "p1": [
+     -110.0,
+     0.0
+    ],
+    "p2": [
+     -110.0,
+     4200.0
+    ],
+    "base": [
+     -1200.0,
+     2100.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/trai/2",
+   "data": {
+    "p1": [
+     -110.0,
+     4200.0
+    ],
+    "p2": [
+     -110.0,
+     5700.0
+    ],
+    "base": [
+     -1200.0,
+     4950.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/trai/3",
+   "data": {
+    "p1": [
+     -110.0,
+     5700.0
+    ],
+    "p2": [
+     -110.0,
+     6900.0
+    ],
+    "base": [
+     -1200.0,
+     6300.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/trai/4",
+   "data": {
+    "p1": [
+     -110.0,
+     6900.0
+    ],
+    "p2": [
+     -110.0,
+     8400.0
+    ],
+    "base": [
+     -1200.0,
+     7650.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/trai/5",
+   "data": {
+    "p1": [
+     -110.0,
+     8400.0
+    ],
+    "p2": [
+     -110.0,
+     8510.0
+    ],
+    "base": [
+     -1200.0,
+     8455.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L2/phai/0",
+   "data": {
+    "p1": [
+     10800.0,
+     0.0
+    ],
+    "p2": [
+     10800.0,
+     4200.0
+    ],
+    "base": [
+     12800.0,
+     2100.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L2/phai/1",
+   "data": {
+    "p1": [
+     10800.0,
+     4200.0
+    ],
+    "p2": [
+     10800.0,
+     8400.0
+    ],
+    "base": [
+     12800.0,
+     6300.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L3/phai/0",
+   "data": {
+    "p1": [
+     10800.0,
+     0.0
+    ],
+    "p2": [
+     10800.0,
+     8400.0
+    ],
+    "base": [
+     13600.0,
+     4200.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/phai/0",
+   "data": {
+    "p1": [
+     10910.0,
+     -110.0
+    ],
+    "p2": [
+     10910.0,
+     0.0
+    ],
+    "base": [
+     12000.0,
+     -55.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/phai/1",
+   "data": {
+    "p1": [
+     10910.0,
+     0.0
+    ],
+    "p2": [
+     10910.0,
+     4200.0
+    ],
+    "base": [
+     12000.0,
+     2100.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/phai/2",
+   "data": {
+    "p1": [
+     10910.0,
+     4200.0
+    ],
+    "p2": [
+     10910.0,
+     8400.0
+    ],
+    "base": [
+     12000.0,
+     6300.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "dim_linear",
+   "role": "dim",
+   "skill": "08",
+   "eid": "08/dim/L1/phai/3",
+   "data": {
+    "p1": [
+     10910.0,
+     8400.0
+    ],
+    "p2": [
+     10910.0,
+     8510.0
+    ],
+    "base": [
+     12000.0,
+     8455.0
+    ],
+    "angle": 90.0,
+    "dimstyle": "TCVN_KT_100"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P1/ten",
+   "data": {
+    "insert": [
+     3931.225775,
+     2409.039525
+    ],
+    "text": "PHÒNG KHÁCH",
+    "height": 300.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P1/dien_tich",
+   "data": {
+    "insert": [
+     3931.225775,
+     2049.039525
+    ],
+    "text": "S = 30,24 m²*",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P1/cote",
+   "data": {
+    "insert": [
+     3931.225775,
+     1729.039525
+    ],
+    "text": "±0.000",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P2/ten",
+   "data": {
+    "insert": [
+     8799.583333,
+     1102.5
+    ],
+    "text": "BẾP + ĂN",
+    "height": 300.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P2/dien_tich",
+   "data": {
+    "insert": [
+     8799.583333,
+     742.5
+    ],
+    "text": "S = 15,12 m²*",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P2/cote",
+   "data": {
+    "insert": [
+     8799.583333,
+     422.5
+    ],
+    "text": "±0.000",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P3/ten",
+   "data": {
+    "insert": [
+     1684.375,
+     5920.0
+    ],
+    "text": "PHÒNG NGỦ",
+    "height": 300.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P3/dien_tich",
+   "data": {
+    "insert": [
+     1684.375,
+     5560.0
+    ],
+    "text": "S = 15,12 m²",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P3/cote",
+   "data": {
+    "insert": [
+     1684.375,
+     5240.0
+    ],
+    "text": "±0.000",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P4/ten",
+   "data": {
+    "insert": [
+     5836.25,
+     6565.0
+    ],
+    "text": "SẢNH THANG",
+    "height": 300.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P4/dien_tich",
+   "data": {
+    "insert": [
+     5836.25,
+     6205.0
+    ],
+    "text": "S = 15,12 m²*",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P4/cote",
+   "data": {
+    "insert": [
+     5836.25,
+     5885.0
+    ],
+    "text": "±0.000",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P5/ten",
+   "data": {
+    "insert": [
+     8999.623051,
+     5539.095147
+    ],
+    "text": "WC",
+    "height": 300.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P5/dien_tich",
+   "data": {
+    "insert": [
+     8999.623051,
+     5179.095147
+    ],
+    "text": "S = 7,20 m²*",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P5/cote",
+   "data": {
+    "insert": [
+     8999.623051,
+     4859.095147
+    ],
+    "text": "-0.020",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P6/ten",
+   "data": {
+    "insert": [
+     9258.75,
+     7592.5
+    ],
+    "text": "KHO",
+    "height": 300.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P6/dien_tich",
+   "data": {
+    "insert": [
+     9258.75,
+     7232.5
+    ],
+    "text": "S = 7,92 m²*",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/P6/cote",
+   "data": {
+    "insert": [
+     9258.75,
+     6912.5
+    ],
+    "text": "±0.000",
+    "height": 220.00000000000003,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/khung",
+   "data": {
+    "points": [
+     [
+      16800.0,
+      4150.0
+     ],
+     [
+      32400.0,
+      4150.0
+     ],
+     [
+      32400.0,
+      12200.0
+     ],
+     [
+      16800.0,
+      12200.0
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_ngang/1",
+   "data": {
+    "p1": [
+     16800.0,
+     11550.0
+    ],
+    "p2": [
+     32400.0,
+     11550.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_ngang/2",
+   "data": {
+    "p1": [
+     16800.0,
+     10750.0
+    ],
+    "p2": [
+     32400.0,
+     10750.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_ngang/3",
+   "data": {
+    "p1": [
+     16800.0,
+     9950.0
+    ],
+    "p2": [
+     32400.0,
+     9950.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_ngang/4",
+   "data": {
+    "p1": [
+     16800.0,
+     9150.0
+    ],
+    "p2": [
+     32400.0,
+     9150.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_ngang/5",
+   "data": {
+    "p1": [
+     16800.0,
+     8550.0
+    ],
+    "p2": [
+     32400.0,
+     8550.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_ngang/6",
+   "data": {
+    "p1": [
+     16800.0,
+     7750.0
+    ],
+    "p2": [
+     32400.0,
+     7750.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_ngang/7",
+   "data": {
+    "p1": [
+     16800.0,
+     6950.0
+    ],
+    "p2": [
+     32400.0,
+     6950.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_ngang/8",
+   "data": {
+    "p1": [
+     16800.0,
+     6150.0
+    ],
+    "p2": [
+     32400.0,
+     6150.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_ngang/9",
+   "data": {
+    "p1": [
+     16800.0,
+     5550.0
+    ],
+    "p2": [
+     32400.0,
+     5550.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_ngang/10",
+   "data": {
+    "p1": [
+     16800.0,
+     4750.0
+    ],
+    "p2": [
+     32400.0,
+     4750.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_doc/1/0",
+   "data": {
+    "p1": [
+     17600.0,
+     11550.0
+    ],
+    "p2": [
+     17600.0,
+     6150.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_doc/2/0",
+   "data": {
+    "p1": [
+     20000.0,
+     11550.0
+    ],
+    "p2": [
+     20000.0,
+     5550.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_doc/3/0",
+   "data": {
+    "p1": [
+     21600.0,
+     11550.0
+    ],
+    "p2": [
+     21600.0,
+     5550.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_doc/4/0",
+   "data": {
+    "p1": [
+     25200.0,
+     11550.0
+    ],
+    "p2": [
+     25200.0,
+     6150.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_doc/5/0",
+   "data": {
+    "p1": [
+     28400.0,
+     11550.0
+    ],
+    "p2": [
+     28400.0,
+     6150.0
+    ]
+   }
+  },
+  {
+   "kind": "line",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ke_doc/6/0",
+   "data": {
+    "p1": [
+     31000.0,
+     11550.0
+    ],
+    "p2": [
+     31000.0,
+     6150.0
+    ]
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/tieu_de/0",
+   "data": {
+    "insert": [
+     24600.0,
+     11875.0
+    ],
+    "text": "BẢNG HOÀN THIỆN",
+    "height": 300.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/cot/0/0",
+   "data": {
+    "insert": [
+     17200.0,
+     11150.0
+    ],
+    "text": "STT",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/cot/1/0",
+   "data": {
+    "insert": [
+     18800.0,
+     11150.0
+    ],
+    "text": "Phòng",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/cot/2/0",
+   "data": {
+    "insert": [
+     20800.0,
+     11300.0
+    ],
+    "text": "Diện tích",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/cot/2/1",
+   "data": {
+    "insert": [
+     20800.0,
+     11000.0
+    ],
+    "text": "(m²)",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/cot/3/0",
+   "data": {
+    "insert": [
+     23400.0,
+     11150.0
+    ],
+    "text": "Sàn",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/cot/4/0",
+   "data": {
+    "insert": [
+     26800.0,
+     11150.0
+    ],
+    "text": "Tường",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/cot/5/0",
+   "data": {
+    "insert": [
+     29700.0,
+     11150.0
+    ],
+    "text": "Trần",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/cot/6/0",
+   "data": {
+    "insert": [
+     31700.0,
+     11150.0
+    ],
+    "text": "Cote",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P1/0/0",
+   "data": {
+    "insert": [
+     17200.0,
+     10350.0
+    ],
+    "text": "1",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P1/1/0",
+   "data": {
+    "insert": [
+     17700.0,
+     10350.0
+    ],
+    "text": "PHÒNG KHÁCH",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P1/2/0",
+   "data": {
+    "insert": [
+     20800.0,
+     10350.0
+    ],
+    "text": "30,24*",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P1/3/0",
+   "data": {
+    "insert": [
+     21700.0,
+     10500.0
+    ],
+    "text": "Lát gạch granite",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P1/3/1",
+   "data": {
+    "insert": [
+     21700.0,
+     10200.0
+    ],
+    "text": "600×600",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P1/4/0",
+   "data": {
+    "insert": [
+     25300.0,
+     10350.0
+    ],
+    "text": "Sơn nước 1 lót 2 phủ",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P1/5/0",
+   "data": {
+    "insert": [
+     28500.0,
+     10350.0
+    ],
+    "text": "Trần thạch cao",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P1/6/0",
+   "data": {
+    "insert": [
+     31700.0,
+     10350.0
+    ],
+    "text": "±0.000",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P2/0/0",
+   "data": {
+    "insert": [
+     17200.0,
+     9550.0
+    ],
+    "text": "2",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P2/1/0",
+   "data": {
+    "insert": [
+     17700.0,
+     9550.0
+    ],
+    "text": "BẾP + ĂN",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P2/2/0",
+   "data": {
+    "insert": [
+     20800.0,
+     9550.0
+    ],
+    "text": "15,12*",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P2/3/0",
+   "data": {
+    "insert": [
+     21700.0,
+     9700.0
+    ],
+    "text": "Lát gạch granite",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P2/3/1",
+   "data": {
+    "insert": [
+     21700.0,
+     9400.0
+    ],
+    "text": "600×600",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P2/4/0",
+   "data": {
+    "insert": [
+     25300.0,
+     9700.0
+    ],
+    "text": "Ốp gạch men cao",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P2/4/1",
+   "data": {
+    "insert": [
+     25300.0,
+     9400.0
+    ],
+    "text": "1,5 m",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P2/5/0",
+   "data": {
+    "insert": [
+     28500.0,
+     9550.0
+    ],
+    "text": "Trần thạch cao",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P2/6/0",
+   "data": {
+    "insert": [
+     31700.0,
+     9550.0
+    ],
+    "text": "±0.000",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P3/0/0",
+   "data": {
+    "insert": [
+     17200.0,
+     8850.0
+    ],
+    "text": "3",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P3/1/0",
+   "data": {
+    "insert": [
+     17700.0,
+     8850.0
+    ],
+    "text": "PHÒNG NGỦ",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P3/2/0",
+   "data": {
+    "insert": [
+     20800.0,
+     8850.0
+    ],
+    "text": "15,12",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P3/3/0",
+   "data": {
+    "insert": [
+     21700.0,
+     8850.0
+    ],
+    "text": "Sàn gỗ công nghiệp",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P3/4/0",
+   "data": {
+    "insert": [
+     25300.0,
+     8850.0
+    ],
+    "text": "Sơn nước 1 lót 2 phủ",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P3/5/0",
+   "data": {
+    "insert": [
+     28500.0,
+     8850.0
+    ],
+    "text": "Trần thạch cao",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P3/6/0",
+   "data": {
+    "insert": [
+     31700.0,
+     8850.0
+    ],
+    "text": "±0.000",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P4/0/0",
+   "data": {
+    "insert": [
+     17200.0,
+     8150.0
+    ],
+    "text": "4",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P4/1/0",
+   "data": {
+    "insert": [
+     17700.0,
+     8150.0
+    ],
+    "text": "SẢNH THANG",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P4/2/0",
+   "data": {
+    "insert": [
+     20800.0,
+     8150.0
+    ],
+    "text": "15,12*",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P4/3/0",
+   "data": {
+    "insert": [
+     21700.0,
+     8300.0
+    ],
+    "text": "Lát gạch granite",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P4/3/1",
+   "data": {
+    "insert": [
+     21700.0,
+     8000.0
+    ],
+    "text": "600×600",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P4/4/0",
+   "data": {
+    "insert": [
+     25300.0,
+     8150.0
+    ],
+    "text": "Sơn nước 1 lót 2 phủ",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P4/5/0",
+   "data": {
+    "insert": [
+     28500.0,
+     8150.0
+    ],
+    "text": "Trát trần, sơn",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P4/6/0",
+   "data": {
+    "insert": [
+     31700.0,
+     8150.0
+    ],
+    "text": "±0.000",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P5/0/0",
+   "data": {
+    "insert": [
+     17200.0,
+     7350.0
+    ],
+    "text": "5",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P5/1/0",
+   "data": {
+    "insert": [
+     17700.0,
+     7350.0
+    ],
+    "text": "WC",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P5/2/0",
+   "data": {
+    "insert": [
+     20800.0,
+     7350.0
+    ],
+    "text": "7,20*",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P5/3/0",
+   "data": {
+    "insert": [
+     21700.0,
+     7500.0
+    ],
+    "text": "Lát gạch chống trơn",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P5/3/1",
+   "data": {
+    "insert": [
+     21700.0,
+     7200.0
+    ],
+    "text": "300×300",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P5/4/0",
+   "data": {
+    "insert": [
+     25300.0,
+     7500.0
+    ],
+    "text": "Ốp gạch men cao",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P5/4/1",
+   "data": {
+    "insert": [
+     25300.0,
+     7200.0
+    ],
+    "text": "2,4 m",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P5/5/0",
+   "data": {
+    "insert": [
+     28500.0,
+     7350.0
+    ],
+    "text": "Trần nhựa",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P5/6/0",
+   "data": {
+    "insert": [
+     31700.0,
+     7350.0
+    ],
+    "text": "-0.020",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P6/0/0",
+   "data": {
+    "insert": [
+     17200.0,
+     6550.0
+    ],
+    "text": "6",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P6/1/0",
+   "data": {
+    "insert": [
+     17700.0,
+     6550.0
+    ],
+    "text": "KHO",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P6/2/0",
+   "data": {
+    "insert": [
+     20800.0,
+     6550.0
+    ],
+    "text": "7,92*",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P6/3/0",
+   "data": {
+    "insert": [
+     21700.0,
+     6700.0
+    ],
+    "text": "Lát gạch granite",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P6/3/1",
+   "data": {
+    "insert": [
+     21700.0,
+     6400.0
+    ],
+    "text": "600×600",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P6/4/0",
+   "data": {
+    "insert": [
+     25300.0,
+     6550.0
+    ],
+    "text": "Sơn nước 1 lót 2 phủ",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P6/5/0",
+   "data": {
+    "insert": [
+     28500.0,
+     6550.0
+    ],
+    "text": "Trát trần, sơn",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/hang/P6/6/0",
+   "data": {
+    "insert": [
+     31700.0,
+     6550.0
+    ],
+    "text": "±0.000",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/tong/0/0",
+   "data": {
+    "insert": [
+     16900.0,
+     5850.0
+    ],
+    "text": "Tổng diện tích",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/tong/1/0",
+   "data": {
+    "insert": [
+     20800.0,
+     5850.0
+    ],
+    "text": "90,72*",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/tong/2/0",
+   "data": {
+    "insert": [
+     21700.0,
+     5850.0
+    ],
+    "text": "tính 6/6 phòng",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ghi_chu/0/0",
+   "data": {
+    "insert": [
+     16900.0,
+     5300.0
+    ],
+    "text": "Ghi chú: diện tích tính theo đường bao nhập; 6/6 phòng có đường bao trùng tim trục/tim tường — chưa",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ghi_chu/0/1",
+   "data": {
+    "insert": [
+     16900.0,
+     5000.0
+    ],
+    "text": "trừ chiều dày tường, KHÔNG phải diện tích thông thủy.",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "hoan_thien",
+   "skill": "09",
+   "eid": "09/hoan_thien/bang/ghi_chu/1/0",
+   "data": {
+    "insert": [
+     16900.0,
+     4450.0
+    ],
+    "text": "(*) số liệu dựa trên nội suy CHƯA xác nhận: axes:V.spans[1]",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/vien_giay",
+   "data": {
+    "points": [
+     [
+      -7900.0,
+      -13400.0
+     ],
+     [
+      34100.0,
+      -13400.0
+     ],
+     [
+      34100.0,
+      16300.0
+     ],
+     [
+      -7900.0,
+      16300.0
+     ]
+    ],
+    "closed": true,
+    "lineweight": 13
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/khung_ve",
+   "data": {
+    "points": [
+     [
+      -5400.0,
+      -12900.0
+     ],
+     [
+      33600.0,
+      -12900.0
+     ],
+     [
+      33600.0,
+      15800.0
+     ],
+     [
+      -5400.0,
+      15800.0
+     ]
+    ],
+    "closed": true,
+    "lineweight": 50
+   }
+  },
+  {
+   "kind": "pline",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/o/vien",
+   "data": {
+    "points": [
+     [
+      15600.0,
+      -12900.0
+     ],
+     [
+      15600.0,
+      -8900.0
+     ],
+     [
+      33600.0,
+      -8900.0
+     ]
+    ],
+    "closed": false,
+    "lineweight": 50
+   }
+  },
+  {
+   "kind": "line",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/o/ke/0",
+   "data": {
+    "p1": [
+     15600.0,
+     -9700.0
+    ],
+    "p2": [
+     33600.0,
+     -9700.0
+    ],
+    "lineweight": 18
+   }
+  },
+  {
+   "kind": "line",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/o/ke/1",
+   "data": {
+    "p1": [
+     15600.0,
+     -10500.0
+    ],
+    "p2": [
+     33600.0,
+     -10500.0
+    ],
+    "lineweight": 18
+   }
+  },
+  {
+   "kind": "line",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/o/ke/2",
+   "data": {
+    "p1": [
+     15600.0,
+     -11100.0
+    ],
+    "p2": [
+     33600.0,
+     -11100.0
+    ],
+    "lineweight": 18
+   }
+  },
+  {
+   "kind": "line",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/o/ke/3",
+   "data": {
+    "p1": [
+     15600.0,
+     -11700.0
+    ],
+    "p2": [
+     33600.0,
+     -11700.0
+    ],
+    "lineweight": 18
+   }
+  },
+  {
+   "kind": "line",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/o/ke/4",
+   "data": {
+    "p1": [
+     26600.0,
+     -12300.0
+    ],
+    "p2": [
+     33600.0,
+     -12300.0
+    ],
+    "lineweight": 18
+   }
+  },
+  {
+   "kind": "line",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/o/ke/5",
+   "data": {
+    "p1": [
+     18000.0,
+     -12900.0
+    ],
+    "p2": [
+     18000.0,
+     -8900.0
+    ],
+    "lineweight": 18
+   }
+  },
+  {
+   "kind": "line",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/o/ke/6",
+   "data": {
+    "p1": [
+     26600.0,
+     -12900.0
+    ],
+    "p2": [
+     26600.0,
+     -10500.0
+    ],
+    "lineweight": 18
+   }
+  },
+  {
+   "kind": "line",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/o/ke/7",
+   "data": {
+    "p1": [
+     29000.0,
+     -12900.0
+    ],
+    "p2": [
+     29000.0,
+     -10500.0
+    ],
+    "lineweight": 18
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/nhan/du_an",
+   "data": {
+    "insert": [
+     15750.0,
+     -9300.0
+    ],
+    "text": "DỰ ÁN",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/gia_tri/du_an",
+   "data": {
+    "insert": [
+     18150.0,
+     -9300.0
+    ],
+    "text": "NHÀ Ở MẪU (DỮ LIỆU MINH HOẠ)",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/nhan/ban_ve",
+   "data": {
+    "insert": [
+     15750.0,
+     -10100.0
+    ],
+    "text": "BẢN VẼ",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/gia_tri/ban_ve",
+   "data": {
+    "insert": [
+     18150.0,
+     -10100.0
+    ],
+    "text": "MẶT BẰNG TẦNG 1",
+    "height": 350.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/nhan/thiet_ke",
+   "data": {
+    "insert": [
+     15750.0,
+     -10800.0
+    ],
+    "text": "THIẾT KẾ",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/nhan/so_hieu",
+   "data": {
+    "insert": [
+     26750.0,
+     -10800.0
+    ],
+    "text": "SỐ HIỆU",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/gia_tri/so_hieu",
+   "data": {
+    "insert": [
+     29150.0,
+     -10800.0
+    ],
+    "text": "KT-01",
+    "height": 250.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/nhan/kiem_tra",
+   "data": {
+    "insert": [
+     15750.0,
+     -11400.0
+    ],
+    "text": "KIỂM TRA",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/nhan/ty_le",
+   "data": {
+    "insert": [
+     26750.0,
+     -11400.0
+    ],
+    "text": "TỶ LỆ",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/gia_tri/ty_le",
+   "data": {
+    "insert": [
+     29150.0,
+     -11400.0
+    ],
+    "text": "1:100",
+    "height": 250.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/nhan/trang_thai/0",
+   "data": {
+    "insert": [
+     15750.0,
+     -12100.0
+    ],
+    "text": "TRẠNG THÁI",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/nhan/trang_thai/1",
+   "data": {
+    "insert": [
+     15750.0,
+     -12500.0
+    ],
+    "text": "SỐ LIỆU",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/gia_tri/trang_thai",
+   "data": {
+    "insert": [
+     18150.0,
+     -12300.0
+    ],
+    "text": "CHỜ XÁC NHẬN 2 SỐ LIỆU NỘI SUY",
+    "height": 250.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/nhan/lan_sua",
+   "data": {
+    "insert": [
+     26750.0,
+     -12000.0
+    ],
+    "text": "LẦN SỬA",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/gia_tri/lan_sua",
+   "data": {
+    "insert": [
+     29150.0,
+     -12000.0
+    ],
+    "text": "00",
+    "height": 250.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/nhan/ngay",
+   "data": {
+    "insert": [
+     26750.0,
+     -12600.0
+    ],
+    "text": "NGÀY",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/ten_ban_ve",
+   "data": {
+    "insert": [
+     14100.0,
+     -5350.0
+    ],
+    "text": "MẶT BẰNG TẦNG 1",
+    "height": 500.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "text",
+   "role": "khung_ten",
+   "skill": "10",
+   "eid": "10/khung_ten/ty_le",
+   "data": {
+    "insert": [
+     14100.0,
+     -5950.0
+    ],
+    "text": "TỶ LỆ 1:100",
+    "height": 300.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_CENTER"
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "kiem_tra",
+   "skill": "10",
+   "eid": "10/kiem_tra/axes:V.spans[1]/vong",
+   "data": {
+    "center": [
+     5400.0,
+     -2000.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "kiem_tra",
+   "skill": "10",
+   "eid": "10/kiem_tra/axes:V.spans[1]/chu",
+   "data": {
+    "insert": [
+     5950.0,
+     -2000.0
+    ],
+    "text": "NỘI SUY – CHƯA XÁC NHẬN: axes:V.spans[1]",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  },
+  {
+   "kind": "circle",
+   "role": "kiem_tra",
+   "skill": "10",
+   "eid": "10/kiem_tra/openings:CD4.width/vong",
+   "data": {
+    "center": [
+     7200.0,
+     7250.0
+    ],
+    "r": 400.0
+   }
+  },
+  {
+   "kind": "text",
+   "role": "kiem_tra",
+   "skill": "10",
+   "eid": "10/kiem_tra/openings:CD4.width/chu",
+   "data": {
+    "insert": [
+     7750.0,
+     7250.0
+    ],
+    "text": "NỘI SUY – CHƯA XÁC NHẬN: openings:CD4.width",
+    "height": 200.0,
+    "rotation": 0.0,
+    "align": "MIDDLE_LEFT"
+   }
+  }
+ ]
+}

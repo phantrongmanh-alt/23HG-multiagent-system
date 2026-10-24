@@ -10,6 +10,8 @@ thanh toán 03a, tiến độ CPM, KCS, As-Built. Giữ file này dưới 200 d�
 - Tự kiểm tra solver + CPM (như CI): `python run_state_graph.py --solver-test`
 - Khung đối chiếu hồ sơ duyệt: `python -m tests.golden.harness.runner` (còn FAIL có lý do, xem bên dưới)
 - Quét lỗi công thức Excel: `python -m tools.audit_excels_static <thư mục>`
+- Dựng bản vẽ CAD mặt bằng: `python -m tools.cad_drafting --dau-vao <đề bài .json | .dxf> --ra <thư mục>` (`--noi-suy`,
+  `--kich-thuoc-nhap`, `--cap-nhat`); quy trình `workflows/16_QUY_TRINH_DUNG_BAN_VE_CAD_TU_DONG.md`.
 - Tra cứu nhanh mã nguồn / file: ưu tiên dùng ripgrep (`rg "từ_khóa"` hoặc `rg --files`) thay cho grep/findstr/Select-String.
 - Kiểm tra trước khi push (một lần cho mỗi bản clone): `git config core.hooksPath .githooks`
 
@@ -51,6 +53,8 @@ thanh toán 03a, tiến độ CPM, KCS, As-Built. Giữ file này dưới 200 d�
 ## Bố cục
 
 - `core/` — agents, supervisor, state bus, quality gate. `tools/` — các bộ tính (thép, QS, CPM, KCS...).
+- `tools/cad_drafting/` — agent dựng CAD tách khỏi State Graph thi công: Skill 00 đọc → kho dữ liệu → 10 skill → Validator →
+  DXF/PDF/AutoLISP/JSON MCP. Kích thước nội suy không bao giờ tự coi là đã xác nhận (chỉ `store.confirm`).
 - `examples/` — hồ sơ mẫu và script sinh hồ sơ; `examples/data/` — dữ liệu đầu vào dạng CSV/JSON.
 - `examples/HO_SO_CAU_KM19_529/05_DU_LIEU_GOC_SCAN_MARKER/` — HSTK đã OCR làm đầu vào. File lớn:
   đừng đọc nguyên văn; dùng `du_lieu.json` theo trang, `chia_doan.jsonl` theo đoạn, `kiem_tra_so_lieu.md`

@@ -124,6 +124,9 @@ class AxisGroup:
                              f"nhận {len(self.spans)}")
         if len(set(self.names)) != len(self.names):
             raise StoreError(f"nhóm trục {self.orientation}: tên trục trùng {self.names}")
+        bad = [n for n in self.names if not re.fullmatch(r"[^/@\s]+", n)]
+        if bad:
+            raise StoreError(f"nhóm trục {self.orientation}: tên trục không được rỗng hay chứa '/', '@', khoảng trắng: {bad}")
         while len(self.span_prov) < len(self.spans):
             self.span_prov.append(None)
 
@@ -225,6 +228,7 @@ class Room(Entity):
     ceiling_finish: str = ""
     floor_level: Optional[float] = None       # cote sàn hoàn thiện (mm)
     hatch: str = ""                           # khoá trong layers.HATCH_PATTERNS; rỗng = không hatch sàn
+    label_at: Optional[PointRef] = None       # tâm nhãn phòng do người dùng chỉ định (None = Skill 09 tự tìm chỗ trống)
 
 
 @dataclass(kw_only=True)
@@ -341,7 +345,13 @@ class ProjectStore:
         if isinstance(ref, (list, tuple)):
             if len(ref) != 2:
                 raise StoreError(f"điểm phải có 2 toạ độ: {ref!r}")
-            return (float(ref[0]), float(ref[1])), ""
+            try:
+                x, y = float(ref[0]), float(ref[1])
+            except (TypeError, ValueError):
+                raise StoreError(f"toạ độ điểm không phải số: {ref!r}")
+            if not (math.isfinite(x) and math.isfinite(y)):
+                raise StoreError(f"toạ độ điểm không hữu hạn: {ref!r}")
+            return (x, y), ""
         m = _REF_RE.match(str(ref))
         if not m:
             raise StoreError(f"điểm '{ref}' sai cú pháp (dùng '1/A', '1/A@dx,dy' hoặc [x, y])")
@@ -357,6 +367,16 @@ class ProjectStore:
         if unknown:
             return None, f"trục {', '.join(unknown)} chưa có toạ độ (thiếu nhịp trục)"
         return (x + float(dx or 0.0), y + float(dy or 0.0)), ""
+
+    def missing_span_key(self, axis_name: str) -> str:
+        """Khoá nhịp thiếu đầu tiên làm trục `axis_name` chưa có toạ độ ("" nếu trục đã có toạ độ)."""
+        g = self.axis_group_of(axis_name)
+        if g is None:
+            return ""
+        for i in range(g.names.index(axis_name)):
+            if g.spans[i] is None:
+                return f"axes:{g.orientation}.spans[{i}]"
+        return ""
 
     def point(self, ref: PointRef) -> Optional[Point]:
         return self.point_or_reason(ref)[0]
