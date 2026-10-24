@@ -4,9 +4,10 @@ MASTER AGENT — điều phối dựng bản vẽ CAD: Skill 00 → kiểm tra d
 
 Tư duy cốt lõi: đọc 1 lần → lưu dữ liệu chung → vẽ theo từng skill → kiểm tra liên tục.
 
-"Chỉ sửa phần liên quan": khi chạy lại vào cùng thư mục kết quả với cap_nhat=True, Master so dấu vân tay từng mục
-dữ liệu (store.section_hashes) với lần trước, chỉ chạy lại skill có `reads` dính mục đã đổi; Op của các skill khác giữ
-nguyên và Validator xác nhận dấu vân tay của chúng không đổi.
+"Chỉ sửa phần liên quan": khi chạy lại vào cùng thư mục kết quả (cap_nhat=True, hoặc only=[...]), Master so mã băm
+phần dữ liệu từng skill đọc (`reads`) với lúc vẽ Op đang có, và dấu vân tay Op với lần lưu trước: skill có dữ liệu đổi,
+có Op bị sửa tay hoặc lần trước chưa chạy xong thì chạy lại (kể cả khi only không nêu); khung tên (skill 10) luôn
+chạy lại vì ghi trạng thái/phê duyệt. Op các skill khác giữ nguyên nhưng vẫn được Validator kiểm tra lại.
 
 Kết luận ĐẠT được TÍNH: không LOI, không NGHI_VAN, không đối tượng nào bị bỏ qua chưa vẽ. Đạt kiểm tra tự động vẫn
 chỉ là "chờ kỹ sư duyệt" — phê duyệt là việc của người (store.approve).
@@ -17,6 +18,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Optional
@@ -24,9 +26,9 @@ from typing import Any, Dict, Iterable, List, Optional
 from tools.cad_drafting import validator
 from tools.cad_drafting.layers import SHEET_SIZES_MM
 from tools.cad_drafting.plan import DrawingPlan
-from tools.cad_drafting.skills import SKILL_MODULES, all_skills, new_plan
+from tools.cad_drafting.skills import SKILL_MODULES, all_skills, new_plan, skill_class
 from tools.cad_drafting.skills.base import WARN_PREFIX
-from tools.cad_drafting.store import (SEV_DOUBT, SEV_ERROR, SEV_WARN, SRC_INTERP, Issue, ProjectStore)
+from tools.cad_drafting.store import (COLLECTIONS, SEV_DOUBT, SEV_ERROR, SEV_WARN, SRC_INTERP, Issue, ProjectStore)
 
 REPORT_SCHEMA = "23hg-cad-report/1"
 PLAN_FILE = "{base}_lenh_ve.json"          # danh sách lệnh vẽ — cũng là giao thức gửi máy chủ MCP
@@ -64,6 +66,8 @@ class RunReport:
     kept: List[str]
     section_hashes: Dict[str, str]
     interpolations: List[Dict[str, Any]] = field(default_factory=list)
+    fingerprints: Dict[str, str] = field(default_factory=dict)     # dấu vân tay Op từng skill khi lưu lệnh vẽ
+    input_hashes: Dict[str, str] = field(default_factory=dict)     # mã băm dữ liệu skill đọc (reads) lúc vẽ Op đang có
 
     def all_issues(self) -> List[Issue]:
         out = list(self.precheck)
@@ -74,6 +78,8 @@ class RunReport:
     def counts(self) -> Dict[str, int]:
         c = {SEV_ERROR: 0, SEV_DOUBT: 0, SEV_WARN: 0}
         for i in _dedupe(self.all_issues()):
+            if i.code == "DOI_TUONG_CHUA_VE":       # đã đếm riêng ở "đối tượng chưa vẽ" — không đếm lần hai
+                continue
             c[i.severity] += 1
         c["doi_tuong_chua_ve"] = sum(len(s.skipped) for s in self.steps)
         return c
@@ -102,7 +108,8 @@ class RunReport:
             "kiem_tra_cuoi": [_issue_dict(i) for i in self.final],
             "kiem_tra_xuat": [_issue_dict(i) for i in self.export_issues],
             "skill_chay_lai": self.rerun, "skill_giu_nguyen": self.kept,
-            "section_hashes": self.section_hashes, "dau_ra": self.outputs,
+            "section_hashes": self.section_hashes, "hash_dau_vao": self.input_hashes,
+            "dau_van_tay": self.fingerprints, "dau_ra": self.outputs,
         }
 
 
@@ -112,16 +119,20 @@ def _issue_dict(i: Issue) -> Dict[str, Any]:
 
 
 def _dedupe(issues: Iterable[Issue]) -> List[Issue]:
-    """Một mục có thể được báo nhiều lần (Skill 00 và precheck cùng thấy chữ ghi đè; precheck và kiểm tra cuối cùng thấy
-    thiếu kích thước / nội suy) — chỉ đếm một lần: cùng mức độ + mã + đối tượng (eids), hoặc cùng lời văn nếu không
-    có eids."""
-    seen, out = set(), []
-    for i in issues:
-        key = (i.severity, i.code, tuple(i.eids)) if i.eids else (i.severity, i.code, i.message)
-        if key not in seen:
-            seen.add(key)
-            out.append(i)
-    return out
+    """Gộp trùng — cùng quy tắc với validator.dedupe (một chỗ định nghĩa)."""
+    return validator.dedupe(issues)
+
+
+def safe_base(name: str) -> str:
+    """Tên gốc file kết quả an toàn trên mọi hệ điều hành (số hiệu "KT/01" → "KT_01")."""
+    cleaned = re.sub(r"[^\w.\-]+", "_", str(name), flags=re.UNICODE).strip("._")
+    return cleaned or "BAN_VE"
+
+
+def skill_input_hash(section_hashes: Dict[str, str], reads: Iterable[str]) -> str:
+    """Mã băm phần dữ liệu một skill đọc — đổi thì Op của skill đó không còn khớp dữ liệu."""
+    raw = "|".join(f"{s}={section_hashes.get(s, '')}" for s in sorted(reads))
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 def _sha256(path: str) -> str:
@@ -142,15 +153,21 @@ class CadDraftingMaster:
     # ── vẽ ───────────────────────────────────────────────────────────────────
 
     def draw(self, store: ProjectStore, plan: Optional[DrawingPlan] = None,
-             rerun: Optional[Iterable[str]] = None):
-        """Chạy các skill (tất cả, hoặc chỉ `rerun` khi đã có plan cũ). Trả (plan, các bước, chạy lại, giữ nguyên)."""
+             rerun: Optional[Iterable[str]] = None, previous_steps: Optional[Dict[str, Dict[str, Any]]] = None):
+        """Chạy các skill (tất cả, hoặc chỉ `rerun` khi đã có plan cũ). Trả (plan, các bước, chạy lại, giữ nguyên).
+        previous_steps: các bước của báo cáo lần trước (theo mã skill) — skill giữ nguyên mang lại danh sách đối tượng
+        chưa vẽ và ghi chú của lần chạy đã tạo ra Op của nó, để báo cáo không đếm thiếu."""
+        previous_steps = previous_steps or {}
         fresh = new_plan(store)
         if plan is None:
             plan = fresh
             todo = {c for c, _, _ in SKILL_MODULES}
         else:
-            # cập nhật layer/kiểu theo store hiện tại, giữ Op cũ
-            plan.layers, plan.dimstyles, plan.text_style = fresh.layers, fresh.dimstyles, fresh.text_style
+            # cập nhật layer/kiểu theo store hiện tại, giữ Op cũ — và giữ kiểu kích thước mà Op cũ còn dùng
+            used = {o.data["dimstyle"] for o in plan.ops if o.kind == "dim_linear"}
+            kept_styles = {n: v for n, v in plan.dimstyles.items() if n in used}
+            plan.layers, plan.text_style = fresh.layers, fresh.text_style
+            plan.dimstyles = {**kept_styles, **fresh.dimstyles}
             plan.meta.update(fresh.meta)
             todo = set(rerun or ())
         steps: List[StepRecord] = []
@@ -160,8 +177,17 @@ class CadDraftingMaster:
                 # giữ Op cũ nhưng vẫn kiểm tra lại với dữ liệu hiện tại (vd tường đổi → nội thất có thể đè tường)
                 kept.append(skill.code)
                 issues = validator.check_step(store, plan, skill.code, plan.fingerprints())
+                old = previous_steps.get(skill.code)
+                if old is None:
+                    old = {}
+                    issues.append(Issue(severity=SEV_WARN, code="BUOC_GIU_NGUYEN_KHONG_RO", skill=skill.code,
+                                        message=f"Skill {skill.code} giữ Op lần trước nhưng không có báo cáo lần trước — "
+                                                "không biết đối tượng nào đã bị bỏ qua; nên chạy lại toàn bộ."))
+                notes = list(old.get("notes", []))
+                issues += [Issue(severity=SEV_WARN, code="SKILL_CANH_BAO", message=n, skill=skill.code)
+                           for n in notes if n.startswith(WARN_PREFIX)]
                 steps.append(StepRecord(skill.code, skill.name, False, len(plan.ops_of(skill=skill.code)),
-                                        issues=issues))
+                                        list(old.get("skipped", [])), notes, issues))
                 continue
             if skill.code == "10":
                 plan.meta["validator_issues"] = [
@@ -180,7 +206,19 @@ class CadDraftingMaster:
                      f"{len(issues)} phát hiện ({n_err} lỗi)")
             if n_err and self.stop_on_error:
                 self.log(f"  ✗ Dừng sau skill {skill.code} vì có lỗi (stop_on_error)")
+                stopped_at = skill.code
                 break
+        else:
+            stopped_at = None
+        if stopped_at is not None:
+            # các skill sau không chạy: phải hiện trong báo cáo, không được thành "0 đối tượng chưa vẽ"
+            for c, _, _ in SKILL_MODULES:
+                if c > stopped_at:
+                    sk = skill_class(c)()
+                    steps.append(StepRecord(c, sk.name, False, len(plan.ops_of(skill=c)), issues=[
+                        Issue(severity=SEV_ERROR, code="BUOC_CHUA_CHAY", skill=c,
+                              message=f"Skill {c} ({sk.name}) chưa chạy: dừng sau skill {stopped_at} vì có lỗi "
+                                      f"(--dung-khi-loi) — bản vẽ thiếu phần của skill này.")]))
         plan.meta.pop("validator_issues", None)
         return plan, steps, rerun_codes, kept
 
@@ -191,7 +229,7 @@ class CadDraftingMaster:
             reference_paths: Optional[Iterable[str]] = None, pdf: bool = True,
             interpolations: Optional[List[Dict[str, Any]]] = None) -> RunReport:
         os.makedirs(out_dir, exist_ok=True)
-        base = base or (store.project.drawing_no or "BAN_VE").replace(" ", "_")
+        base = safe_base(base or store.project.drawing_no or "BAN_VE")
         plan_path = os.path.join(out_dir, PLAN_FILE.format(base=base))
         report_path = os.path.join(out_dir, REPORT_JSON.format(base=base))
         md_name = REPORT_MD.format(base=base)
@@ -200,27 +238,38 @@ class CadDraftingMaster:
         self.log("[Skill 00] Kiểm tra dữ liệu trước khi vẽ")
         pre = list(store.issues) + validator.precheck(store)      # vấn đề lúc đọc bản vẽ + kiểm tra dữ liệu
         hashes = store.section_hashes()
+        input_hashes = {sk.code: skill_input_hash(hashes, sk.reads) for sk in all_skills()}
 
-        plan, rerun = None, None
-        if only:
-            rerun = {str(c).zfill(2) for c in only}
-            if os.path.exists(plan_path):
-                plan = DrawingPlan.load(plan_path)
-            else:
-                self.log("  (chưa có lệnh vẽ lần trước — chạy toàn bộ)")
-                rerun = None
-        elif cap_nhat and os.path.exists(plan_path) and os.path.exists(report_path):
+        plan, rerun, previous_steps, old_report = None, None, {}, {}
+        reuse = bool(only) or cap_nhat
+        if reuse and os.path.exists(plan_path) and os.path.exists(report_path):
             with open(report_path, encoding="utf-8") as f:
-                old_hashes = json.load(f).get("section_hashes", {})
-            changed = {s for s, h in hashes.items() if old_hashes.get(s) != h}
+                old_report = json.load(f)
             plan = DrawingPlan.load(plan_path)
-            rerun = {s.code for s in all_skills() if changed & set(s.reads)}
-            self.log(f"  Cập nhật: mục dữ liệu đổi {sorted(changed) or 'không có'} → chạy lại skill {sorted(rerun) or 'không'}")
-        if rerun is not None and rerun:
-            rerun.add("10")          # khung tên ghi trạng thái số liệu — luôn tính lại khi có thay đổi
+            previous_steps = {st["code"]: st for st in old_report.get("cac_buoc", [])}
+            rerun = {str(c).zfill(2) for c in (only or ())}
+            old_inputs = old_report.get("hash_dau_vao", {})
+            saved_fp = old_report.get("dau_van_tay", {})
+            empty_fp = DrawingPlan().fingerprint("")
+            for code, _, _ in SKILL_MODULES:
+                if code in rerun:
+                    continue
+                if old_inputs.get(code) != input_hashes[code]:
+                    # dữ liệu skill đọc đã đổi so với lúc vẽ Op đang giữ → phải chạy lại (cả khi --chi-chay không nêu)
+                    rerun.add(code)
+                    self.log(f"  Skill {code}: dữ liệu đầu vào đã đổi so với lần vẽ trước → chạy lại")
+                elif previous_steps.get(code) is None or saved_fp.get(code, empty_fp) != plan.fingerprint(code):
+                    # lệnh vẽ lần trước bị sửa tay / lần trước dừng giữa chừng → không được giữ nguyên
+                    rerun.add(code)
+                    self.log(f"  Skill {code}: lệnh vẽ lần trước không khớp dấu vân tay đã lưu hoặc chưa từng chạy xong "
+                             f"→ chạy lại")
+            rerun.add("10")          # khung tên ghi trạng thái số liệu và phê duyệt — luôn tính lại (rẻ)
+            self.log(f"  Cập nhật: chạy lại skill {sorted(rerun)}")
+        elif reuse:
+            self.log("  (chưa có lệnh vẽ / báo cáo lần trước — chạy toàn bộ)")
 
-        plan, steps, ran, kept = self.draw(store, plan, rerun)
-        results = [_StepResult(s) for s in steps if s.ran]
+        plan, steps, ran, kept = self.draw(store, plan, rerun, previous_steps)
+        results = [_StepResult(s) for s in steps]          # cả skill giữ nguyên: đối tượng chưa vẽ vẫn phải báo
         final = validator.check_final(store, plan, results)
 
         outputs: Dict[str, Dict[str, Any]] = {}
@@ -231,13 +280,18 @@ class CadDraftingMaster:
         outputs["du_lieu_du_an"] = {"file": store_name}
         export_issues += self._export(plan, store, out_dir, base, outputs, reference_paths, pdf)
 
-        for meta in outputs.values():
+        for key, meta in outputs.items():
             p = os.path.join(out_dir, meta["file"]) if meta.get("file") else ""
-            if p and os.path.isfile(p):
+            if p and os.path.isfile(p) and key not in ("dxf", "pdf", "png"):   # DXF/PDF/PNG không tất định từng byte
                 meta["bytes"] = os.path.getsize(p)
+        ran_ok = {st.code for st in steps if st.ran}
+        old_inputs = old_report.get("hash_dau_vao", {})
         report = RunReport(base=base, data_status=store.status(), precheck=pre, steps=steps, final=final,
                            export_issues=export_issues, outputs=outputs, rerun=ran, kept=kept,
-                           section_hashes=hashes, interpolations=list(interpolations or []))
+                           section_hashes=hashes, interpolations=list(interpolations or []),
+                           fingerprints={c: plan.fingerprint(c) for c, _, _ in SKILL_MODULES},
+                           input_hashes={c: (h if c in ran_ok else old_inputs.get(c, ""))
+                                         for c, h in input_hashes.items()})
         outputs["bao_cao"] = {"file": md_name}
         with open(os.path.join(out_dir, md_name), "w", encoding="utf-8") as f:
             f.write(render_report_md(report, store, plan))
@@ -275,6 +329,17 @@ class CadDraftingMaster:
             issues.append(Issue(severity=SEV_ERROR, code="XUAT_DXF_LECH", skill="XUAT",
                                 message="Số thực thể trong DXF đọc lại khác danh sách lệnh vẽ (layer: lệnh, DXF): "
                                         + "; ".join(f"{k}: {a}≠{b}" for k, (a, b) in sorted(lech.items()))))
+        for w in summary.get("canh_bao", []) or []:
+            issues.append(Issue(severity=SEV_WARN, code="XUAT_DXF_CANH_BAO", skill="XUAT", message=f"DXF: {w}"))
+        for b in summary.get("bo_qua", []) or []:
+            bid = str(b.get("id", "")) if isinstance(b, dict) else str(b)
+            why = b.get("ly_do", "") if isinstance(b, dict) else ""
+            if bid.startswith("anh_nen:"):        # ảnh nền chỉ để tham chiếu — không phải nội dung bản vẽ
+                issues.append(Issue(severity=SEV_WARN, code="XUAT_ANH_NEN_BO_QUA", skill="XUAT",
+                                    message=f"DXF: chưa đặt ảnh nền {bid[8:]} — {why}"))
+            else:
+                issues.append(Issue(severity=SEV_ERROR, code="XUAT_DXF_BO_QUA", skill="XUAT", eids=[bid],
+                                    message=f"DXF: không ghi được {bid} — {why}"))
         if summary.get("audit_errors"):
             issues.append(Issue(severity=SEV_WARN, code="XUAT_DXF_AUDIT", skill="XUAT",
                                 message=f"ezdxf audit báo {summary['audit_errors']} lỗi trong DXF"))
@@ -289,6 +354,8 @@ class CadDraftingMaster:
         if problems:
             issues.append(Issue(severity=SEV_ERROR, code="XUAT_LISP_SAI_CU_PHAP", skill="XUAT",
                                 message="AutoLISP sinh ra lỗi cú pháp tĩnh: " + "; ".join(problems[:5])))
+        for w in lisp_summary.get("canh_bao", []) or []:
+            issues.append(Issue(severity=SEV_WARN, code="XUAT_LISP_CANH_BAO", skill="XUAT", message=f"AutoLISP: {w}"))
 
         if pdf:
             try:
@@ -334,6 +401,21 @@ class _StepResult:
 _SEV_LABEL = {SEV_ERROR: "LỖI", SEV_DOUBT: "NGHI VẤN", SEV_WARN: "CẢNH BÁO"}
 
 
+def interpolated_keys(store: ProjectStore) -> List[str]:
+    """Mọi khoá có nguồn nội suy (đã hay chưa xác nhận), ở mọi nhóm dữ liệu, cả cấp đối tượng."""
+    keys = []
+    for o, g in sorted(store.axes.items()):
+        keys += [f"axes:{o}.spans[{i}]" for i in range(len(g.spans)) if g.span_provenance(i).source == SRC_INTERP]
+        if g.overall is not None and (g.overall_prov or g.prov).source == SRC_INTERP:
+            keys.append(f"axes:{o}.overall")
+    for coll in COLLECTIONS:
+        for e in getattr(store, coll):
+            if e.prov.source == SRC_INTERP:
+                keys.append(f"{coll}:{e.id}")
+            keys += [f"{coll}:{e.id}.{n}" for n, pv in sorted(e.field_prov.items()) if pv.source == SRC_INTERP]
+    return keys
+
+
 def _md(text: Any) -> str:
     return str(text).replace("|", "\\|").replace("\n", " ")
 
@@ -364,21 +446,16 @@ def render_report_md(report: RunReport, store: ProjectStore, plan: DrawingPlan) 
 
     unconf = store.unconfirmed()
     lines += ["", "## Số liệu nội suy (B) — CHƯA được coi là đã xác nhận", ""]
-    interp_keys = []
-    for o, g in sorted(store.axes.items()):
-        for i, pv in enumerate(g.span_prov):
-            if pv is not None and pv.source == SRC_INTERP:
-                interp_keys.append(f"axes:{o}.spans[{i}]")
-    for coll in ("columns", "walls", "openings", "stairs"):
-        for e in getattr(store, coll):
-            for name, pv in sorted(e.field_prov.items()):
-                if pv.source == SRC_INTERP:
-                    interp_keys.append(f"{coll}:{e.id}.{name}")
+    interp_keys = interpolated_keys(store)
     if interp_keys:
         lines += ["| Khoá | Giá trị | Cách nội suy | Xác nhận |", "|---|---|---|---|"]
         for k in interp_keys:
             pv = store.get_provenance(k)
-            lines.append(f"| `{k}` | {store.get_value(k)} | {_md(pv.ref)} | "
+            try:
+                value = store.get_value(k)
+            except Exception:                    # khoá cấp đối tượng: không có một giá trị số
+                value = "(cả đối tượng)"
+            lines.append(f"| `{k}` | {_md(value)} | {_md(pv.ref)} | "
                          f"{'đã xác nhận: ' + _md(pv.confirmed_by) if pv.confirmed else '**chưa**'} |")
     else:
         lines.append("Không có.")
@@ -408,7 +485,7 @@ def render_report_md(report: RunReport, store: ProjectStore, plan: DrawingPlan) 
         lines += ["", "### Ghi chú của skill", ""]
         lines += [f"- Skill {code}: {_md(n)}" for code, n in notes]
 
-    issues = _dedupe(report.all_issues())
+    issues = [i for i in _dedupe(report.all_issues()) if i.code != "DOI_TUONG_CHUA_VE"]   # đã có mục riêng ở trên
     lines += ["", "## Danh sách phát hiện", ""]
     for sev in (SEV_ERROR, SEV_DOUBT, SEV_WARN):
         group = [i for i in issues if i.severity == sev]
@@ -435,7 +512,10 @@ def render_report_md(report: RunReport, store: ProjectStore, plan: DrawingPlan) 
         "- Không sinh DWG trực tiếp: mở file DXF trong AutoCAD rồi SAVEAS, hoặc giao danh sách lệnh vẽ JSON cho máy chủ cad-mcp.",
         "- File AutoLISP chỉ được kiểm tra cú pháp tĩnh, chưa chạy thử trên AutoCAD.",
         "- PDF/ảnh đầu vào chỉ làm ảnh nền tham chiếu, không tự nhận dạng số liệu (cấm đoán số OCR mờ) — số liệu nhập theo đề bài JSON.",
-        "- Phạm vi hình học: tường thẳng, cột chữ nhật, thang vế thẳng, kích thước tường ngoài 3 cấp 4 phía (chưa ghi kích thước trong nhà).",
+        "- Phạm vi hình học: tường thẳng (nối vuông góc hoặc xiên), cột chữ nhật, thang vế thẳng + chiếu nghỉ, kích thước "
+        "tường ngoài 3 cấp 4 phía (chưa ghi kích thước trong nhà).",
+        "- Kiểu đường của template không có trong bảng của bộ xuất (vd ACAD_ISO*) được thay bằng nét liền trong DXF và báo "
+        "cảnh báo XUAT_DXF_CANH_BAO; file AutoLISP nạp kiểu đó từ acadiso.lin.",
         "",
     ]
     return "\n".join(lines)

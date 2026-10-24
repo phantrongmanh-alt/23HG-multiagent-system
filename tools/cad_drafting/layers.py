@@ -112,6 +112,18 @@ def dimstyle_tcvn(scale: int) -> Dict[str, object]:
         "dimclre": 3,
         "dimclrt": 7,
         "dimscale": float(scale),
+        # cố định thêm các biến dễ bị kế thừa từ bản vẽ đích khi AutoLISP lưu kiểu bằng -DIMSTYLE Save
+        "dimlfac": 1.0,           # không co giãn số đo (lỗi DIMLFAC ≠ 1 là cờ đỏ trong SKILL.md)
+        "dimrnd": 0.0,
+        "dimalt": 0,
+        "dimse1": 0,
+        "dimse2": 0,
+        "dimtsz": 0.0,            # dùng khối đầu đo (DIMBLK), không dùng gạch tick DIMTSZ
+        "dimsah": 0,
+        "dimdle": 0.0,
+        "dimtfac": 1.0,
+        "dimtvp": 0.0,
+        "dimjust": 0,
     }
 
 

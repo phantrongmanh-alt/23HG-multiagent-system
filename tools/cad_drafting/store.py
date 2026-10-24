@@ -127,6 +127,9 @@ class AxisGroup:
         bad = [n for n in self.names if not re.fullmatch(r"[^/@\s]+", n)]
         if bad:
             raise StoreError(f"nhóm trục {self.orientation}: tên trục không được rỗng hay chứa '/', '@', khoảng trắng: {bad}")
+        for v in list(self.spans) + [self.overall, self.origin]:
+            if v is not None and not math.isfinite(float(v)):
+                raise StoreError(f"nhóm trục {self.orientation}: nhịp / kích thước tổng / gốc không hữu hạn ({v!r})")
         while len(self.span_prov) < len(self.spans):
             self.span_prov.append(None)
 
@@ -317,7 +320,7 @@ class ProjectStore:
     layers: Dict[str, LayerSpec] = field(default_factory=default_layers)   # vai trò → layer
     blocks: Dict[str, BlockDef] = field(default_factory=dict)              # block từ template
     sources: List[SourceFile] = field(default_factory=list)
-    issues: List[Issue] = field(default_factory=list)                      # vấn đề phát hiện khi đọc
+    issues: List[Issue] = field(default_factory=list)                      # vấn đề phát hiện ở lần đọc này (không nạp lại)
     approvals: List[Approval] = field(default_factory=list)
 
     # ── truy vấn ─────────────────────────────────────────────────────────────
@@ -383,12 +386,19 @@ class ProjectStore:
 
     def column_center(self, col: Column) -> Optional[Point]:
         p = self.point(f"{col.axis_v}/{col.axis_h}")
-        return None if p is None else (p[0] + col.dx, p[1] + col.dy)
+        return None if p is None else (p[0] + float(col.dx), p[1] + float(col.dy))
 
     # ── khoá số liệu: đọc / ghi / xác nhận ───────────────────────────────────
 
     def _resolve_key(self, key: str):
-        """khoá → (đối tượng chứa, tên trường, chỉ số trong list hoặc None)."""
+        """khoá → (đối tượng chứa, tên trường, chỉ số trong list hoặc None). Khoá cấp đối tượng ("furniture:F1",
+        nguồn của cả đối tượng) → (đối tượng, None, None)."""
+        m = re.match(r"^(\w+):([^.]+)$", key)
+        if m and m.group(1) in COLLECTIONS:
+            ent = self.get(m.group(1), m.group(2))
+            if ent is None:
+                raise StoreError(f"khoá '{key}' không tồn tại")
+            return ent, None, None
         m = re.match(r"^axes:([VH])\.(spans)\[(\d+)\]$|^axes:([VH])\.(overall)$", key)
         if m:
             if m.group(1):
@@ -419,6 +429,8 @@ class ProjectStore:
 
     def get_value(self, key: str):
         obj, name, idx = self._resolve_key(key)
+        if name is None:
+            raise StoreError(f"khoá '{key}' là cả đối tượng, không có giá trị số")
         if name.startswith("flights["):
             i, attr = re.match(r"flights\[(\d+)\]\.(\w+)", name).groups()
             return getattr(obj.flights[int(i)], attr)
@@ -427,6 +439,8 @@ class ProjectStore:
 
     def get_provenance(self, key: str) -> Provenance:
         obj, name, idx = self._resolve_key(key)
+        if name is None:
+            return obj.prov
         if isinstance(obj, AxisGroup):
             return obj.span_provenance(idx) if name == "spans" else (obj.overall_prov or obj.prov)
         return obj.provenance(name)
@@ -434,6 +448,8 @@ class ProjectStore:
     def set_value(self, key: str, value, prov: Provenance) -> None:
         """Ghi một số liệu kèm nguồn gốc (nhập tay hoặc nội suy)."""
         obj, name, idx = self._resolve_key(key)
+        if name is None:
+            raise StoreError(f"khoá '{key}' là cả đối tượng — chỉ ghi được số liệu theo trường")
         if value is not None:
             value = float(value)
             if not math.isfinite(value):
@@ -464,7 +480,20 @@ class ProjectStore:
         if prov.source != SRC_INTERP:
             raise StoreError(f"{key} không phải số liệu nội suy (nguồn: {prov.source})")
         ref = prov.ref + (f" | xác nhận: {note}" if note else "")
-        self.set_value(key, self.get_value(key), Provenance(SRC_INTERP, ref, True, by.strip()))
+        self._put_provenance(key, Provenance(SRC_INTERP, ref, True, by.strip()))
+
+    def _put_provenance(self, key: str, prov: Provenance) -> None:
+        """Chỉ đổi nguồn gốc (giữ nguyên giá trị — kể cả trường không phải số như đường bao phòng)."""
+        obj, name, idx = self._resolve_key(key)
+        if name is None:
+            obj.prov = prov
+        elif isinstance(obj, AxisGroup):
+            if name == "spans":
+                obj.span_prov[idx] = prov
+            else:
+                obj.overall_prov = prov
+        else:
+            obj.field_prov[name] = prov
 
     # ── thiếu số liệu / chưa xác nhận / trạng thái ───────────────────────────
 
@@ -499,11 +528,13 @@ class ProjectStore:
         """Mọi số liệu nội suy chưa có người xác nhận."""
         out: List[Tuple[str, Provenance]] = []
         for o, g in sorted(self.axes.items()):
-            for i, p in enumerate(g.span_prov):
-                if p is not None and p.source == SRC_INTERP and not p.confirmed:
+            for i in range(len(g.spans)):
+                p = g.span_provenance(i)            # nhịp không có nguồn riêng dùng nguồn của cả nhóm trục
+                if p.source == SRC_INTERP and not p.confirmed:
                     out.append((f"axes:{o}.spans[{i}]", p))
-            if g.overall_prov and g.overall_prov.source == SRC_INTERP and not g.overall_prov.confirmed:
-                out.append((f"axes:{o}.overall", g.overall_prov))
+            p = g.overall_prov or g.prov
+            if g.overall is not None and p.source == SRC_INTERP and not p.confirmed:
+                out.append((f"axes:{o}.overall", p))
         for coll in COLLECTIONS:
             for e in getattr(self, coll):
                 if e.prov.source == SRC_INTERP and not e.prov.confirmed:
@@ -653,7 +684,8 @@ class ProjectStore:
             store.layers = layers
         store.blocks = {n: BlockDef.from_dict(b) for n, b in d.get("blocks", {}).items()}
         store.sources = [SourceFile(**s) for s in d.get("sources", [])]
-        store.issues = [Issue(**i) for i in d.get("issues", [])]
+        # "issues" (vấn đề phát hiện ở lần đọc trước) KHÔNG nạp lại: vấn đề phải phát sinh từ lần đọc / kiểm tra hiện tại,
+        # nếu không dữ liệu đã sửa đúng vẫn mang lỗi cũ và cảnh báo cộng dồn qua các lần chạy
         store.approvals = [Approval(**a) for a in d.get("approvals", [])]
         return store
 

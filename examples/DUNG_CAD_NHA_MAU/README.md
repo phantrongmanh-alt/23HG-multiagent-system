@@ -23,4 +23,5 @@ python -m tools.cad_drafting --dau-vao examples/DUNG_CAD_NHA_MAU/de_bai_mat_bang
     --kich-thuoc-nhap examples/DUNG_CAD_NHA_MAU/kich_thuoc_nhap.json --ra examples/DUNG_CAD_NHA_MAU/ket_qua --ten KT-01_NHAP_TAY
 ```
 
-DXF/PDF khác nhau giữa hai lần sinh ở dấu thời gian do thư viện ghi; hình học, số thực thể và báo cáo thì tất định.
+Lệnh vẽ JSON, dữ liệu dự án, AutoLISP và báo cáo tất định (hai lần sinh giống hệt từng byte); DXF khác nhau ở dấu thời
+gian do thư viện ghi, PDF/PNG có thể khác vài điểm ảnh — báo cáo không ghi kích thước ba file này vì lý do đó.

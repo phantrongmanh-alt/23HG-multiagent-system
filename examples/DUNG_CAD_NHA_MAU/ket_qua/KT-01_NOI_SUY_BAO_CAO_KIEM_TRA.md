@@ -95,12 +95,12 @@ Không có.
 
 | Loại | File | Ghi chú |
 |---|---|---|
-| lenh_ve_json | KT-01_NOI_SUY_lenh_ve.json | 119.914 byte |
+| lenh_ve_json | KT-01_NOI_SUY_lenh_ve.json | 120.409 byte |
 | du_lieu_du_an | KT-01_NOI_SUY_du_lieu_du_an.json | 26.551 byte |
-| dxf | KT-01_NOI_SUY.dxf | 190.951 byte |
-| lisp | KT-01_NOI_SUY.lsp | kiểm tra tĩnh: không phát hiện lỗi cú pháp tĩnh; chạy trên AutoCAD: CHƯA chạy thử · 100.027 byte |
-| pdf | KT-01_NOI_SUY.pdf | 340.141 byte |
-| png | KT-01_NOI_SUY.png | 569.356 byte |
+| dxf | KT-01_NOI_SUY.dxf |  |
+| lisp | KT-01_NOI_SUY.lsp | kiểm tra tĩnh: không phát hiện lỗi cú pháp tĩnh; chạy trên AutoCAD: CHƯA chạy thử · 100.720 byte |
+| pdf | KT-01_NOI_SUY.pdf |  |
+| png | KT-01_NOI_SUY.png |  |
 | dwg | — | Không sinh DWG: cần AutoCAD (mở DXF → SAVEAS, hoặc máy chủ cad-mcp). |
 | bao_cao | KT-01_NOI_SUY_BAO_CAO_KIEM_TRA.md |  |
 
@@ -109,4 +109,5 @@ Không có.
 - Không sinh DWG trực tiếp: mở file DXF trong AutoCAD rồi SAVEAS, hoặc giao danh sách lệnh vẽ JSON cho máy chủ cad-mcp.
 - File AutoLISP chỉ được kiểm tra cú pháp tĩnh, chưa chạy thử trên AutoCAD.
 - PDF/ảnh đầu vào chỉ làm ảnh nền tham chiếu, không tự nhận dạng số liệu (cấm đoán số OCR mờ) — số liệu nhập theo đề bài JSON.
-- Phạm vi hình học: tường thẳng, cột chữ nhật, thang vế thẳng, kích thước tường ngoài 3 cấp 4 phía (chưa ghi kích thước trong nhà).
+- Phạm vi hình học: tường thẳng (nối vuông góc hoặc xiên), cột chữ nhật, thang vế thẳng + chiếu nghỉ, kích thước tường ngoài 3 cấp 4 phía (chưa ghi kích thước trong nhà).
+- Kiểu đường của template không có trong bảng của bộ xuất (vd ACAD_ISO*) được thay bằng nét liền trong DXF và báo cảnh báo XUAT_DXF_CANH_BAO; file AutoLISP nạp kiểu đó từ acadiso.lin.

@@ -5,7 +5,7 @@ THƯ VIỆN BLOCK NỘI THẤT CHUẨN cho Skill 06 (nội thất, thiết bị 
 Quy ước chung cho mọi block trong LIBRARY:
   - Đơn vị mm, hình học nằm trọn trong hộp [0, X] × [0, Y] với size = [X, Y] (kể cả vòng tròn bao của
     circle/arc — plan.iter_points lấy tâm ± bán kính), điểm chèn (0, 0) = góc dưới-trái của hộp.
-    Nhờ vậy geom.footprint(insert, size, rotation) đúng là vết chiếm chỗ của block sau khi chèn.
+    Nhờ vậy geom.footprint(insert, size, rotation) (origin mặc định (0, 0)) đúng là vết chiếm chỗ của block sau khi chèn.
   - Chỉ dùng line / pline / circle / arc (không chữ) để Validator và mọi bộ xuất đọc được.
   - Nét đủ thưa để còn nhận ra khi in 1:100 (chi tiết nhỏ nhất ≈ 20–25 mm model = 0,2–0,25 mm giấy).
 

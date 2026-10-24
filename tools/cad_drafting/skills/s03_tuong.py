@@ -133,7 +133,8 @@ def opening_skip_reason(store: ProjectStore, op: Opening) -> str:
                 parts[0] = item
             else:
                 parts.append(item)
-    if op.width is not None and op.width <= 0 and parts[0] != "bề rộng cửa ≤ 0":
+    width = geom._num(op.width)
+    if width is not None and width <= 0 and parts[0] != "bề rộng cửa ≤ 0":
         parts.append("bề rộng cửa ≤ 0")
     return "; ".join(parts)
 

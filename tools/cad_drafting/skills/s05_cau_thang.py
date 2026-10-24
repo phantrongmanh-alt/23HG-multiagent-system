@@ -21,6 +21,7 @@ Mỗi thang (không lặp theo vế):
     cắt một lần ở cao độ khoảng 1,2–1,5 m nên chỉ vế đầu bị cắt; vế 0 chưa vẽ được thì KHÔNG vẽ đường cắt
     và ghi chú lý do                                                             eid "thang/<id>/cat"
   - mỗi chiếu nghỉ (stair.landings[j]) → pline kín                               eid "thang/<id>/chieu_nghi/<j>"
+  - cạnh bao trùng cạnh vế / chiếu nghỉ đã vẽ trước (thang chữ U) được bỏ; phần còn lại thành pline hở eid ".../<k>"
 
 Thiếu số liệu → result.skip, KHÔNG bỏ im lặng:
   - "thang:<id>/<i>": lý do kể mọi thứ còn thiếu/sai của vế (width / going / n_treads kèm khoá
@@ -37,7 +38,8 @@ from __future__ import annotations
 import math
 from typing import Dict, List, Optional, Tuple
 
-from shapely.geometry import Polygon
+from shapely.geometry import LineString, Polygon
+from shapely.ops import unary_union
 
 from tools.cad_drafting import geom
 from tools.cad_drafting.layers import paper_to_model, text_height
@@ -243,6 +245,19 @@ class CauThangSkill(DraftSkill):
     name = "Cầu thang"
     reads = ("project", "axes", "stairs")
 
+    def _outline(self, plan: DrawingPlan, eid: str, pts: List[Point], drawn_edges: List[LineString]) -> None:
+        """Đường bao kín; cạnh trùng với vế / chiếu nghỉ đã vẽ trước (thang chữ U, vế nối chiếu nghỉ) thì bỏ, phần còn
+        lại vẽ thành các pline hở eid "<eid>/<k>"."""
+        ring = LineString(list(pts) + [pts[0]])
+        rest = ring.difference(unary_union(drawn_edges)) if drawn_edges else ring
+        drawn_edges.append(ring)
+        if rest.equals(ring):
+            self.add(plan, "pline", "thang", eid, points=pts, closed=True)
+            return
+        for k, path in enumerate(geom.lines_to_paths(rest)):
+            closed = len(path) > 3 and geom.length(geom.sub(path[0], path[-1])) < 1e-6
+            self.add(plan, "pline", "thang", f"{eid}/{k}", points=path[:-1] if closed else path, closed=closed)
+
     def draw(self, store: ProjectStore, plan: DrawingPlan, result: SkillResult) -> None:
         scale = int(store.project.scale)
         n_flights = sum(len(st.flights) for st in store.stairs)
@@ -252,6 +267,7 @@ class CauThangSkill(DraftSkill):
         for st in store.stairs:
             base = f"thang/{st.id}"
             first: Optional[Dict[str, object]] = None
+            drawn_edges: List[LineString] = []          # cạnh đã vẽ của thang này (vế, chiếu nghỉ) — tránh trùng nét
             for i, fl in enumerate(st.flights):
                 why = flight_skip_reason(store, st, i)
                 f = None if why else flight_frame(store, fl)
@@ -261,7 +277,7 @@ class CauThangSkill(DraftSkill):
                         result.notes.append(f"{st.id}: chưa vẽ đường cắt thang vì vế {i + 1} chưa vẽ được")
                     continue
                 fb = f"{base}/{i}"
-                self.add(plan, "pline", "thang", f"{fb}/bao", points=outline_points(f), closed=True)
+                self._outline(plan, f"{fb}/bao", outline_points(f), drawn_edges)
                 for k, p1, p2 in nosing_lines(f):
                     self.add(plan, "line", "thang", f"{fb}/bac/{k}", p1=p1, p2=p2)
                 p0, p1 = walk_line(f)
@@ -293,7 +309,7 @@ class CauThangSkill(DraftSkill):
                 if why:
                     result.skip(f"thang:{st.id}/chieu_nghi/{j}", why)
                     continue
-                self.add(plan, "pline", "thang", f"{base}/chieu_nghi/{j}", points=pts, closed=True)
+                self._outline(plan, f"{base}/chieu_nghi/{j}", pts, drawn_edges)
                 drawn_landings += 1
         result.notes.append(f"đã vẽ {drawn_flights}/{n_flights} vế thang, {drawn_landings}/{n_landings} chiếu nghỉ "
                             f"({len(store.stairs)} thang)")

@@ -658,8 +658,9 @@ class CheckFinalAndSummaryTest(unittest.TestCase):
         self.assertEqual(pre, fin)
 
     def test_summarize_computed(self):
-        mk = lambda sev, code: Issue(severity=sev, code=code, message="x", skill="VAL")
-        s = validator.summarize([mk(SEV_ERROR, "A"), mk(SEV_WARN, "B"), mk(SEV_WARN, "B"), mk(SEV_DOUBT, "C")])
+        mk = lambda sev, code, msg="x": Issue(severity=sev, code=code, message=msg, skill="VAL")
+        s = validator.summarize([mk(SEV_ERROR, "A"), mk(SEV_WARN, "B", "b1"), mk(SEV_WARN, "B", "b2"),
+                                 mk(SEV_DOUBT, "C")])
         self.assertEqual(s["tong"], 4)
         self.assertEqual(s["theo_muc_do"], {SEV_ERROR: 1, SEV_WARN: 2, SEV_DOUBT: 1})
         self.assertEqual(s["theo_ma"], {"A": 1, "B": 2, "C": 1})
@@ -668,6 +669,10 @@ class CheckFinalAndSummaryTest(unittest.TestCase):
         self.assertFalse(validator.summarize([mk(SEV_DOUBT, "C")])["dat"])
         self.assertTrue(validator.summarize([mk(SEV_WARN, "B")])["dat"])
         self.assertTrue(validator.summarize([])["dat"])
+        # cùng một mục báo hai lần (precheck + check_final) chỉ đếm một lần
+        self.assertEqual(validator.summarize([mk(SEV_WARN, "B"), mk(SEV_WARN, "B")])["tong"], 1)
+        # đối tượng chưa vẽ → không đạt, dù chỉ ở mức cảnh báo (cùng quy tắc với Master)
+        self.assertFalse(validator.summarize([mk(SEV_WARN, "DOI_TUONG_CHUA_VE")])["dat"])
 
 
 if __name__ == "__main__":

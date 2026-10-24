@@ -47,6 +47,8 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
+from shapely.geometry import LineString
+
 from tools.cad_drafting import geom
 from tools.cad_drafting.layers import LAYOUT_PAPER_MM, dimstyle_name, paper_to_model
 from tools.cad_drafting.plan import DrawingPlan
@@ -117,6 +119,25 @@ def dim_line_position(store: ProjectStore, side: str, level: int,
 def side_point(side: str, s: float, t: float) -> Point:
     """Điểm từ toạ độ dọc phương đo s và toạ độ vuông góc t của một phía."""
     return (s, t) if SIDES[side]["group"] == "V" else (t, s)
+
+
+FACE_PROBE_MM = 1e-3   # dò mép ngoài trên đường song song mặt ngoài, lùi vào trong 0,001 mm (tránh trùng biên đa giác)
+
+
+def face_extent(poly, meas: str, across_value: float) -> Tuple[float, float]:
+    """(min, max) dọc phương đo của phần tường nằm trên đường mặt ngoài (across = across_value). Với mối nối xiên,
+    bao hình đa giác có thể là mũi vát ở MẶT TRONG — phải lấy giao với chính đường mặt ngoài mới ra mép ngoài thật."""
+    minx, miny, maxx, maxy = poly.bounds
+    far = 1e6
+    if meas == "V":
+        probe = LineString([(minx - far, across_value), (maxx + far, across_value)])
+    else:
+        probe = LineString([(across_value, miny - far), (across_value, maxy + far)])
+    inter = poly.intersection(probe)
+    if inter.is_empty:
+        return (minx, maxx) if meas == "V" else (miny, maxy)
+    ix0, iy0, ix1, iy1 = inter.bounds
+    return (ix0, ix1) if meas == "V" else (iy0, iy1)
 
 
 def along(side: str, p: Point) -> float:
@@ -317,8 +338,7 @@ def detail_chain(store: ProjectStore, side: str) -> Dict[str, Any]:
         a_s, b_s = along(side, a), along(side, b)
         lo, hi = min(a_s, b_s), max(a_s, b_s)
         poly = geom.wall_polygon(store, w)
-        minx, miny, maxx, maxy = poly.bounds
-        s_lo, s_hi = (minx, maxx) if meas == "V" else (miny, maxy)
+        s_lo, s_hi = face_extent(poly, meas, face_t - sign * FACE_PROBE_MM)
         start_terms = _ref_terms(store, w.start, meas)
         end_terms = _ref_terms(store, w.end, meas)
         lo_ref_terms, hi_ref_terms = (start_terms, end_terms) if ud > 0 else (end_terms, start_terms)

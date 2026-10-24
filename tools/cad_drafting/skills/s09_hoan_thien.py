@@ -8,7 +8,7 @@ Nhãn phòng — mỗi phòng có geom.room_polygon (thiếu → result.skip("ho
     "±0.000" khi 0, "+0.450" / "-0.020" (m, 3 chữ số, dấu chấm như ký hiệu cote). Dòng cách dòng 1 mm giấy.
     eid "hoan_thien/<room id>/ten", ".../dien_tich", ".../cote".
   - vị trí: room.label_at nếu người dùng chỉ định; ngược lại tâm khối chữ ưu tiên trọng tâm phần sàn TRỐNG
-    (phòng − tường − cột − vết nội thất − vế thang − vùng quét cánh cửa − chữ của skill chạy trước như ký hiệu cửa), không vừa thì dò lưới điểm gần trọng tâm nhất
+    (phòng − tường − cột − vết nội thất − vế thang, chiếu nghỉ − vùng quét cánh cửa − chữ của skill chạy trước như ký hiệu cửa), không vừa thì dò lưới điểm gần trọng tâm nhất
     sao cho khung chữ ước lượng (bề rộng ký tự ≈ 0,75 × chiều cao) nới thêm 1 mm giấy nằm TRỌN trong phần sàn trống.
     Không vừa → thử lại chỉ trừ tường (ghi chú "nhãn đè vật"), rồi mới tới representative_point (luôn nằm trong phòng),
     kèm CẢNH BÁO trong ghi chú. `reads` gồm cả columns, furniture, blocks, stairs, openings vì vị trí nhãn phụ thuộc
@@ -573,7 +573,9 @@ class HoanThienSkill(DraftSkill):
         """Hộp chữ (ước lượng) của các skill chạy trước (ký hiệu cửa, chữ LÊN của thang...) để nhãn phòng không đè."""
         boxes = []
         for op in plan.ops:
-            if op.kind != "text" or op.skill == "09":
+            # chỉ chữ của skill chạy TRƯỚC 09 — chữ khung tên / dấu kiểm tra (skill 10) của lần trước không được ảnh
+            # hưởng vị trí nhãn, để chạy cập nhật cho cùng kết quả như chạy lại toàn bộ
+            if op.kind != "text" or op.skill >= "09":
                 continue
             d = op.data
             w, h = text_width(d["text"], d["height"]), d["height"]
@@ -601,18 +603,10 @@ class HoanThienSkill(DraftSkill):
             if p is not None:
                 parts.append(p)
         for f in store.furniture:
-            block = get_block(f.block, store)
-            try:
-                ins = store.point(f.insert)
-            except StoreError:
-                ins = None
-            if block is not None and ins is not None and block.size[0] > 0 and block.size[1] > 0:
-                parts.append(geom.footprint(ins, (block.size[0], block.size[1]), float(f.rotation)))
-        for st in store.stairs:
-            for fl in st.flights:
-                p = geom.flight_polygon(store, fl)
-                if p is not None:
-                    parts.append(p)
+            p = geom.block_footprint(store, f, get_block(f.block, store))
+            if p is not None:
+                parts.append(p)
+        parts += geom.stair_polygons(store)                  # vế thang và chiếu nghỉ
         for op in store.openings:
             p = geom.door_swing_polygon(store, op)
             if p is not None:

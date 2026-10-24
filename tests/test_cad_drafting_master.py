@@ -132,11 +132,25 @@ class MasterIncrementalTest(unittest.TestCase):
         self.assertNotEqual(before["06"], after["06"])
         self.assertFalse([i for s in rep.steps for i in s.issues if i.code == "SKILL_SUA_PHAN_KHAC"])
 
-    def test_no_change_reruns_nothing(self):
+    def test_kept_skills_keep_their_skipped_objects(self):
+        """Skill giữ nguyên vẫn phải mang danh sách đối tượng chưa vẽ của lần trước — không được thành "đạt"."""
+        store = load_sample()
+        store.get("furniture", "F8").block = "KHONG_CO_BLOCK"          # skill 06 bỏ qua F8 kèm lý do
+        master = CadDraftingMaster(log=_quiet)
+        first = master.run(store, self.tmp, pdf=False)
+        self.assertEqual(first.counts()["doi_tuong_chua_ve"], 1)
+        store.get("rooms", "P1").wall_finish = "Sơn nước 2 lớp"         # chỉ mục rooms đổi
+        rep = master.run(store, self.tmp, cap_nhat=True, pdf=False)
+        self.assertNotIn("06", rep.rerun)
+        self.assertEqual(rep.counts()["doi_tuong_chua_ve"], 1)
+        self.assertFalse(rep.dat)
+        self.assertIn("DOI_TUONG_CHUA_VE", [i.code for i in rep.final])
+
+    def test_no_change_reruns_only_title_block(self):
         master = CadDraftingMaster(log=_quiet)
         master.run(load_sample(), self.tmp, pdf=False)
         rep = master.run(load_sample(), self.tmp, cap_nhat=True, pdf=False)
-        self.assertEqual(rep.rerun, [])
+        self.assertEqual(rep.rerun, ["10"])          # chỉ khung tên (trạng thái/phê duyệt luôn tính lại)
 
     def test_only_mode_reruns_named_skill(self):
         master = CadDraftingMaster(log=_quiet)

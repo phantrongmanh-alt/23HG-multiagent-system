@@ -186,6 +186,7 @@ class BlockDef:
     size: List[float] = field(default_factory=lambda: [0.0, 0.0])   # [rộng X, sâu Y] mm, để kiểm tra va chạm
     description: str = ""
     source: str = "thu_vien"                   # "thu_vien" (thư viện chuẩn) | "mau" (từ template người dùng)
+    origin: List[float] = field(default_factory=lambda: [0.0, 0.0])  # góc dưới-trái bao hình so với điểm chèn
 
     def __post_init__(self):
         norm = []
@@ -195,15 +196,17 @@ class BlockDef:
             norm.append({"kind": o["kind"], "data": normalize_op_data(o["kind"], o["data"], f"block {self.name}[{i}]")})
         self.ops = norm
         self.size = [float(self.size[0]), float(self.size[1])]
+        self.origin = [float(self.origin[0]), float(self.origin[1])]
 
     def to_dict(self) -> Dict[str, Any]:
         return {"name": self.name, "ops": self.ops, "size": self.size,
-                "description": self.description, "source": self.source}
+                "description": self.description, "source": self.source, "origin": self.origin}
 
     @classmethod
     def from_dict(cls, d: Dict[str, Any]) -> "BlockDef":
         return cls(name=d["name"], ops=d.get("ops", []), size=d.get("size", [0.0, 0.0]),
-                   description=d.get("description", ""), source=d.get("source", "thu_vien"))
+                   description=d.get("description", ""), source=d.get("source", "thu_vien"),
+                   origin=d.get("origin", [0.0, 0.0]))
 
 
 @dataclass

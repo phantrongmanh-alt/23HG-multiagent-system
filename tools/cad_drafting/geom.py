@@ -7,8 +7,10 @@ toạ độ) hoặc dữ liệu sai cấu trúc (tham chiếu trục không tồ
 không ném StoreError. Người gọi phải ghi đối tượng đó vào danh sách "bỏ qua kèm lý do", không được bỏ im lặng.
 
 Quy ước tường: tim tường từ start → end; u = vectơ đơn vị dọc tường, n = pháp tuyến TRÁI (xoay u +90°).
-Ở đầu tường gặp tường khác, hình chữ nhật tường được kéo dài thêm nửa chiều dày lớn nhất của các tường
-đi qua điểm đó để góc/ngã ba khép kín; đầu tự do không kéo dài.
+Ở đầu tường gặp tường KHÔNG song song, hình tường được kéo dài tới mặt xa của tường kia (vuông góc: t_kia/2;
+xiên góc θ: t_kia/(2 sinθ) + t_mình/(2 |tanθ|)) rồi cắt phần kéo dài theo dải tường kia — góc chữ L thành góc vát
+khép kín, ngã ba không nhô ra ngoài mặt tường. Tường thẳng hàng nối tiếp (kể cả đổi chiều dày) không kéo dài; đầu
+tự do không kéo dài. Ô cửa chỉ khoét tường của chính nó, không khoét tường khác.
 """
 
 from __future__ import annotations
@@ -136,34 +138,60 @@ def _drawable_axes(store: ProjectStore) -> List[Tuple[Wall, Point, Point]]:
     return out
 
 
-def _walls_through(axes: List[Tuple[Wall, Point, Point]], p: Point, exclude: Wall) -> List[Wall]:
+MIN_JOIN_SIN = 0.05        # hai tường lệch nhau dưới ~3° coi như thẳng hàng: không kéo dài mối nối
+
+
+def _walls_through(axes: List[Tuple[Wall, Point, Point]], p: Point, exclude: Wall) -> List[Tuple[Wall, Point, Point]]:
     out = []
-    for w, a, b in axes:
+    for item in axes:
+        w, a, b = item
         if w is exclude:
             continue
         if (min(a[0], b[0]) - TOL <= p[0] <= max(a[0], b[0]) + TOL and
                 min(a[1], b[1]) - TOL <= p[1] <= max(a[1], b[1]) + TOL and dist_point_segment(p, a, b) <= TOL):
-            out.append(w)
+            out.append(item)
     return out
 
 
+def _end_extension(p: Point, u_out: Point, t_self: float, others: List[Tuple[Wall, Point, Point]],
+                   n: Point) -> List[Polygon]:
+    """Phần kéo dài ở đầu tường tại p (u_out hướng ra ngoài tường), đã cắt theo dải từng tường gặp tại p."""
+    pieces = []
+    for w, a, b in others:
+        v = unit(sub(b, a))
+        sin_t = abs(u_out[0] * v[1] - u_out[1] * v[0])
+        if sin_t < MIN_JOIN_SIN:                       # thẳng hàng / gần song song: không kéo dài
+            continue
+        cos_t = abs(u_out[0] * v[0] + u_out[1] * v[1])
+        t_o = float(w.thickness)
+        ext = t_o / (2.0 * sin_t) + t_self * cos_t / (2.0 * sin_t)
+        piece = rect_polygon(p, u_out, ext, n, -t_self / 2.0, t_self / 2.0)
+        span = length(sub(b, a)) + 2.0 * (ext + t_o + t_self)
+        vn = left_normal(v)
+        strip = rect_polygon(sub(a, mul(v, ext + t_o + t_self)), v, span, vn, -t_o / 2.0, t_o / 2.0)
+        clipped = piece.intersection(strip)
+        if not clipped.is_empty:
+            pieces.append(clipped)
+    return pieces
+
+
 def wall_polygon(store: ProjectStore, wall: Wall,
-                 _axes: Optional[List[Tuple[Wall, Point, Point]]] = None) -> Optional[Polygon]:
+                 _axes: Optional[List[Tuple[Wall, Point, Point]]] = None) -> Optional[BaseGeometry]:
+    """Hình tường (chữ nhật dọc tim + phần kéo dài ở mối nối). None nếu tường chưa vẽ được."""
     if wall_reason(store, wall):
         return None
     axes = _drawable_axes(store) if _axes is None else _axes
     a, b = wall_axis(store, wall)
     u = unit(sub(b, a))
     n = left_normal(u)
-    ext_a = max((float(w.thickness) / 2.0 for w in _walls_through(axes, a, wall)), default=0.0)
-    ext_b = max((float(w.thickness) / 2.0 for w in _walls_through(axes, b, wall)), default=0.0)
-    start = sub(a, mul(u, ext_a))
-    total = length(sub(b, a)) + ext_a + ext_b
     t = float(wall.thickness)
-    return rect_polygon(start, u, total, n, -t / 2.0, t / 2.0)
+    parts = [rect_polygon(a, u, length(sub(b, a)), n, -t / 2.0, t / 2.0)]
+    parts += _end_extension(a, mul(u, -1.0), t, _walls_through(axes, a, wall), n)
+    parts += _end_extension(b, u, t, _walls_through(axes, b, wall), n)
+    return parts[0] if len(parts) == 1 else unary_union(parts)
 
 
-def wall_polygons(store: ProjectStore) -> Dict[str, Polygon]:
+def wall_polygons(store: ProjectStore) -> Dict[str, BaseGeometry]:
     """Hình chữ nhật (đã kéo dài ở chỗ giao) của mọi tường vẽ được, theo mã tường."""
     axes = _drawable_axes(store)
     return {w.id: wall_polygon(store, w, axes) for w, _, _ in axes}
@@ -299,18 +327,38 @@ def columns_union(store: ProjectStore) -> BaseGeometry:
 
 # ── thân tường (để vẽ đường bao và hatch) ───────────────────────────────────
 
+def _openings_by_wall(store: ProjectStore) -> Dict[str, BaseGeometry]:
+    by_wall: Dict[str, List[Polygon]] = {}
+    for o in store.openings:
+        f = opening_frame(store, o)
+        if f is not None:
+            by_wall.setdefault(o.wall_id, []).append(f["poly"])
+    return {k: unary_union(v) for k, v in by_wall.items()}
+
+
+def _walls_minus_own_openings(store: ProjectStore, kind: Optional[str] = None) -> List[BaseGeometry]:
+    """Mỗi tường trừ ô cửa CỦA CHÍNH NÓ (ô cửa không khoét tường khác ở góc / ngã ba)."""
+    holes = _openings_by_wall(store)
+    out = []
+    for wid, poly in wall_polygons(store).items():
+        if kind is not None and store.get("walls", wid).kind != kind:
+            continue
+        out.append(poly.difference(holes[wid]) if wid in holes else poly)
+    return out
+
+
 def wall_body(store: ProjectStore) -> BaseGeometry:
-    """Phần tường xây thật: hợp các tường − ô cửa − cột."""
-    return walls_union(store).difference(openings_union(store)).difference(columns_union(store))
+    """Phần tường xây thật: hợp (mỗi tường − ô cửa của nó) − cột."""
+    parts = _walls_minus_own_openings(store)
+    return (unary_union(parts) if parts else Polygon()).difference(columns_union(store))
 
 
 def wall_body_by_kind(store: ProjectStore, kind: str) -> BaseGeometry:
-    """Thân tường của một loại ("xay" | "btct"), đã trừ ô cửa và cột."""
-    by_id = wall_polygons(store)
-    polys = [by_id[w.id] for w in store.walls if w.kind == kind and w.id in by_id]
-    if not polys:
+    """Thân tường của một loại ("xay" | "btct"), đã trừ ô cửa (của chính tường đó) và cột."""
+    parts = _walls_minus_own_openings(store, kind)
+    if not parts:
         return Polygon()
-    return unary_union(polys).difference(openings_union(store)).difference(columns_union(store))
+    return unary_union(parts).difference(columns_union(store))
 
 
 def wall_outline_lines(store: ProjectStore) -> List[List[Point]]:
@@ -365,17 +413,50 @@ def flight_polygon(store: ProjectStore, fl: StairFlight) -> Optional[Polygon]:
     if flight_reason(store, fl):
         return None
     o = store.point(fl.origin)
-    u = dir_from_angle(fl.angle)
+    u = dir_from_angle(float(fl.angle))
     right = (u[1], -u[0])
-    return rect_polygon(o, u, fl.n_treads * float(fl.going), right, 0.0, float(fl.width))
+    return rect_polygon(o, u, int(float(fl.n_treads)) * float(fl.going), right, 0.0, float(fl.width))
 
 
-def footprint(insert: Point, size: Tuple[float, float], rotation: float) -> Polygon:
-    """Vết chiếm chỗ của block: hình chữ nhật size [X, Y] có góc dưới-trái tại điểm chèn, xoay quanh điểm chèn."""
+def landing_polygon(store: ProjectStore, loop) -> Optional[Polygon]:
+    """Chiếu nghỉ (đa giác các điểm tham chiếu). None nếu thiếu toạ độ / suy biến."""
+    pts = [_safe_point(store, r) for r in loop]
+    if len(pts) < 3 or any(p is None for p in pts):
+        return None
+    poly = Polygon(pts)
+    return poly if poly.is_valid and poly.area > 0 else None
+
+
+def stair_polygons(store: ProjectStore) -> List[Polygon]:
+    """Mọi vế và chiếu nghỉ dựng được (để hatch sàn chừa ra, nhãn và nội thất tránh, Validator kiểm va chạm)."""
+    out = []
+    for st in store.stairs:
+        out += [p for p in (flight_polygon(store, fl) for fl in st.flights) if p is not None]
+        out += [p for p in (landing_polygon(store, lp) for lp in st.landings) if p is not None]
+    return out
+
+
+def footprint(insert: Point, size: Tuple[float, float], rotation: float,
+              origin: Tuple[float, float] = (0.0, 0.0)) -> Polygon:
+    """Vết chiếm chỗ của block: hình chữ nhật size [X, Y] có góc dưới-trái tại điểm chèn + origin (BlockDef.origin —
+    góc dưới-trái bao hình so với điểm chèn của block), xoay quanh điểm chèn."""
     x, y = insert
     w, d = size
-    rect = Polygon([(x, y), (x + w, y), (x + w, y + d), (x, y + d)])
+    x0, y0 = x + float(origin[0]), y + float(origin[1])
+    rect = Polygon([(x0, y0), (x0 + w, y0), (x0 + w, y0 + d), (x0, y0 + d)])
     return affinity.rotate(rect, rotation, origin=(x, y))
+
+
+def block_footprint(store: ProjectStore, furniture: Furniture, block) -> Optional[Polygon]:
+    """Vết của một đồ nội thất theo block (BlockDef). None nếu điểm chèn / góc xoay không dùng được hoặc block chưa có
+    size — người gọi phải báo (Skill 06 / Validator)."""
+    if block is None or block.size[0] <= 0 or block.size[1] <= 0:
+        return None
+    ins = _safe_point(store, furniture.insert)
+    rot = _num(furniture.rotation)
+    if ins is None or rot is None:
+        return None
+    return footprint(ins, (block.size[0], block.size[1]), rot, tuple(getattr(block, "origin", (0.0, 0.0))))
 
 
 # ── tiện ích chuyển hình shapely → danh sách điểm ───────────────────────────

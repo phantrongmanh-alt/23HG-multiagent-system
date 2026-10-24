@@ -310,8 +310,12 @@ class CauThangMultiFlightTest(unittest.TestCase):
         self.skipped = skipped_map(self.result)
 
     def test_each_drawable_flight_drawn(self):
+        self.assertIn("05/thang/ST2/0/bao", self.ops)
+        # vế 2 kề vế 1: cạnh chung đã vẽ ở vế 1 nên đường bao vế 2 là pline hở (không trùng nét)
+        self.assertIn("05/thang/ST2/1/bao/0", self.ops)
+        self.assertFalse(self.ops["05/thang/ST2/1/bao/0"].data["closed"])
+        self.assertEqual(len(self.ops["05/thang/ST2/1/bao/0"].data["points"]), 4)
         for i in (0, 1):
-            self.assertIn(f"05/thang/ST2/{i}/bao", self.ops)
             self.assertEqual(sum(1 for e in self.ops if e.startswith(f"05/thang/ST2/{i}/bac/")), 7)
             self.assertIn(f"05/thang/ST2/{i}/duong_di", self.ops)
             self.assertIn(f"05/thang/ST2/{i}/mui_ten", self.ops)
@@ -336,9 +340,11 @@ class CauThangMultiFlightTest(unittest.TestCase):
         self.assertTrue(poly0.buffer(1000).contains(ShPoint(labels[0].data["insert"])))
 
     def test_landings(self):
-        landing = self.ops["05/thang/ST2/chieu_nghi/0"]
-        self.assertTrue(landing.data["closed"])
+        # chiếu nghỉ kề đầu hai vế: cạnh chung (y = 2300) đã vẽ ở hai vế → chỉ còn 3 cạnh, pline hở
+        landing = self.ops["05/thang/ST2/chieu_nghi/0/0"]
+        self.assertFalse(landing.data["closed"])
         self.assertEqual(bounds(landing.data["points"]), (200.0, 2300.0, 2200.0, 3300.0))
+        self.assertNotIn("05/thang/ST2/chieu_nghi/0", self.ops)
         self.assertIn("chưa có toạ độ", self.skipped["thang:ST2/chieu_nghi/1"])
         self.assertIn("ít nhất 3 điểm", self.skipped["thang:ST2/chieu_nghi/2"])
         self.assertIn("suy biến", self.skipped["thang:ST2/chieu_nghi/3"])

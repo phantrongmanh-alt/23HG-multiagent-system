@@ -10,8 +10,8 @@ cùng chiều kim đồng hồ; toạ độ làm tròn 6 chữ số thập phân
   - Tường: geom.wall_body_by_kind(store, "xay") → "tuong_xay" (ANSI31), "btct" → "tuong_btct" (SOLID). Thân tường
     xây được trừ thêm phần tường BTCT (ở chỗ hai loại giao nhau) để không tô chồng hai mẫu. Polygon sắp theo bao
     hình (min x, min y, max x, max y, diện tích) rồi đánh số            eid "hatch/tuong/<xay|btct>/<i>"
-  - Sàn phòng: vùng = geom.room_polygon − geom.walls_union − geom.columns_union − hợp các geom.flight_polygon
-    (vế thang không phủ gạch) − vết nội thất (geom.footprint theo size block, để nét gạch không chạy xuyên đồ).
+  - Sàn phòng: vùng = geom.room_polygon − geom.walls_union − geom.columns_union − vế thang và chiếu nghỉ
+    (không phủ gạch) − vết nội thất (geom.footprint theo size block, để nét gạch không chạy xuyên đồ).
     Khoá room.hatch rỗng → không hatch (không phải lỗi)    eid "hatch/san/<room id>/<i>"
   - Polygon diện tích < 1 mm² (mảnh vụn hình học) bị bỏ, có ghi chú số lượng — KHÔNG im lặng.
 
@@ -150,20 +150,19 @@ def flights_union(store: ProjectStore) -> Tuple[BaseGeometry, List[str]]:
                 bad.append(f"{st.id}/{i}: {why or 'không dựng được hình vế thang'}")
             else:
                 polys.append(p)
+        for j, loop in enumerate(st.landings):           # chiếu nghỉ cũng không lát gạch sàn
+            p = geom.landing_polygon(store, loop)
+            if p is None:
+                bad.append(f"{st.id}/chiếu nghỉ {j}: chưa dựng được (thiếu toạ độ hoặc đa giác suy biến)")
+            else:
+                polys.append(p)
     return (unary_union(polys) if polys else Polygon()), bad
 
 
 def furniture_union(store: ProjectStore) -> BaseGeometry:
     """Hợp vết nội thất dựng được (block có size > 0, điểm chèn có toạ độ). Đồ không dựng được do Skill 06 báo."""
-    polys = []
-    for f in store.furniture:
-        block = get_block(f.block, store)
-        try:
-            ins = store.point(f.insert)
-        except StoreError:
-            ins = None
-        if block is not None and ins is not None and block.size[0] > 0 and block.size[1] > 0:
-            polys.append(geom.footprint(ins, (block.size[0], block.size[1]), float(f.rotation)))
+    polys = [p for p in (geom.block_footprint(store, f, get_block(f.block, store)) for f in store.furniture)
+             if p is not None]
     return unary_union(polys) if polys else Polygon()
 
 

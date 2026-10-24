@@ -24,8 +24,8 @@ Bảng mã:
                  CHUA_KIEM_TRA_HINH_HOC (geom.* ném lỗi vì dữ liệu sai kiểu)
   01  LOI TRUC_TRUNG_VI_TRI
   02  LOI COT_CHONG_NHAU; CANH_BAO COT_LECH_TRUC (thông tin)
-  03  LOI TUONG_TRUNG; CANH_BAO TUONG_LECH_TRUC, TUONG_CAT_NHAU
-  04  LOI CUA_DAM_COT; CANH_BAO CANH_CUA_VUONG, CANH_CUA_CHONG
+  03  LOI TUONG_TRUNG, TUONG_CHONG_THAN; CANH_BAO TUONG_LECH_TRUC, TUONG_CAT_NHAU
+  04  LOI CUA_DAM_COT, CUA_DAM_TUONG; CANH_BAO CANH_CUA_VUONG, CANH_CUA_CHONG
   05  LOI THANG_DAM_TUONG; CANH_BAO THANG_NGOAI_PHONG, THANG_CHUA_KIEM_TRA, CUA_VUONG_THANG
   06  LOI NOI_THAT_XUNG_DOT; CANH_BAO NOI_THAT_CHAN_CUA, NOI_THAT_NGOAI_PHONG, NOI_THAT_CHONG_NHAU, NOI_THAT_CHUA_KIEM_TRA
   07  LOI HATCH_BIEN_HONG
@@ -87,6 +87,7 @@ TEXT_CHAR_WIDTH = 0.75           # bề rộng một ký tự ≈ 0,75 × chiề
 TEXT_OVERLAP_RATIO = 0.25        # hai hộp chữ giao > 25 % hộp nhỏ hơn → chữ đè chữ
 MTEXT_LINE_SPACING = 1.667       # bước dòng MTEXT mặc định của AutoCAD (× chiều cao chữ)
 FRAME_FREE_ROLES = ("kiem_tra", "anh_nen")   # vai trò không in — không bắt nằm trong khung, không xét chữ đè
+WALL_BODY_OVERLAP_RATIO = 0.5    # hai tường song song chồng > 50 % thân tường nhỏ hơn → nhập trùng
 MAX_LISTED = 10                  # số mã liệt kê trong message trước khi ghi "và N mục khác"
 
 _EMPTY_FP = DrawingPlan().fingerprint("")    # dấu vân tay của một skill không có lệnh vẽ nào
@@ -474,6 +475,8 @@ def _ref_items(store: ProjectStore):
     for r in store.rooms:
         for i, ref in enumerate(r.boundary):
             yield "phòng", r.id, f"boundary[{i}]", ref
+        if r.label_at is not None:
+            yield "phòng", r.id, "label_at", r.label_at
     for st in store.stairs:
         for i, fl in enumerate(st.flights):
             yield "thang", st.id, f"flights[{i}].origin", fl.origin
@@ -491,7 +494,7 @@ def _check_refs(store: ProjectStore) -> List[Issue]:
             store.point_or_reason(ref)
         except (StoreError, TypeError, ValueError) as e:
             out.append(_issue(SEV_ERROR, "THAM_CHIEU_SAI",
-                              f"Tham chiếu điểm sai ở {label} {eid} ({fld} = {ref!r}): {e}.", VAL, [eid]))
+                              f"Tham chiếu điểm sai ở {label} {eid} ({fld} = {ref!r}): {e}.", VAL, [eid, fld]))
     return out
 
 
@@ -786,20 +789,41 @@ class _Ctx:
 
     @cached_property
     def holes(self) -> BaseGeometry:
-        polys = [f["poly"] for _, f in self.opening_frames] + [p for _, _, p in self.columns]
+        """Hợp các cột (ô cửa chỉ khoét tường của chính nó — xem wall_bodies)."""
+        polys = [p for _, _, p in self.columns]
         return unary_union(polys) if polys else Polygon()
+
+    @cached_property
+    def wall_polys(self) -> List[Tuple[str, BaseGeometry]]:
+        out = []
+        for w in self.store.walls:
+            poly = self.safe(f"tường {w.id}", w.id, geom.wall_polygon, self.cstore, w)
+            if poly is not None:
+                out.append((w.id, poly))
+        return out
 
     @cached_property
     def wall_bodies(self) -> List[Tuple[str, str, BaseGeometry]]:
         """Thân từng tường (đã trừ ô cửa và cột) — để nêu đúng tường bị va chạm."""
+        own: Dict[str, List[BaseGeometry]] = {}
+        for op, f in self.opening_frames:
+            own.setdefault(op.wall_id, []).append(f["poly"])
         out = []
-        for w in self.store.walls:
-            poly = self.safe(f"tường {w.id}", w.id, geom.wall_polygon, self.cstore, w)
-            if poly is None:
-                continue
+        for wid, poly in self.wall_polys:
+            cut = unary_union(own[wid] + [self.holes]) if wid in own else self.holes
+            body = poly.difference(cut)
+            if not body.is_empty:
+                out.append(("tường", wid, body))
+        return out
+
+    @cached_property
+    def wall_solids(self) -> List[Tuple[str, str, BaseGeometry]]:
+        """Thân tường CHƯA trừ ô cửa (chỉ trừ cột) — thang / nội thất cắm vào khe cửa hay ô cửa sổ vẫn là va chạm."""
+        out = []
+        for wid, poly in self.wall_polys:
             body = poly.difference(self.holes)
             if not body.is_empty:
-                out.append(("tường", w.id, body))
+                out.append(("tường", wid, body))
         return out
 
     @cached_property
@@ -838,6 +862,11 @@ class _Ctx:
                 poly = self.safe(_flight_label(fid), fid, geom.flight_polygon, self.cstore, fl)
                 if poly is not None:
                     out.append(("vế thang", fid, poly))
+            for j, loop in enumerate(st.landings):        # chiếu nghỉ cũng là thang: kiểm đè tường/cột, trong phòng
+                lid = f"{st.id}.landings[{j}]"
+                poly = self.safe(f"chiếu nghỉ {lid}", lid, geom.landing_polygon, self.cstore, loop)
+                if poly is not None:
+                    out.append(("chiếu nghỉ", lid, poly))
         return out
 
     @cached_property
@@ -863,12 +892,15 @@ class _Ctx:
 
 
 def _flight_label(fid: str) -> str:
-    m = re.match(r"^(.*)\.flights\[(\d+)\]$", fid)
-    return f"vế {int(m.group(2)) + 1} thang {m.group(1)}" if m else fid
+    m = re.match(r"^(.*)\.(flights|landings)\[(\d+)\]$", fid)
+    if not m:
+        return fid
+    kind = "vế" if m.group(2) == "flights" else "chiếu nghỉ"
+    return f"{kind} {int(m.group(3)) + 1} thang {m.group(1)}"
 
 
 def _obj_label(label: str, oid: str) -> str:
-    return _flight_label(oid) if label == "vế thang" else f"{label} {oid}"
+    return _flight_label(oid) if label in ("vế thang", "chiếu nghỉ") else f"{label} {oid}"
 
 
 def check_step(store: ProjectStore, plan: DrawingPlan, code: str,
@@ -1056,6 +1088,21 @@ def _step_03(ctx: _Ctx, code: str) -> List[Issue]:
             out.append(_issue(SEV_WARN, "TUONG_CAT_NHAU",
                               f"Tường {w1.id} và tường {w2.id} cắt nhau tại {_fmt_pt(p)} ở giữa cả hai tường (không phải "
                               f"đầu tường) — kiểm tra định vị, nên tách tường tại giao điểm.", code, [w1.id, w2.id], p))
+    polys = dict(ctx.wall_polys)
+    for i, j in _bbox_pairs([polys[w.id].bounds if w.id in polys else _seg_bounds(a, b) for w, a, b in walls], TOL):
+        (w1, a1, b1), (w2, a2, b2) = walls[i], walls[j]
+        if w1.id not in polys or w2.id not in polys:
+            continue
+        u1, u2 = geom.unit(geom.sub(b1, a1)), geom.unit(geom.sub(b2, a2))
+        if abs(u1[0] * u2[1] - u1[1] * u2[0]) >= geom.MIN_JOIN_SIN or _collinear_overlap(a1, b1, a2, b2):
+            continue                                     # không song song, hoặc đã báo TUONG_TRUNG
+        inter = _intersection(polys[w1.id], polys[w2.id])
+        small = min(polys[w1.id].area, polys[w2.id].area) or 1.0
+        if inter.area > WALL_BODY_OVERLAP_RATIO * small:
+            out.append(_issue(SEV_ERROR, "TUONG_CHONG_THAN",
+                              f"Tường {w1.id} và tường {w2.id} song song, thân chồng nhau {_fmt(inter.area)} mm² "
+                              f"({inter.area / small * 100:.0f} % tường nhỏ hơn) quanh {_fmt_pt(_where_of(inter))} — "
+                              f"tường bị nhập trùng lệch vài mm.", code, [w1.id, w2.id], inter))
     for w, a, b in walls:
         numeric = [n for n, ref in (("đầu", w.start), ("cuối", w.end)) if isinstance(ref, (list, tuple))]
         if numeric and not _on_axis_line(ctx.store, a, b):
@@ -1075,6 +1122,12 @@ def _step_04(ctx: _Ctx, code: str) -> List[Issue]:
             out.append(_issue(SEV_ERROR, "CUA_DAM_COT",
                               f"Ô cửa {op.id} (tường {op.wall_id}) đè cột {cid}: giao {_fmt(area)} mm² quanh "
                               f"{_fmt_pt(_where_of(inter))}.", code, [op.id, cid], inter))
+        others = [("tường", wid, p) for wid, p in ctx.wall_polys if wid != op.wall_id]
+        for _, wid, inter, area in _clashes(fr["poly"], others, AREA_COLUMN_MM2):
+            out.append(_issue(SEV_ERROR, "CUA_DAM_TUONG",
+                              f"Ô cửa {op.id} (tường {op.wall_id}) ăn vào tường {wid} ở chỗ giao: {_fmt(area)} mm² quanh "
+                              f"{_fmt_pt(_where_of(inter))} — ô cửa không khoét tường khác, cần dời cửa.", code,
+                              [op.id, wid], inter))
     obstacles = ctx.wall_bodies + ctx.columns
     swings = ctx.door_swings
     for _, oid, sw in swings:
@@ -1108,7 +1161,7 @@ def _room_overlap_note(rooms: Dict[str, Polygon], g: BaseGeometry) -> str:
 
 def _step_05(ctx: _Ctx, code: str) -> List[Issue]:
     out = []
-    obstacles = ctx.wall_bodies + ctx.columns
+    obstacles = ctx.wall_solids + ctx.columns
     rooms = ctx.rooms
     for _, fid, poly in ctx.flights:
         name = _flight_label(fid)
@@ -1161,14 +1214,14 @@ def _furniture_footprints(ctx: _Ctx, code: str, out: List[Issue]) -> List[Tuple[
                               f"Chưa kiểm tra va chạm nội thất {f.id} ({f.block}): {why}.", code, [f.id],
                               p if p is not None else None))
             continue
-        fps.append((f, geom.footprint(p, (blk.size[0], blk.size[1]), rot)))
+        fps.append((f, geom.footprint(p, (blk.size[0], blk.size[1]), rot, tuple(blk.origin))))
     return fps
 
 
 def _step_06(ctx: _Ctx, code: str) -> List[Issue]:
     out: List[Issue] = []
     fps = _furniture_footprints(ctx, code, out)
-    obstacles = ctx.wall_bodies + ctx.columns + ctx.flights
+    obstacles = ctx.wall_solids + ctx.columns + ctx.flights
     rooms = ctx.rooms
     for f, fp in fps:
         for label, xid, inter, area in _clashes(fp, obstacles, AREA_CLASH_MM2):
@@ -1447,9 +1500,22 @@ def check_final(store: ProjectStore, plan: DrawingPlan, results: Iterable[Any]) 
     return out
 
 
+def dedupe(issues: Iterable[Issue]) -> List[Issue]:
+    """Một mục có thể được báo nhiều lần (Skill 00 và precheck cùng thấy chữ ghi đè; precheck và check_final cùng thấy
+    thiếu kích thước / nội suy) — giữ một lần: cùng mức độ + mã + đối tượng (eids), hoặc cùng lời văn nếu không có eids."""
+    seen, out = set(), []
+    for i in issues:
+        key = (i.severity, i.code, tuple(i.eids)) if i.eids else (i.severity, i.code, i.message)
+        if key not in seen:
+            seen.add(key)
+            out.append(i)
+    return out
+
+
 def summarize(issues: Iterable[Issue]) -> Dict[str, Any]:
-    """Đếm theo mức độ, theo mã (và mã × mức độ). "dat" TÍNH = không có LOI và không có NGHI_VAN."""
-    issues = list(issues)
+    """Đếm (đã gộp trùng) theo mức độ, theo mã (và mã × mức độ). "dat" TÍNH = không LOI, không NGHI_VAN và không
+    đối tượng nào chưa vẽ (DOI_TUONG_CHUA_VE) — cùng quy tắc với Master."""
+    issues = dedupe(issues)
     by_sev = {s: 0 for s in SEVERITIES}
     by_code: Dict[str, int] = {}
     by_code_sev: Dict[str, Dict[str, int]] = {}
@@ -1463,9 +1529,9 @@ def summarize(issues: Iterable[Issue]) -> Dict[str, Any]:
         "theo_muc_do": by_sev,
         "theo_ma": dict(sorted(by_code.items())),
         "theo_ma_muc_do": {k: dict(sorted(v.items())) for k, v in sorted(by_code_sev.items())},
-        "dat": by_sev[SEV_ERROR] == 0 and by_sev[SEV_DOUBT] == 0,
+        "dat": by_sev[SEV_ERROR] == 0 and by_sev[SEV_DOUBT] == 0 and by_code.get("DOI_TUONG_CHUA_VE", 0) == 0,
     }
 
 
-__all__ = ["precheck", "check_step", "check_final", "summarize", "VAL",
+__all__ = ["precheck", "check_step", "check_final", "summarize", "dedupe", "VAL",
            "AREA_COLUMN_MM2", "AREA_CLASH_MM2", "AREA_ROOM_MM2", "TEXT_CHAR_WIDTH", "TEXT_OVERLAP_RATIO"]

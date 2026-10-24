@@ -134,6 +134,38 @@ def build_room_dxf(path):
     return {"loose": loose.dxf.handle}
 
 
+def add_grid_2x2(msp):
+    """Trục 1, 2 (x = 0, 6000) và A, B (y = 0, 4000), có vòng tròn + tên ở đầu trục."""
+    for name, x in (("1", 0.0), ("2", 6000.0)):
+        msp.add_line((x, -1000), (x, 5000), dxfattribs={"layer": "TRUC"})
+        msp.add_circle((x, 5000 + R), R, dxfattribs={"layer": "TRUC"})
+        msp.add_text(name, height=350, dxfattribs={"layer": "TRUC"}).set_placement(
+            (x, 5000 + R), align=TextEntityAlignment.MIDDLE_CENTER)
+    for name, y in (("A", 0.0), ("B", 4000.0)):
+        msp.add_line((-1000, y), (7000, y), dxfattribs={"layer": "TRUC"})
+        msp.add_circle((-1000 - R, y), R, dxfattribs={"layer": "TRUC"})
+        msp.add_text(name, height=350, dxfattribs={"layer": "TRUC"}).set_placement(
+            (-1000 - R, y), align=TextEntityAlignment.MIDDLE_CENTER)
+
+
+def add_room_outline(msp, layer="TUONG"):
+    """Phòng 6000×4000 (tim trục), tường dày 220 vẽ bằng hai đa tuyến kín."""
+    a = {"layer": layer}
+    msp.add_lwpolyline([(-110, -110), (6110, -110), (6110, 4110), (-110, 4110)], close=True, dxfattribs=a)
+    msp.add_lwpolyline([(110, 110), (5890, 110), (5890, 3890), (110, 3890)], close=True, dxfattribs=a)
+
+
+def patch_group_value(path, etype, handle, code, value):
+    """Sửa giá trị nhóm `code` đầu tiên của thực thể `etype` #handle ngay trong file DXF (giả lập file hỏng)."""
+    with open(path, encoding="utf-8") as f:
+        s = f.read()
+    i = s.find(f"{etype}\n  5\n{handle}\n")
+    j = s.find(f"\n{code}\n", i)
+    k = s.find("\n", j + len(code) + 2)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(s[:j] + f"\n{code}\n{value}" + s[k:])
+
+
 def codes(store, severity=None):
     return [i.code for i in store.issues if severity is None or i.severity == severity]
 
@@ -343,6 +375,23 @@ class ReadDxfTest(ReaderTestBase):
         self.assertNotIn("TUONG_CHUA_GHEP_CAP", codes(st))
         self.assertAlmostEqual(geom.walls_union(st).area, 5220 * 220 + 220 * 2890, places=3)
 
+    def test_mtext_bad_attachment_point_reported_not_crash(self):
+        """(rà soát reader-9) MTEXT ghi chú có mã canh lề 71 ngoài 1..9: không được làm hỏng cả lần đọc (KeyError thô) —
+        báo CANH_BAO kèm handle, phần còn lại đọc bình thường."""
+        p = self.path("mtext_hong.dxf")
+        doc = ezdxf.new("R2010", units=4)
+        msp = doc.modelspace()
+        add_grid_2x2(msp)
+        t = msp.add_mtext("GHI CHU", dxfattribs={"layer": "GHI_CHU", "insert": (0, -3000), "char_height": 250})
+        doc.saveas(p)
+        for bad in ("     0", "    10"):
+            patch_group_value(p, "MTEXT", t.dxf.handle, " 71", bad)
+            st = reader.read_dxf(p)
+            self.assertEqual(st.axes["V"].names, ["1", "2"])
+            found = issue(st, "CHU_KHONG_DOC_DUOC")
+            self.assertIsNotNone(found)
+            self.assertEqual((found.severity, found.eids), (SEV_WARN, [t.dxf.handle]))
+
     def test_bad_files(self):
         with self.assertRaises(ReaderError):
             reader.read_dxf(self.path("khong_co.dxf"))
@@ -353,6 +402,185 @@ class ReadDxfTest(ReaderTestBase):
             reader.read_dxf(junk)
         with self.assertRaises(ReaderError):
             reader.read_dxf(self.dxf, tol=0)
+
+
+class DxfDoubtTest(ReaderTestBase):
+    """Bản vẽ đọc không chắc chắn phải thành NGHI_VAN (chặn kết luận ĐẠT), không được chọn ngầm hay bỏ im lặng."""
+
+    def new_doc(self):
+        doc = ezdxf.new("R2010", units=4)
+        return doc, doc.modelspace()
+
+    def save(self, doc, name):
+        p = self.path(name)
+        doc.saveas(p)
+        return p
+
+    def test_unread_geometry_on_role_or_unknown_layer_is_doubt(self):
+        """(rà soát reader-1) Cột vẽ bằng CIRCLE / 4 LINE rời / block, tường ARC, cột trên layer tên lạ: trước đây chỉ
+        CANH_BAO nên bản vẽ thiếu cột/tường vẫn ĐẠT. Hình học → NGHI_VAN; chữ, hatch → vẫn CANH_BAO; layer khai báo
+        'bo_qua' → CANH_BAO."""
+        doc, msp = self.new_doc()
+        add_grid_2x2(msp)
+        add_room_outline(msp)
+        circle = msp.add_circle((6000, 4000), 150, dxfattribs={"layer": "COT"})
+        lines = [msp.add_line(a, b, dxfattribs={"layer": "COT"}).dxf.handle
+                 for a, b in (((-110, -110), (110, -110)), ((110, -110), (110, 110)),
+                              ((110, 110), (-110, 110)), ((-110, 110), (-110, -110)))]
+        blk = doc.blocks.new("COT220")
+        blk.add_lwpolyline([(-110, -110), (110, -110), (110, 110), (-110, 110)], close=True)
+        ins = msp.add_blockref("COT220", (6000, 0), dxfattribs={"layer": "COT"})
+        arcs = [msp.add_arc((3000, 4000), r, 0, 180, dxfattribs={"layer": "TUONG"}).dxf.handle for r in (1390, 1610)]
+        hatch = msp.add_hatch(dxfattribs={"layer": "TUONG"})
+        hatch.paths.add_polyline_path([(-110, -110), (6110, -110), (6110, 110), (-110, 110)], is_closed=True)
+        odd = msp.add_lwpolyline([(-110, 3890), (110, 3890), (110, 4110), (-110, 4110)], close=True,
+                                 dxfattribs={"layer": "Cét"})                    # tên layer "Cột" kiểu TCVN3
+        note = msp.add_text("GHI CHU", height=250, dxfattribs={"layer": "GHI_CHU", "insert": (0, -3000)})
+        p = self.save(doc, "chua_doc.dxf")
+        st = reader.read_dxf(p)
+        self.assertEqual(st.columns, [])
+        left = {(i.severity, tuple(sorted(i.eids))) for i in st.issues if i.code == "THUC_THE_CHUA_XU_LY"}
+        self.assertIn((SEV_DOUBT, tuple(sorted([circle.dxf.handle, ins.dxf.handle] + lines))), left)
+        self.assertIn((SEV_DOUBT, tuple(sorted(arcs))), left)
+        self.assertIn((SEV_WARN, (hatch.dxf.handle,)), left)                       # hatch: không phải đối tượng
+        unknown = {(i.severity, tuple(i.eids)) for i in st.issues if i.code == "LAYER_KHONG_NHAN_DIEN"}
+        self.assertEqual(unknown, {(SEV_DOUBT, (odd.dxf.handle,)), (SEV_WARN, (note.dxf.handle,))})
+        # người dùng khai báo layer đó là cố ý không đọc → chỉ còn CANH_BAO (vẫn liệt kê handle); qua load_inputs
+        st2 = reader.load_inputs(p, role_patterns={"bo_qua": r"^Cét$"})
+        self.assertNotIn((SEV_DOUBT, "LAYER_KHONG_NHAN_DIEN"), [(i.severity, i.code) for i in st2.issues])
+        skipped = [i for i in st2.issues if i.code == "THUC_THE_CHUA_XU_LY" and odd.dxf.handle in i.eids]
+        self.assertEqual([i.severity for i in skipped], [SEV_WARN])
+
+    def test_elevation_layer_not_read_as_column(self):
+        """(rà soát reader-7) Bỏ dấu thì "CỐT" (cao độ) và "CỘT" (cột) đều thành "cot": khung ký hiệu cao độ gần giao
+        trục không được thành cột thật. Layer "CỘT" (dấu nặng) vẫn đọc là cột."""
+        for layer in ("CỐT CAO ĐỘ", "COT CAO DO", "CỐT"):
+            doc, msp = self.new_doc()
+            add_grid_2x2(msp)
+            add_room_outline(msp)
+            box = msp.add_lwpolyline([(5900, 3900), (6300, 3900), (6300, 4100), (5900, 4100)], close=True,
+                                     dxfattribs={"layer": layer})
+            st = reader.read_dxf(self.save(doc, "cao_do.dxf"))
+            self.assertEqual(st.columns, [], layer)
+            left = [i for i in st.issues if box.dxf.handle in i.eids]
+            self.assertEqual([(i.code, i.severity) for i in left], [("THUC_THE_CHUA_XU_LY", SEV_WARN)], layer)
+            self.assertIn("bo_qua", left[0].message)
+        doc, msp = self.new_doc()
+        add_grid_2x2(msp)
+        msp.add_lwpolyline([(5890, 3890), (6110, 3890), (6110, 4110), (5890, 4110)], close=True,
+                           dxfattribs={"layer": "CỘT"})
+        st = reader.read_dxf(self.save(doc, "cot.dxf"))
+        self.assertEqual([(c.id, c.b, c.h) for c in st.columns], [("C-2B", 220.0, 220.0)])
+
+    def test_gap_wider_than_door_not_merged(self):
+        """(rà soát reader-2) Khe tường 1000..3400 chỉ có cửa 900: không được nối thành tường liền (1900..3400 vốn là
+        khe hở) — giữ hai đoạn, NGHI_VAN kèm handle cửa. Lối thông không cửa cạnh tường giao: khe 3100..5000 không bằng
+        chiều dày tường giao → không nối."""
+        doc, msp = self.new_doc()
+        a = {"layer": "TUONG"}
+        for x0, x1 in ((0, 1000), (3400, 6000)):
+            msp.add_line((x0, -110), (x1, -110), dxfattribs=a)
+            msp.add_line((x0, 110), (x1, 110), dxfattribs=a)
+        for x in (0, 1000, 3400, 6000):
+            msp.add_line((x, -110), (x, 110), dxfattribs=a)
+        door = msp.add_blockref(_door_block(doc, "D900"), (1000, 110), dxfattribs={"layer": "CUA_DI"})
+        st = reader.read_dxf(self.save(doc, "khe_rong.dxf"))
+        self.assertEqual([(w.start, w.end) for w in st.walls], [([0.0, 0.0], [1000.0, 0.0]), ([3400.0, 0.0], [6000.0, 0.0])])
+        gap = issue(st, "TUONG_KHE_KHONG_KHOP_CUA")
+        self.assertIsNotNone(gap)
+        self.assertEqual((gap.severity, gap.eids), (SEV_DOUBT, [door.dxf.handle]))
+        self.assertNotIn("nối qua", " ".join(w.prov.ref for w in st.walls))
+
+        doc, msp = self.new_doc()
+        for x0, x1 in ((0, 3000), (5000, 8000)):
+            msp.add_line((x0, -110), (x1, -110), dxfattribs=a)
+            msp.add_line((x0, 110), (x1, 110), dxfattribs=a)
+        msp.add_line((3000, -110), (3000, 2000), dxfattribs=a)                  # tường dày 100 đi lên từ mặt dưới
+        msp.add_line((3100, -110), (3100, 2000), dxfattribs=a)
+        st = reader.read_dxf(self.save(doc, "loi_thong.dxf"))
+        main = [w for w in st.walls if w.thickness == 220.0]
+        self.assertEqual([(w.start, w.end) for w in main], [([0.0, 0.0], [3050.0, 0.0]), ([5000.0, 0.0], [8000.0, 0.0])])
+        self.assertNotIn("nối qua chỗ giao tường", " ".join(w.prov.ref for w in st.walls))
+
+    def test_extra_parallel_lines_and_box_on_wall_layer_are_doubt(self):
+        """(rà soát reader-3) Nét kính cửa sổ, nét tim tường, ô 300×300 vẽ trên layer tường từng bị ghép thành tường
+        giả (dày 90, dày 110 lệch tim, hai tường 300 cắt nhau) mà không có Issue nào."""
+        doc, msp = self.new_doc()
+        a = {"layer": "TUONG"}
+        add_room_outline(msp)
+        glass = [msp.add_line((2000, y), (3200, y), dxfattribs=a).dxf.handle for y in (3980, 4020)]
+        axis = msp.add_line((1000, 0), (1800, 0), dxfattribs=a).dxf.handle
+        box = msp.add_lwpolyline([(2850, 1850), (3150, 1850), (3150, 2150), (2850, 2150)], close=True,
+                                 dxfattribs=a).dxf.handle
+        st = reader.read_dxf(self.save(doc, "net_thua.dxf"))
+        amb = issue(st, "TUONG_GHEP_CAP_MO_HO")
+        self.assertIsNotNone(amb)
+        self.assertEqual(amb.severity, SEV_DOUBT)
+        self.assertTrue(set(glass + [axis]) <= set(amb.eids))
+        short = issue(st, "TUONG_NGAN_HON_DAY")
+        self.assertIsNotNone(short)
+        self.assertEqual(short.severity, SEV_DOUBT)
+        self.assertIn(box, short.eids)
+        # phòng sạch (chỉ hai mặt mỗi tường, góc khép kín) không bị báo
+        build_room_dxf(self.path("phong.dxf"))
+        clean = reader.read_dxf(self.path("phong.dxf"))
+        for code in ("TUONG_GHEP_CAP_MO_HO", "TUONG_NGAN_HON_DAY", "TUONG_CHUA_GHEP_CAP"):
+            self.assertNotIn(code, codes(clean))
+        # trụ 300 giữa hai cửa có nét bịt hai mép: hai nét bịt không được ghép thành "tường" vuông góc dày 300
+        doc, msp = self.new_doc()
+        for x0, x1 in ((0, 1000), (1900, 2200), (3100, 5000)):
+            msp.add_line((x0, -110), (x1, -110), dxfattribs=a)
+            msp.add_line((x0, 110), (x1, 110), dxfattribs=a)
+        for x in (0, 1000, 1900, 2200, 3100, 5000):
+            msp.add_line((x, -110), (x, 110), dxfattribs=a)
+        door = _door_block(doc, "D900")
+        for x in (1000, 2200):
+            msp.add_blockref(door, (x, 110), dxfattribs={"layer": "CUA_DI"})
+        st = reader.read_dxf(self.save(doc, "tru_giua_cua.dxf"))
+        self.assertEqual([(w.start, w.end, w.thickness) for w in st.walls], [([0.0, 0.0], [5000.0, 0.0], 220.0)])
+        self.assertEqual([(o.offset, o.width) for o in st.openings], [(1000.0, 900.0), (2200.0, 900.0)])
+        self.assertEqual(codes(st, SEV_DOUBT), [])
+
+    def test_partially_paired_face_reported(self):
+        """(rà soát reader-4) Mặt dưới dài 6000 chỉ ghép được 3000 với mặt trên: đoạn 3000..6000 không được mất im lặng."""
+        doc, msp = self.new_doc()
+        a = {"layer": "TUONG"}
+        long_face = msp.add_line((0, -110), (6000, -110), dxfattribs=a).dxf.handle
+        msp.add_line((0, 110), (3000, 110), dxfattribs=a)
+        msp.add_line((0, -110), (0, 110), dxfattribs=a)
+        st = reader.read_dxf(self.save(doc, "ghep_mot_phan.dxf"))
+        self.assertEqual([(w.start, w.end, w.thickness) for w in st.walls], [([0.0, 0.0], [3000.0, 0.0], 220.0)])
+        lost = issue(st, "TUONG_CHUA_GHEP_CAP")
+        self.assertIsNotNone(lost)
+        self.assertEqual((lost.severity, lost.eids), (SEV_DOUBT, [long_face]))
+        self.assertIn("(3000, -110)→(6000, -110) dài 3000 mm", lost.message)
+
+    def test_door_at_corner_assigned_by_closed_leaf(self):
+        """(rà soát reader-8) Bản lề đặt đúng góc trong: điểm chèn cách tim cả tường ngang lẫn tường đứng 110 mm. Nét
+        cánh vẽ ở vị trí mở dọc X → cánh đóng dọc Y → cửa thuộc tường đứng x = 0 (trước đây bị gán tường ngang, không
+        Issue). Block chỉ có cung, không có nét cánh → không phân định được → NGHI_VAN."""
+        doc, msp = self.new_doc()
+        add_room_outline(msp)
+        blk = doc.blocks.new("D_GOC")
+        blk.add_line((0, 0), (900, 0))
+        blk.add_arc((0, 0), 900, 0, 90)
+        msp.add_blockref("D_GOC", (110, 110), dxfattribs={"layer": "CUA_DI"})
+        st = reader.read_dxf(self.save(doc, "cua_goc.dxf"))
+        op = st.openings[0]
+        wall = st.get("walls", op.wall_id)
+        self.assertEqual((wall.start, wall.end), ([0.0, 0.0], [0.0, 4000.0]))
+        self.assertEqual((op.offset, op.width), (110.0, 900.0))
+        self.assertNotIn("CUA_NHIEU_TUONG", codes(st))
+
+        doc, msp = self.new_doc()
+        add_room_outline(msp)
+        blk = doc.blocks.new("CHI_CUNG")
+        blk.add_arc((0, 0), 900, 0, 90)
+        ins = msp.add_blockref("CHI_CUNG", (110, 110), dxfattribs={"layer": "CUA_DI"})
+        st = reader.read_dxf(self.save(doc, "cua_goc_mo_ho.dxf"))
+        amb = issue(st, "CUA_NHIEU_TUONG")
+        self.assertIsNotNone(amb)
+        self.assertEqual((amb.severity, amb.eids), (SEV_DOUBT, [ins.dxf.handle]))
 
 
 class ReadSpecTest(ReaderTestBase):
@@ -370,6 +598,11 @@ class ReadSpecTest(ReaderTestBase):
         p = self.write_json("sai.json", {"schema": "23hg-cad-store/1", "columns": [{"id": "C1", "la": 1}]})
         with self.assertRaises(ReaderError):
             reader.read_spec(p)
+        # (rà soát reader-12) sai KIỂU (list/chuỗi thay cho dict) cũng phải là ReaderError, không AttributeError thô
+        for i, data in enumerate(({"schema": "23hg-cad-store/1", "axes": {"V": []}}, {"axes": []},
+                                  {"walls": [{"id": "W1", "start": [0, 0], "end": [1, 0], "prov": "abc"}]})):
+            with self.assertRaises(ReaderError, msg=str(data)):
+                reader.read_spec(self.write_json(f"sai_kieu_{i}.json", data))
         bad = self.path("hong.json")
         with open(bad, "w", encoding="utf-8") as f:
             f.write("{ khong phai json")
@@ -475,6 +708,86 @@ class UserValuesTest(ReaderTestBase):
         reader.apply_user_values(self.store, p)
         self.assertIn("NGUON_NHAP_THIEU_TRANG", codes(self.store, SEV_WARN))
 
+    def test_only_dimension_fields_accepted(self):
+        """(rà soát reader-5) Số cánh cửa, toạ độ nhãn phòng... không phải kích thước: leaves = 3 từng lọt qua (bản vẽ
+        ĐẠT, file dữ liệu xuất ra không nạp lại được). Chỉ nhận trường kích thước; sai một mục → không ghi gì."""
+        st = load_sample(filled=True)
+        label_at = st.get("rooms", "P1").label_at
+        width_prov = st.get_provenance("openings:CD2.width")
+        for i, (key, val) in enumerate((("openings:CD2.leaves", 3), ("openings:CD2.leaves", 2),
+                                        ("rooms:P1.label_at", 5000), ("openings:CD2.width", 900),
+                                        ("stairs:ST1.label", 1))):
+            gia_tri = {key: val} if key != "openings:CD2.width" else {key: val, "openings:CD2.leaves": 1}
+            p = self.write_json(f"nhap_{i}.json", {"nguon": "[Trang 2] KT-01", "gia_tri": gia_tri})
+            with self.assertRaises(ReaderError, msg=key):
+                reader.apply_user_values(st, p)
+        self.assertEqual(st.get("openings", "CD2").leaves, 1)
+        self.assertEqual(st.get("rooms", "P1").label_at, label_at)
+        self.assertIs(st.get_provenance("openings:CD2.width"), width_prov)      # mục hợp lệ cùng file cũng không ghi
+        ok = self.write_json("nhap_ok.json", {"nguon": "[Trang 2] KT-01",
+                                              "gia_tri": {"walls:W1.height": 3300, "columns:C-1A.dx": 50}})
+        self.assertEqual(reader.apply_user_values(st, ok), ["walls:W1.height", "columns:C-1A.dx"])
+        self.assertEqual((st.get("walls", "W1").height, st.get("columns", "C-1A").dx), (3300.0, 50.0))
+
+    def test_alias_keys_rejected_before_writing(self):
+        """(rà soát reader-10) "axes:V.spans[01]" và "axes:V.spans[1]" là cùng một số liệu: phép so trùng theo chuỗi thô
+        để lọt, store.confirm ném StoreError SAU khi đã ghi giá trị (store sửa dở, không có nguồn)."""
+        before = (self.store.get_value("axes:V.spans[1]"), self.store.get_value("axes:H.spans[0]"),
+                  len(self.store.sources))
+        mixed = self.write_json("trung_xn.json", {
+            "nguon": "[Trang 2] KT-01", "gia_tri": {"axes:V.spans[01]": 3500, "axes:H.spans[0]": 4300},
+            "xac_nhan": [{"key": "axes:V.spans[1]", "by": "KS A"}]})
+        with self.assertRaises(ReaderError):
+            reader.apply_user_values(self.store, mixed)
+        twice = self.write_json("trung_gt.json", {"nguon": "[Trang 2] KT-01",
+                                                  "gia_tri": {"axes:V.spans[01]": 3500, "axes:V.spans[1]": 3600}})
+        with self.assertRaises(ReaderError):
+            reader.apply_user_values(self.store, twice)
+        after = (self.store.get_value("axes:V.spans[1]"), self.store.get_value("axes:H.spans[0]"),
+                 len(self.store.sources))
+        self.assertEqual(after, before)
+        prov = self.store.get_provenance("axes:V.spans[1]")
+        self.assertEqual((prov.source, prov.confirmed), (SRC_INTERP, False))
+
+    def test_user_values_clear_gap_issue_but_keep_swing_default(self):
+        """(rà soát reader-6) Cửa có block không đo được: Issue thiếu vị trí/bề rộng mang khoá số liệu và được gỡ khi
+        người dùng nhập ĐỦ cả hai (trạng thái tính lại); chiều mở mặc định đoán khi không đo được vẫn là NGHI_VAN."""
+        doc = ezdxf.new("R2010", units=4)
+        msp = doc.modelspace()
+        add_room_outline(msp)
+        blk = doc.blocks.new("CUA_TRONG")
+        blk.add_attdef("KH", (0, 0), dxfattribs={"height": 200})
+        ins = msp.add_blockref("CUA_TRONG", (2000, 0), dxfattribs={"layer": "CUA_DI"})
+        ins.add_auto_attribs({"KH": "D1"})
+        p = self.path("cua_trong.dxf")
+        doc.saveas(p)
+        st = reader.read_dxf(p)
+        h = ins.dxf.handle
+        gap = issue(st, "CUA_KHONG_DO_DUOC_BE_RONG")
+        self.assertEqual((gap.severity, gap.eids), (SEV_DOUBT, [h, "openings:CD1.offset", "openings:CD1.width"]))
+        swing = issue(st, "CUA_CHIEU_MO_CHUA_RO")
+        self.assertIsNotNone(swing)
+        self.assertEqual((swing.severity, swing.eids), (SEV_DOUBT, [h]))
+        reader.apply_user_values(st, self.write_json("bo_rong.json", {"nguon": "[Trang 1] KT-01",
+                                                                      "gia_tri": {"openings:CD1.width": 900}}))
+        self.assertIn("CUA_KHONG_DO_DUOC_BE_RONG", codes(st))                   # còn thiếu vị trí
+        reader.apply_user_values(st, self.write_json("vi_tri.json", {"nguon": "[Trang 1] KT-01",
+                                                                     "gia_tri": {"openings:CD1.offset": 1550}}))
+        self.assertEqual(st.missing(), [])
+        self.assertNotIn("CUA_KHONG_DO_DUOC_BE_RONG", codes(st))
+        self.assertIn("CUA_CHIEU_MO_CHUA_RO", codes(st, SEV_DOUBT))
+
+    def test_user_span_clears_interpolation_error(self):
+        """(rà soát reader-6) LOI "không nội suy được nhịp" gắn khoá nhịp; người dùng nhập nhịp đó → gỡ (Validator vẫn
+        đối chiếu tổng nhịp với kích thước tổng)."""
+        st = load_sample(filled=False)
+        st.set_value("axes:V.overall", 7000, st.get_provenance("axes:V.overall"))
+        reader.interpolate_missing(st)
+        self.assertIn("NOI_SUY_NHIP_KHONG_DUONG", codes(st, SEV_ERROR))
+        reader.apply_user_values(st, self.write_json("nhip.json", {"nguon": "[Trang 2] KT-01",
+                                                                   "gia_tri": {"axes:V.spans[1]": 3600}}))
+        self.assertNotIn("NOI_SUY_NHIP_KHONG_DUONG", codes(st))
+
 
 class ReferenceAndDispatchTest(ReaderTestBase):
     def make_png(self, name="scan.png", size=(40, 30)):
@@ -506,6 +819,25 @@ class ReferenceAndDispatchTest(ReaderTestBase):
             reader.set_reference_scale(st, 0)
         with self.assertRaises(ReaderError):
             reader.set_reference_scale(st, 1, name="khong_co.png")
+
+    def test_two_different_underlays_with_same_name_rejected(self):
+        """(rà soát reader-11) Hai ảnh nền khác nhau cùng tên file ở hai thư mục: SourceFile chỉ ghi tên và kết quả chép
+        ảnh theo tên → một ảnh mất im lặng. Từ chối; gắn lại đúng file cũ thì vẫn được."""
+        from PIL import Image
+        pa, pb = self.path("a"), self.path("b")
+        os.makedirs(pa)
+        os.makedirs(pb)
+        png_a, png_b = os.path.join(pa, "scan.png"), os.path.join(pb, "scan.png")
+        Image.new("RGB", (100, 50), (255, 255, 255)).save(png_a)
+        Image.new("RGB", (300, 200), (255, 255, 255)).save(png_b)
+        st = load_sample()
+        reader.attach_reference(st, png_a)
+        with self.assertRaises(ReaderError):
+            reader.attach_reference(st, png_b)
+        self.assertEqual([s.underlay["pixels"] for s in st.sources if s.used_for == "anh_nen"], [[100, 50]])
+        reader.attach_reference(st, png_a, scale=2)
+        with self.assertRaises(ReaderError):
+            reader.load_inputs([SAMPLE_SPEC, png_a, png_b])
 
     def test_pdf_reference(self):
         pdf = self.path("ban_ve.pdf")

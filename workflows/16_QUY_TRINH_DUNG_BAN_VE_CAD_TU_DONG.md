@@ -37,16 +37,18 @@ Chỉ một nguồn dữ liệu (JSON hoặc DXF) mỗi lần chạy.
 
 - Thiếu kích thước → để trống (None), liệt kê ở `store.missing()`. Đối tượng phụ thuộc (tường trên trục chưa có toạ độ...) không vẽ và
   được ghi lý do.
-- **A. Tôi nhập**: file `--kich-thuoc-nhap` (`gia_tri` + `xac_nhan`).
+- **A. Tôi nhập**: file `--kich-thuoc-nhap` mục `gia_tri`. Xác nhận số liệu đã nội suy là bước SAU: chạy lại trên
+  `<tên>_du_lieu_du_an.json` với file chỉ có mục `xac_nhan` (người xác nhận ghi tên).
 - **B. Nội suy** (`--noi-suy`): nhịp trục thiếu đúng một = kích thước tổng − tổng nhịp đã biết; kích thước cột/cửa lấy từ đối tượng cùng ký hiệu.
   Giá trị nội suy mang nguồn `noi_suy`, `confirmed = False`; trạng thái dữ liệu thành `CHO_XAC_NHAN_NOI_SUY`; khung tên và báo cáo ghi rõ;
   layer `KT-KIEM-TRA` (không in) đánh dấu vị trí. **Không có đường nào tự chuyển nội suy thành đã xác nhận.**
 
 ## 3. Project Data Store
 
-`<tên>_du_lieu_du_an.json` — đọc lại được làm đầu vào cho lần sau. Mỗi số liệu có nguồn gốc. Trạng thái duyệt tính bằng `store.status()`:
+`<tên>_du_lieu_du_an.json` — đọc lại được làm đầu vào cho lần sau (vấn đề phát hiện ở lần đọc trước không nạp lại: mọi
+phát hiện tính lại từ dữ liệu hiện tại). Mỗi số liệu có nguồn gốc. Trạng thái duyệt tính bằng `store.status()`:
 `THIEU_KICH_THUOC` → `CHO_XAC_NHAN_NOI_SUY` → `CHO_DUYET` → `DA_DUYET` (chỉ khi có phê duyệt mang đúng mã băm dữ liệu hiện tại;
-sửa dữ liệu sau khi duyệt thì phê duyệt cũ hết hiệu lực).
+sửa dữ liệu sau khi duyệt thì phê duyệt cũ hết hiệu lực). CLI chỉ ghi phê duyệt (`--duyet`) khi kết luận đã ĐẠT.
 
 ## 4. 10 skill
 

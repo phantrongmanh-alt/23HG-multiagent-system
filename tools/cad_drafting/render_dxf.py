@@ -254,6 +254,21 @@ def _setup_dimstyles(doc, plan: DrawingPlan, warn: List[str]) -> List[str]:
     return made
 
 
+def _sync_header_dimvars(doc, name: str) -> None:
+    """Chép biến DIM* của kiểu hiện hành vào header ($DIM*): AutoCAD coi header là biến DIM hiện hành, lệch nhau thì
+    kiểu hiện hành mang "<style overrides>" và kích thước vẽ thêm sau (tay / máy chủ MCP) không theo TCVN."""
+    from ezdxf.sections.headervars import HEADER_VAR_MAP
+    for key, value in doc.dimstyles.get(name).dxfattribs().items():
+        if not key.startswith("dim") or key.endswith("_handle"):
+            continue
+        var = "$" + key.upper()
+        if var not in HEADER_VAR_MAP:
+            continue
+        if key in ("dimblk", "dimblk1", "dimblk2", "dimldrblk") and value and not str(value).startswith("_"):
+            value = "_" + str(value)              # khối đầu đo chuẩn của AutoCAD mang tiền tố "_" (vd _ARCHTICK)
+        doc.header[var] = value
+
+
 def _add_primitive(doc, layout, kind: str, d: Dict[str, Any], attribs: Dict[str, Any], style: str,
                    what: str, warn: List[str]):
     """Thêm một hình cơ bản (line/pline/circle/arc/text/mtext) vào layout. Trả thực thể."""
@@ -428,8 +443,9 @@ def _draw_op(doc, msp, op: Op, layer: str, style: str, dimstyles: Iterable[str],
     if op.kind == "dim_linear":
         name = d["dimstyle"]
         if name not in dimstyles:
-            warn.append(f"{op.eid}: dimstyle '{name}' không có trong plan.dimstyles — dùng Standard")
-            name = "Standard"
+            # không lặng lẽ vẽ bằng Standard (chữ 2,5 mm model, mũi tên kín): bỏ qua để số đếm đọc lại lệch và báo lỗi
+            skipped.append({"id": op.eid, "ly_do": f"dimstyle '{name}' không có trong plan.dimstyles"})
+            return None
         text = d.get("text_override")
         dim = msp.add_linear_dim(base=d["base"], p1=d["p1"], p2=d["p2"], angle=d["angle"], dimstyle=name,
                                  text=text if text else "<>", dxfattribs=attribs)
@@ -481,6 +497,7 @@ def render_dxf(plan: DrawingPlan, path: str, underlays: Optional[Sequence[Dict[s
     dimstyles = _setup_dimstyles(doc, plan, warn)
     if dimstyles:
         doc.header["$DIMSTYLE"] = dimstyles[0]
+        _sync_header_dimvars(doc, dimstyles[0])
     blocks = _setup_blocks(doc, plan, style, warn, skipped)
     msp = doc.modelspace()
 

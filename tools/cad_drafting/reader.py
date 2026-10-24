@@ -15,23 +15,37 @@ Kích thước thiếu (store.missing()):
                   ký hiệu); nguồn "noi_suy", confirmed=False — KHÔNG BAO GIỜ tự coi là đã xác nhận.
 
 Không bỏ dữ liệu im lặng: mỗi thực thể trong model space của DXF hoặc được đọc thành dữ liệu, hoặc hiện trong
-store.issues (skill "00") kèm handle và lý do. Đơn vị mm; toạ độ model space đọc nguyên giá trị, không quy đổi.
+store.issues (skill "00") kèm handle và lý do. Hình học trên layer trục/cột/tường/cửa mà không đọc được, đa tuyến kín
+hay INSERT trên layer không nhận diện được → NGHI_VAN (dữ liệu có thể thiếu đối tượng so với bản vẽ gốc); chữ, hatch,
+nét kích thước đã phá khối → CANH_BAO. Đơn vị mm; toạ độ model space đọc nguyên giá trị, không quy đổi.
 
 Đọc DXF — quy tắc nhận diện (mẫu regex theo tên layer ở DEFAULT_ROLE_PATTERNS, không phân biệt hoa thường,
-tên layer được bỏ dấu tiếng Việt trước khi so; một layer khớp nhiều mẫu thì lấy theo DXF_ROLE_PRIORITY):
+so trên tên layer đã bỏ dấu tiếng Việt và trên tên gốc; một layer khớp nhiều mẫu thì lấy theo DXF_ROLE_PRIORITY):
+  bỏ qua layer khớp mẫu "bo_qua" (mặc định: ký hiệu cao độ — "CỐT", "COT CAO DO", "cote"...) không đọc, chỉ báo
+         CANH_BAO; đứng trước "cot" vì bỏ dấu thì "CỐT" (cao độ) và "CỘT" (cột) đều thành "cot".
   trục   LINE gần đứng → nhóm V (x), gần ngang → nhóm H (y); gộp đường cùng toạ độ (≤ tol). Tên trục là chữ
          (TEXT/MTEXT, hoặc ATTRIB của INSERT) trong/ngay cạnh vòng tròn ở đầu đường trục; không có → "?1", "?2"...
   cột    đa tuyến kín hình chữ nhật thẳng trục X/Y → b, h, tâm; gán giao trục gần nhất, dx/dy = độ lệch.
   tường  cặp đường song song cách nhau WALL_MIN_THICKNESS–WALL_MAX_THICKNESS mm, có đoạn chồng nhau → tim = đường
-         giữa, dày = khoảng cách. Đoạn tường thẳng hàng cùng chiều dày được nối qua ô cửa (có INSERT cửa) và qua
-         chỗ giao tường (có đầu tường khác); đầu tường chạm (hoặc ăn vào) tường khác được đưa về giao tim (góc, ngã ba khép kín).
-  cửa    INSERT trên layer cửa đi / cửa sổ → tường gần nhất (tim cách điểm chèn ≤ nửa dày + tol); offset, width đo
-         bao hình block dọc tim tường; cửa đi: số cánh, bản lề, chiều mở đọc từ cung mở trong block.
+         giữa, dày = khoảng cách. Trong một khoảng có nét nằm giữa hai mặt ghép được, hoặc nét thừa ghép được với nét
+         kề → NGHI_VAN "TUONG_GHEP_CAP_MO_HO"; đoạn tường dài ≤ chiều dày → NGHI_VAN "TUONG_NGAN_HON_DAY"; phần mặt tường
+         không nằm trong tường nào → NGHI_VAN "TUONG_CHUA_GHEP_CAP". Đoạn tường thẳng hàng cùng chiều dày chỉ được nối
+         khi khe giữa chúng được PHỦ KÍN bởi bao hình block cửa (INSERT cửa trong khe) và/hoặc bề dày tường giao (đầu
+         tường khác trong khe); khe có cửa mà không phủ kín → giữ hai đoạn, NGHI_VAN "TUONG_KHE_KHONG_KHOP_CUA". Đầu
+         tường chạm (hoặc ăn vào) tường khác được đưa về giao tim (góc, ngã ba khép kín).
+  cửa    INSERT trên layer cửa đi / cửa sổ → tường gần nhất (tim cách điểm chèn ≤ nửa dày + tol); điểm chèn ở chỗ
+         giao hai tường không song song → chọn tường song song vị trí cánh đóng (cung mở + nét cánh), không phân định
+         được → NGHI_VAN "CUA_NHIEU_TUONG"; offset, width đo bao hình block dọc tim tường; cửa đi: số cánh, bản lề,
+         chiều mở đọc từ cung mở trong block (không đọc được → mặc định + NGHI_VAN "CUA_CHIEU_MO_CHUA_RO").
   DIMENSION (mọi layer) → MeasuredDim; chữ ghi đè khác số đo → NGHI_VAN "DIM_GHI_DE".
+
+Issue gắn với một chỗ thiếu số liệu ghi khoá số liệu trong eids (vd "openings:CD1.width"); apply_user_values gỡ Issue
+đó khi mọi khoá trong eids đã có giá trị do người nhập (hoặc nội suy đã xác nhận).
 """
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import math
@@ -61,6 +75,9 @@ Pt = Tuple[float, float]
 # ── mẫu nhận diện layer ──────────────────────────────────────────────────────
 
 DEFAULT_ROLE_PATTERNS: Dict[str, str] = {
+    # layer cố ý KHÔNG đọc (vẫn báo CANH_BAO kèm handle). Mặc định: ký hiệu cao độ — "c[ốỐ]t" so trên tên GỐC (có dấu)
+    # để "CỐT" (cao độ) không bị đọc là "CỘT" (cột); truyền role_patterns={"bo_qua": ...} để thêm layer nội thất...
+    "bo_qua": r"cao.?do|cote|elev|c[ốỐ]t",
     "truc": r"truc|axis|grid",
     "tuong": r"tuong|wall",
     "cot": r"cot|col|column",
@@ -68,8 +85,9 @@ DEFAULT_ROLE_PATTERNS: Dict[str, str] = {
     "cua_so": r"cua.?so|window|glaz",
     "dim": r"dim",
 }
-# layer khớp nhiều mẫu → lấy vai trò đứng trước (vd "TUONG-DIM" là kích thước, không phải tường)
-DXF_ROLE_PRIORITY: Tuple[str, ...] = ("dim", "cua_di", "cua_so", "truc", "cot", "tuong")
+# layer khớp nhiều mẫu → lấy vai trò đứng trước (vd "TUONG-DIM" là kích thước, không phải tường; "COT CAO DO" là cao độ)
+DXF_ROLE_PRIORITY: Tuple[str, ...] = ("bo_qua", "dim", "cua_di", "cua_so", "truc", "cot", "tuong")
+STRUCT_ROLES: Tuple[str, ...] = ("truc", "cot", "tuong", "cua_di", "cua_so")   # vai trò đọc ra đối tượng hình học
 
 # mẫu khớp layer template với các vai trò trong layers.DEFAULT_ROLES (cùng cách so như trên)
 TEMPLATE_ROLE_PATTERNS: Dict[str, str] = {
@@ -110,6 +128,18 @@ USER_VALUES_KEYS = ("nguon", "gia_tri", "xac_nhan", "ghi_chu", "schema")
 CONFIRM_KEYS = ("key", "by", "ghi_chu")
 POSITIVE_FIELDS = ("spans", "overall", "b", "h", "thickness", "width", "height", "going", "n_treads", "riser")
 NON_NEGATIVE_FIELDS = ("offset", "sill")
+# trường nhập được qua file kích thước (apply_user_values) — chỉ số liệu kích thước/góc; số cánh cửa, toạ độ điểm
+# (PointRef), kích thước đo từ DXF (measured_dims) không nhập kiểu này
+USER_VALUE_FIELDS: Dict[str, Tuple[str, ...]] = {
+    "axes": ("spans", "overall"),
+    "columns": ("b", "h", "dx", "dy"),
+    "walls": ("thickness", "height"),
+    "openings": ("offset", "width", "height", "sill"),
+    "stairs": ("width", "going", "n_treads", "riser", "angle"),      # chỉ trường của vế: stairs:ID.flights[i].trường
+    "furniture": ("rotation",),
+    "rooms": ("floor_level",),
+}
+_STAIR_FLIGHT_KEY = re.compile(r"^stairs:[^.]+\.flights\[\d+\]\.\w+$")
 
 
 class ReaderError(ValueError):
@@ -215,7 +245,8 @@ def _compile_patterns(patterns: Optional[Dict[str, Any]], defaults: Dict[str, st
 def _match_role(layer: str, compiled: Dict[str, "re.Pattern[str]"],
                 priority: Sequence[str]) -> Tuple[Optional[str], List[str]]:
     folded = _fold(layer)
-    hits = [r for r in priority if r in compiled and (compiled[r].search(folded) or compiled[r].search(layer))]
+    raw = unicodedata.normalize("NFC", str(layer))            # tên gốc dạng dựng sẵn (mẫu có dấu như "c[ốỐ]t")
+    hits = [r for r in priority if r in compiled and (compiled[r].search(folded) or compiled[r].search(raw))]
     return (hits[0] if hits else None), hits
 
 
@@ -325,6 +356,8 @@ def _text_center(e: Any) -> Optional[Tuple[Pt, str]]:
         w = float(e.dxf.get("width", 0.0) or 0.0) or 0.6 * h * max(max(len(s) for s in lines), 1)
         total_h = h * (len(lines) + 0.67 * (len(lines) - 1))
         ap_code = int(e.dxf.get("attachment_point", 1))
+        if not 1 <= ap_code <= 9:
+            raise _Unsupported(f"MTEXT có điểm canh lề (mã nhóm 71) = {ap_code}, ngoài 1..9")
         col, row = (ap_code - 1) % 3, (ap_code - 1) // 3
         ref = _xy(e.dxf.insert)
         dx = {0: w / 2, 1: 0.0, 2: -w / 2}[col]
@@ -368,7 +401,7 @@ def read_spec(path: str) -> ProjectStore:
         raise ReaderError(f"{fname}: đề bài phải là một đối tượng JSON (theo mẫu {SPEC_TEMPLATE_HINT})")
     try:
         store = ProjectStore.from_dict(data)
-    except (StoreError, TypeError, KeyError, ValueError) as e:
+    except (StoreError, TypeError, KeyError, ValueError, AttributeError) as e:   # AttributeError: list/chuỗi thay dict
         raise ReaderError(f"{fname}: đề bài sai cấu trúc — {e}") from e
     store.sources.append(SourceFile(name=fname, kind="json", sha256=_sha256(path), used_for="du_lieu",
                                     note=str(data.get("nguon_mac_dinh", ""))[:300]))
@@ -408,6 +441,8 @@ class _Piece:
     notes: List[str] = field(default_factory=list)
     start: Pt = (0.0, 0.0)
     end: Pt = (0.0, 0.0)
+    ext_start: float = 0.0         # đầu tường đưa về giao tim: nửa chiều dày tường giao (vết tường phủ qua chỗ giao)
+    ext_end: float = 0.0
 
 
 class _DxfReader:
@@ -419,6 +454,7 @@ class _DxfReader:
         self.layer_roles: Dict[str, Optional[str]] = {}
         self.by_role: Dict[str, List[Any]] = {r: [] for r in DXF_ROLE_PRIORITY}
         self.fams: List[Tuple[Pt, Pt]] = []      # (u, n) của từng họ phương tường
+        self.geo: Dict[str, Dict[str, Any]] = {} # handle INSERT cửa → _insert_geometry (tính một lần)
 
     # ── chung ────────────────────────────────────────────────────────────────
 
@@ -440,7 +476,9 @@ class _DxfReader:
         self._read_axes(dims)
         self._read_columns()
         inserts = self._opening_inserts()
-        self._read_walls([p for _, _, p in inserts])
+        for e, _, _ in inserts:
+            self.geo[self.h(e)] = _insert_geometry(e)
+        self._read_walls([(self.h(e), p) for e, _, p in inserts])
         self._read_openings(inserts)
         self._report_leftovers()
 
@@ -597,11 +635,22 @@ class _DxfReader:
 
         bubbles = self._axis_bubbles()
         texts = []
+        bad_texts: List[Tuple[str, str]] = []
         for e in self.entities:
             if e.dxftype() in ("TEXT", "MTEXT"):
-                info = _text_center(e)
+                try:
+                    info = _text_center(e)
+                except _Unsupported as why:
+                    bad_texts.append((self.h(e), f"#{self.h(e)} layer {e.dxf.get('layer', '0')}: {why}"))
+                    continue
                 if info and info[1]:
                     texts.append({"c": info[0], "text": info[1], "h": self.h(e), "e": e})
+        if bad_texts:
+            eids, extra = _capped([h for h, _ in bad_texts])
+            self.issue(SEV_WARN, "CHU_KHONG_DOC_DUOC",
+                       f"{len(bad_texts)} chữ có dữ liệu canh lề sai, không tính được vị trí — không dùng để tìm tên "
+                       f"trục: {'; '.join(m for _, m in bad_texts)}. Mở bằng AutoCAD, sửa (hoặc AUDIT) rồi lưu lại.{extra}",
+                       eids)
 
         # tên trục
         seen: Set[str] = set()
@@ -706,7 +755,10 @@ class _DxfReader:
                         break
                 if name is None:
                     for v in virtual:
-                        info = _text_center(v) if v.dxftype() in ("TEXT", "MTEXT") else None
+                        try:
+                            info = _text_center(v) if v.dxftype() in ("TEXT", "MTEXT") else None
+                        except _Unsupported:
+                            info = None                       # chữ hỏng: không lấy làm tên (trục sẽ báo chưa có tên)
                         if info and info[1]:
                             name = info[1]
                             break
@@ -838,7 +890,8 @@ class _DxfReader:
 
     # ── TƯỜNG ────────────────────────────────────────────────────────────────
 
-    def _read_walls(self, opening_points: List[Pt]) -> None:
+    def _read_walls(self, openings: List[Tuple[str, Pt]]) -> None:
+        """openings: (handle, điểm chèn) của các INSERT cửa — để nối tường qua ô cửa (hình học block ở self.geo)."""
         tol = self.tol
         segs: List[_Seg] = []
         degenerate: List[Tuple[str, str]] = []
@@ -870,15 +923,20 @@ class _DxfReader:
                         continue
                     segs.append(_Seg(len(segs), h, f"{t} #{h} cạnh {i + 1}", layer, a, b))
                     layers.add(layer)
-        pieces = self._pair_faces(segs)
-        self._mark_caps(segs, pieces)
-        pieces = self._merge_collinear(pieces, opening_points)
+        pieces, ambiguous = self._pair_faces(segs)
+        pieces = self._mark_caps(segs, pieces)
+        pieces = self._merge_collinear(pieces, openings)
         self._snap_ends(pieces)
 
         pieces.sort(key=lambda p: (round(math.degrees(math.atan2(self.fams[p.fam][0][1], self.fams[p.fam][0][0])), 3),
                                    round(p.o, 3), round(p.a, 3)))
+        short: List[Tuple[str, str, List[str]]] = []
         for i, p in enumerate(pieces, start=1):
             labels = [segs[k].label for k in sorted(p.segs)]
+            L = math.hypot(*_sub(p.end, p.start))
+            if L <= p.t + tol:
+                short.append((f"W{i}", f"W{i} dài {_fmt(L)} × dày {_fmt(p.t)} ({', '.join(labels)})",
+                              [segs[k].handle for k in sorted(p.segs)]))
             ref = (f"{self.fname}: layer {', '.join(sorted({segs[k].layer for k in p.segs}))}; nét tường "
                    f"{', '.join(labels)}; tim = đường giữa hai mặt, dày = khoảng cách")
             if p.notes:
@@ -890,23 +948,42 @@ class _DxfReader:
             self.issue(SEV_WARN, "TUONG_CHUA_RO_VAT_LIEU",
                        f"{len(pieces)} tường đọc từ DXF gán loại 'xay' (gạch) mặc định vì DXF không ghi vật liệu — "
                        f"sửa kind = 'btct' cho tường bê tông trước khi hatch.", [f"W{i}" for i in range(1, len(pieces) + 1)])
+        if ambiguous:
+            eids, extra = _capped([h for _, hs in ambiguous for h in hs])
+            self.issue(SEV_DOUBT, "TUONG_GHEP_CAP_MO_HO",
+                       f"{len(ambiguous)} vùng trên layer tường có nhiều hơn hai nét song song ghép được thành mặt tường "
+                       f"(nét tim, nét kính cửa sổ, nét trát... vẽ trên layer tường) — cách ghép cặp không duy nhất, đã "
+                       f"chọn cặp liền kề nên chiều dày/tim tường có thể sai: {'; '.join(m for m, _ in ambiguous)}. Chuyển "
+                       f"các nét không phải mặt tường sang layer khác.{extra}", eids)
+        if short:
+            eids, extra = _capped([w for w, _, _ in short] + [h for _, _, hs in short for h in hs])
+            self.issue(SEV_DOUBT, "TUONG_NGAN_HON_DAY",
+                       f"{len(short)} đoạn tường dài không quá chiều dày — dấu hiệu cột, hộp kỹ thuật hay nét bịt vẽ trên "
+                       f"layer tường, không chắc là tường; vẫn đọc thành tường, cần kiểm tra: "
+                       f"{'; '.join(m for _, m, _ in short)}.{extra}", eids)
         unpaired = [(s.handle, s.label) for s in segs if s.paired <= 0 and not s.cap] + degenerate
-        if unpaired:
-            eids, extra = _capped([h for h, _ in unpaired])
-            self.issue(SEV_DOUBT, "TUONG_CHUA_GHEP_CAP",
-                       f"{len(unpaired)} đường trên layer tường không ghép được cặp song song (cách nhau "
-                       f"{_fmt(WALL_MIN_THICKNESS)}–{_fmt(WALL_MAX_THICKNESS)} mm, có đoạn chồng nhau) — chưa đọc "
-                       f"thành tường: {', '.join(lb for _, lb in unpaired)}.{extra}", eids)
+        partial = self._uncovered_faces(segs, pieces)
+        if unpaired or partial:
+            eids, extra = _capped([h for h, _ in unpaired] + [h for h, _ in partial])
+            parts = []
+            if unpaired:
+                parts.append(f"{len(unpaired)} đường không ghép được cặp song song (cách nhau "
+                             f"{_fmt(WALL_MIN_THICKNESS)}–{_fmt(WALL_MAX_THICKNESS)} mm, có đoạn chồng nhau) — chưa "
+                             f"đọc thành tường: {', '.join(lb for _, lb in unpaired)}")
+            if partial:
+                parts.append(f"{len(partial)} đường chỉ ghép được một phần — đoạn nằm ngoài mọi tường đã đọc bị bỏ: "
+                             f"{'; '.join(m for _, m in partial)}")
+            self.issue(SEV_DOUBT, "TUONG_CHUA_GHEP_CAP", "Trên layer tường: " + "; ".join(parts) + f".{extra}", eids)
         if curved:
             eids, extra = _capped([h for h, _ in curved])
             self.issue(SEV_DOUBT, "TUONG_CONG_CHUA_HO_TRO",
                        f"{len(curved)} cạnh cong trên layer tường — tường cong chưa hỗ trợ, không đọc: "
                        f"{', '.join(lb for _, lb in curved)}.{extra}", eids)
 
-    def _pair_faces(self, segs: List[_Seg]) -> List[_Piece]:
+    def _pair_faces(self, segs: List[_Seg]) -> Tuple[List[_Piece], List[Tuple[str, List[str]]]]:
         """Ghép mặt tường theo từng khoảng cơ sở dọc mỗi họ phương: trong khoảng đó, các đường phủ kín được xếp theo
         toạ độ pháp tuyến rồi chọn các cặp LIỀN KỀ (không xen nhau) cho nhiều cặp nhất, hoà thì ưu tiên hai đường
-        chồng nhau dài nhất rồi tổng khoảng cách nhỏ nhất."""
+        chồng nhau dài nhất rồi tổng khoảng cách nhỏ nhất. Trả (các đoạn tường, các vùng ghép mơ hồ (mô tả, handle))."""
         tol = self.tol
         for s in segs:
             d = _sub(s.p2, s.p1)
@@ -925,6 +1002,7 @@ class _DxfReader:
 
         pair_iv: Dict[Tuple[int, int], List[Tuple[float, float]]] = {}
         members: Dict[Tuple[int, int], Set[int]] = {}
+        regions: List[Tuple[int, List[Any]]] = []            # (họ, [a, b, {idx nét}, o nhỏ nhất, o lớn nhất])
         for k in range(len(self.fams)):
             fs = sorted((s for s in segs if s.fam == k), key=lambda s: (s.s0, s.idx))
             bps: List[float] = []
@@ -944,12 +1022,32 @@ class _DxfReader:
                         slots[-1].append(s)
                     else:
                         slots.append([s])
-                for A, B in self._best_pairing(slots):
+                chosen = self._best_pairing(slots)
+                for A, B in chosen:
                     key = (A[0].idx, B[0].idx)
                     pair_iv.setdefault(key, []).append((a, b))
                     members.setdefault(key, set()).update(s.idx for s in A + B)
                     for s in A + B:
                         s.paired += b - a
+                involved = self._ambiguous_slots(slots, chosen)
+                if involved:
+                    idxs = {s.idx for i in involved for s in slots[i]}
+                    o_lo, o_hi = slots[involved[0]][0].o, slots[involved[-1]][0].o
+                    last = regions[-1][1] if regions and regions[-1][0] == k else None
+                    if last is not None and a - last[1] <= tol and last[2] & idxs:
+                        last[1], last[3], last[4] = b, min(last[3], o_lo), max(last[4], o_hi)
+                        last[2] |= idxs
+                    else:
+                        regions.append((k, [a, b, set(idxs), o_lo, o_hi]))
+        ambiguous: List[Tuple[str, List[str]]] = []
+        for k, (a, b, idxs, o_lo, o_hi) in regions:
+            u, n = self.fams[k]
+            om = (o_lo + o_hi) / 2
+            p0 = (a * u[0] + om * n[0], a * u[1] + om * n[1])
+            p1 = (b * u[0] + om * n[0], b * u[1] + om * n[1])
+            ambiguous.append((f"từ ({_fmt(p0[0])}, {_fmt(p0[1])}) tới ({_fmt(p1[0])}, {_fmt(p1[1])}), các nét cách nhau "
+                              f"tới {_fmt(o_hi - o_lo)} mm: {', '.join(segs[i].label for i in sorted(idxs))}",
+                              [segs[i].handle for i in sorted(idxs)]))
 
         pieces: List[_Piece] = []
         for (ia, ib), ivs in sorted(pair_iv.items()):
@@ -964,7 +1062,33 @@ class _DxfReader:
                 pieces.append(_Piece(fam=A.fam, o=(A.o + B.o) / 2, t=abs(B.o - A.o), a=cur[0], b=cur[1],
                                      segs=used | {ia, ib}))
                 cur = [a, b]
-        return pieces
+        return pieces, ambiguous
+
+    def _ambiguous_slots(self, slots: List[List[_Seg]],
+                         chosen: Sequence[Tuple[List[_Seg], List[_Seg]]]) -> List[int]:
+        """Chỉ số các mặt làm cách ghép cặp trong một khoảng KHÔNG duy nhất: (1) hai mặt không liền kề cách nhau trong
+        khoảng chiều dày tường mà có mặt khác nằm giữa (nét tim, nét kính, nét trát giữa hai mặt tường); (2) mặt không
+        được ghép mà cách mặt kề trong khoảng chiều dày (lẽ ra cũng ghép được). Rỗng = không mơ hồ."""
+        tol = self.tol
+        lo, hi = WALL_MIN_THICKNESS - tol, WALL_MAX_THICKNESS + tol
+        pos = {id(sl): i for i, sl in enumerate(slots)}
+        paired = {pos[id(x)] for pair in chosen for x in pair}
+        inv: Set[int] = set()
+        n = len(slots)
+        for i in range(n):
+            for j in range(i + 2, n):
+                d = slots[j][0].o - slots[i][0].o
+                if d > hi:
+                    break
+                if d >= lo:
+                    inv.update(range(i, j + 1))
+        for i in range(n):
+            if i in paired:
+                continue
+            for j in (i - 1, i + 1):
+                if 0 <= j < n and lo <= abs(slots[j][0].o - slots[i][0].o) <= hi:
+                    inv.update((i, j))
+        return sorted(inv)
 
     def _best_pairing(self, slots: List[List[_Seg]]) -> Tuple[Tuple[List[_Seg], List[_Seg]], ...]:
         """Chọn các cặp mặt liền kề (quy hoạch động trên dãy mặt đã sắp theo toạ độ pháp tuyến)."""
@@ -984,12 +1108,13 @@ class _DxfReader:
             best.append(cand)
         return best[len(slots)][3] if len(slots) >= 2 else ()
 
-    def _mark_caps(self, segs: List[_Seg], pieces: List[_Piece]) -> None:
-        """Nét bịt đầu tường: đoạn vuông góc, dài bằng chiều dày, trung điểm nằm ở đầu tim một đoạn tường."""
+    def _mark_caps(self, segs: List[_Seg], pieces: List[_Piece]) -> List[_Piece]:
+        """Nét bịt đầu tường: đoạn vuông góc, dài bằng chiều dày, trung điểm nằm ở đầu tim một đoạn tường. Hai nét bịt
+        của tường thật (dài hơn dày) cách nhau trong khoảng chiều dày — mép ô cửa hẹp, mép trụ giữa hai cửa — bị ghép
+        với nhau thành "tường" vuông góc giả: bỏ đoạn đó, coi các nét là nét bịt. Trả các đoạn tường còn lại."""
         tol = self.tol
-        for s in segs:
-            if s.paired > 0:
-                continue
+
+        def host_of(s: _Seg) -> Optional[_Piece]:
             d = _sub(s.p2, s.p1)
             L = math.hypot(*d)
             mid = ((s.p1[0] + s.p2[0]) / 2, (s.p1[1] + s.p2[1]) / 2)
@@ -999,13 +1124,33 @@ class _DxfReader:
                     continue
                 sm, om = _dot(mid, u), _dot(mid, n)
                 if abs(om - p.o) <= tol and (abs(sm - p.a) <= tol or abs(sm - p.b) <= tol):
-                    s.cap = True
-                    p.segs.add(s.idx)
-                    break
+                    return p
+            return None
 
-    def _merge_collinear(self, pieces: List[_Piece], opening_points: List[Pt]) -> List[_Piece]:
-        """Nối các đoạn tường thẳng hàng, cùng chiều dày khi khe giữa chúng ≤ tol, có điểm chèn cửa, hoặc có đầu
-        một tường khác (chỗ giao chữ T / chữ thập — mặt tường bị ngắt ở đó)."""
+        for s in segs:
+            if s.paired > 0:
+                continue
+            host = host_of(s)
+            if host is not None:
+                s.cap = True
+                host.segs.add(s.idx)
+        keep: List[_Piece] = []
+        for p in pieces:
+            ks = sorted(p.segs)
+            hosts = [host_of(segs[k]) for k in ks]
+            if ks and all(h is not None and h.b - h.a > h.t + tol for h in hosts):
+                for k, h in zip(ks, hosts):
+                    segs[k].cap = True
+                    h.segs.add(k)
+                continue
+            keep.append(p)
+        return keep
+
+    def _merge_collinear(self, pieces: List[_Piece], openings: List[Tuple[str, Pt]]) -> List[_Piece]:
+        """Nối các đoạn tường thẳng hàng, cùng chiều dày khi khe giữa chúng ≤ tol, hoặc khi khe được PHỦ KÍN bởi bao
+        hình (đo dọc tường) của các block cửa có điểm chèn trong khe và/hoặc bề dày của tường giao có đầu nằm trong khe
+        (chỗ giao chữ T / chữ thập — mặt tường bị ngắt ở đó). Khe không phủ kín giữ nguyên hai đoạn (khe có thể là lối
+        thông); khe có cửa mà không phủ kín → NGHI_VAN "TUONG_KHE_KHONG_KHOP_CUA"."""
         tol = self.tol
         groups: List[List[_Piece]] = []
         for p in sorted(pieces, key=lambda p: (p.fam, p.o, p.t, p.a)):
@@ -1016,31 +1161,68 @@ class _DxfReader:
                     break
             else:
                 groups.append([p])
-        ends: List[Tuple[Pt, int]] = []
-        for p in pieces:
-            u, n = self.fams[p.fam]
-            for s in (p.a, p.b):
-                ends.append(((s * u[0] + p.o * n[0], s * u[1] + p.o * n[1]), p.fam))
+        others = [(p.fam, p.o, p.t, p.a, p.b) for p in pieces]   # tường giao: theo đoạn gốc (chụp trước khi nối)
 
-        def gap_hit(cur: _Piece, nxt: _Piece) -> Optional[str]:
+        def gap_cover(cur: _Piece, nxt: _Piece) -> Tuple[Optional[str], List[str], str]:
+            """(lý do nối hoặc None, handle cửa trong khe, mô tả phần phủ)."""
             u, n = self.fams[cur.fam]
-            lo, hi = cur.b - tol, nxt.a + tol
+            g0, g1 = cur.b, nxt.a
+            lo, hi = g0 - tol, g1 + tol
             half = max(cur.t, nxt.t) / 2 + tol
-            for pt, fam in ends:
-                if fam != cur.fam and lo <= _dot(pt, u) <= hi and abs(_dot(pt, n) - cur.o) <= half:
-                    return "nối qua chỗ giao tường"
-            for pt in opening_points:
+            ivs: List[Tuple[float, float, str]] = []
+            doors: List[str] = []
+            for h, pt in openings:
                 if lo <= _dot(pt, u) <= hi and abs(_dot(pt, n) - cur.o) <= half:
-                    return "nối qua ô cửa"
-            return None
+                    doors.append(h)
+                    proj = [_dot(p, u) for p in self.geo.get(h, {}).get("points", [])]
+                    if proj:
+                        ivs.append((min(proj), max(proj), "nối qua ô cửa"))
+            for q_fam, q_o, q_t, q_a, q_b in others:
+                if q_fam == cur.fam:
+                    continue
+                uq, nq = self.fams[q_fam]
+                den = _dot(u, nq)
+                if abs(den) < 1e-9:
+                    continue
+                for s in (q_a, q_b):
+                    pt = (s * uq[0] + q_o * nq[0], s * uq[1] + q_o * nq[1])
+                    if lo <= _dot(pt, u) <= hi and abs(_dot(pt, n) - cur.o) <= half:
+                        c = cur.o * _dot(n, nq)                # hai mặt tường giao cắt tim tường này tại s1, s2
+                        s1, s2 = (q_o - q_t / 2 - c) / den, (q_o + q_t / 2 - c) / den
+                        ivs.append((min(s1, s2), max(s1, s2), "nối qua chỗ giao tường"))
+            ivs.sort()
+            reach, whys = g0, []
+            for s0, s1, why in ivs:
+                if s1 < g0 - tol or s0 > g1 + tol:
+                    continue                                   # không chạm khe
+                if s0 > reach + tol:
+                    break
+                reach = max(reach, s1)
+                whys.append(why)
+            cover = ", ".join(f"{_fmt(s0)}..{_fmt(s1)}" for s0, s1, _ in ivs) or "không có"
+            if reach >= g1 - tol and whys:
+                return "; ".join(dict.fromkeys(whys)), doors, cover
+            return None, doors, cover
 
         merged: List[_Piece] = []
         for g in groups:
             g.sort(key=lambda p: (p.a, p.b))
             cur = g[0]
             for nxt in g[1:]:
-                why = "" if nxt.a - cur.b <= tol else gap_hit(cur, nxt)
+                why, doors = "", []
+                if nxt.a - cur.b > tol:
+                    why, doors, cover = gap_cover(cur, nxt)
                 if why is None:
+                    if doors:
+                        u, n = self.fams[cur.fam]
+                        p0 = (cur.b * u[0] + cur.o * n[0], cur.b * u[1] + cur.o * n[1])
+                        p1 = (nxt.a * u[0] + cur.o * n[0], nxt.a * u[1] + cur.o * n[1])
+                        self.issue(SEV_DOUBT, "TUONG_KHE_KHONG_KHOP_CUA",
+                                   f"Khe tường dày {_fmt(cur.t)} từ ({_fmt(p0[0])}, {_fmt(p0[1])}) tới ({_fmt(p1[0])}, "
+                                   f"{_fmt(p1[1])}) dài {_fmt(nxt.a - cur.b)} mm có cửa INSERT #{', #'.join(doors)} nhưng "
+                                   f"bao hình cửa / tường giao (đo dọc tường: {cover}) không phủ kín khe — không nối "
+                                   f"thành tường liền (phần còn lại có thể là lối thông); cửa gán vào đoạn tường gần "
+                                   f"nhất, kiểm tra bản vẽ.", doors, ((p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2))
                     merged.append(cur)
                     cur = nxt
                     continue
@@ -1058,7 +1240,7 @@ class _DxfReader:
         """Đầu tường chạm mặt một tường khác (khe ≤ tol) hoặc ăn vào thân tường đó (vẽ chồng ở góc, lấn ≤ nửa chiều
         dày tường kia) → đưa về giao điểm hai tim, để góc / ngã ba khép kín khi vẽ (geom kéo dài đầu tường)."""
         tol = self.tol
-        snaps: Dict[Tuple[int, str], Pt] = {}
+        snaps: Dict[Tuple[int, str], Tuple[Pt, float]] = {}   # (giao điểm, nửa chiều dày tường giao)
         for i, p in enumerate(pieces):
             u = self.fams[p.fam][0]
             for which, P, sign in (("start", p.start, -1.0), ("end", p.end, 1.0)):
@@ -1081,11 +1263,11 @@ class _DxfReader:
                         continue
                     key = (abs(s), j)
                     if best is None or key < best[0]:
-                        best = (key, X)
+                        best = (key, (X, q.t / 2))
                 if best is not None:
                     snaps[(i, which)] = best[1]
         for i, p in enumerate(pieces):
-            new_start, new_end = snaps.get((i, "start"), p.start), snaps.get((i, "end"), p.end)
+            (new_start, ext_s), (new_end, ext_e) = snaps.get((i, "start"), (p.start, 0.0)), snaps.get((i, "end"), (p.end, 0.0))
             if math.hypot(*_sub(new_end, new_start)) <= tol:
                 p.notes.append("không đưa đầu tường về giao tim vì tường sẽ dài 0 (nằm gọn trong tường khác)")
                 continue
@@ -1094,7 +1276,54 @@ class _DxfReader:
                     continue
                 p.notes.append(f"điểm {'đầu' if which == 'start' else 'cuối'} đưa về giao tim tường "
                                f"({_fmt(X[0])}, {_fmt(X[1])})")
-            p.start, p.end = new_start, new_end
+            p.start, p.end, p.ext_start, p.ext_end = new_start, new_end, ext_s, ext_e
+
+    def _uncovered_faces(self, segs: List[_Seg], pieces: List[_Piece]) -> List[Tuple[str, str]]:
+        """Đường mặt tường đã ghép được một phần: các đoạn của nó nằm NGOÀI mọi tường đã đọc (vết tường = hình chữ
+        nhật tim × chiều dày, đầu đã đưa về giao tim thì phủ thêm nửa chiều dày tường giao; nới tol). Phần mặt ở góc /
+        chỗ giao nằm trong tường kia nên không bị báo. Trả [(handle, mô tả)]."""
+        tol = self.tol
+        boxes = []
+        for p in pieces:
+            d = _sub(p.end, p.start)
+            L = math.hypot(*d)
+            if L <= 1e-9:
+                continue
+            u = (d[0] / L, d[1] / L)
+            boxes.append((p.start, u, (-u[1], u[0]), -p.ext_start - tol, L + p.ext_end + tol, p.t / 2 + tol))
+        out: List[Tuple[str, str]] = []
+        for s in segs:
+            if s.paired <= 0 or s.cap:
+                continue
+            D = _sub(s.p2, s.p1)
+            L = math.hypot(*D)
+            ivs: List[Tuple[float, float]] = []
+            for origin, u, n, smin, smax, hw in boxes:
+                lo, hi = 0.0, 1.0
+                for axis, a_min, a_max in ((u, smin, smax), (n, -hw, hw)):
+                    v0, dv = _dot(_sub(s.p1, origin), axis), _dot(D, axis)   # v(t) = v0 + t·dv ∈ [a_min, a_max]
+                    if abs(dv) < 1e-12:
+                        if not (a_min <= v0 <= a_max):
+                            lo, hi = 1.0, 0.0
+                        continue
+                    t1, t2 = (a_min - v0) / dv, (a_max - v0) / dv
+                    lo, hi = max(lo, min(t1, t2)), min(hi, max(t1, t2))
+                if hi > lo:
+                    ivs.append((lo, hi))
+            ivs.sort()
+            gaps, reach = [], 0.0
+            for lo, hi in ivs + [(1.0, 1.0)]:
+                if (lo - reach) * L > tol:
+                    gaps.append((reach, lo))
+                reach = max(reach, hi)
+            if gaps:
+                e = tol / L                                    # vết tường nới tol khi dò → hiển thị trả lại tol
+                gaps = [(max(0.0, a - e), min(1.0, b + e)) for a, b in gaps]
+                desc = ", ".join(f"({_fmt(s.p1[0] + a * D[0])}, {_fmt(s.p1[1] + a * D[1])})→"
+                                 f"({_fmt(s.p1[0] + b * D[0])}, {_fmt(s.p1[1] + b * D[1])}) dài {_fmt((b - a) * L)} mm"
+                                 for a, b in gaps)
+                out.append((s.handle, f"{s.label}: {desc}"))
+        return out
 
     # ── CỬA ──────────────────────────────────────────────────────────────────
 
@@ -1116,12 +1345,18 @@ class _DxfReader:
                            f"{label} block '{bname}' #{h} tại ({_fmt(P[0])}, {_fmt(P[1])}): không có tường nào có tim "
                            f"cách điểm chèn ≤ nửa chiều dày + {_fmt(tol)} mm — chưa đọc thành ô cửa.", [h], P)
                 continue
-            _d, _k, wall = min(cands, key=lambda c: (c[0], c[1]))
+            geo = self.geo.get(h) or _insert_geometry(e)
+            wall, wall_note = self._pick_wall(cands, geo, label, bname, h, P)
+            counters[kind] += 1
+            oid = f"{'CD' if kind == 'cua_di' else 'CS'}{counters[kind]}"
+            while oid in used_ids:
+                counters[kind] += 1
+                oid = f"{'CD' if kind == 'cua_di' else 'CS'}{counters[kind]}"
+            used_ids.add(oid)
             a, b = tuple(wall.start), tuple(wall.end)
             L = math.hypot(*_sub(b, a))
             u = ((b[0] - a[0]) / L, (b[1] - a[1]) / L)
             n = (-u[1], u[0])
-            geo = _insert_geometry(e)
             proj = [_dot(_sub(p, a), u) for p in geo["points"]]
             offset = width = None
             if proj:
@@ -1129,13 +1364,20 @@ class _DxfReader:
                 if smax - smin > tol:
                     offset, width = _r(smin), _r(smax - smin)
             if width is None:
+                # khoá số liệu trong eids: apply_user_values gỡ Issue này khi người dùng nhập đủ vị trí và bề rộng
                 self.issue(SEV_DOUBT, "CUA_KHONG_DO_DUOC_BE_RONG",
-                           f"{label} block '{bname}' #{h}: block không có hình học đo được dọc tường {wall.id} — "
-                           f"thiếu vị trí và bề rộng, cần nhập tay.", [h], P)
+                           f"{label} {oid} (block '{bname}' #{h}): block không có hình học đo được dọc tường {wall.id} — "
+                           f"thiếu vị trí và bề rộng, cần nhập tay (openings:{oid}.offset, openings:{oid}.width).",
+                           [h, f"openings:{oid}.offset", f"openings:{oid}.width"], P)
             leaves, hinge, opens_to = 1, "dau", "trai"
             swing = ""
+            if kind == "cua_di" and width is None:
+                swing = "không đo được bề rộng nên không đọc được cung mở — bản lề 'dau', mở về 'trai' theo mặc định"
+                self.issue(SEV_DOUBT, "CUA_CHIEU_MO_CHUA_RO",
+                           f"{label} {oid} (#{h}, block '{bname}'): không đo được bề rộng nên không đọc được cung mở — số "
+                           f"cánh, bản lề, chiều mở để mặc định (1 cánh, 'dau', 'trai'); kiểm tra bản vẽ.", [h], P)
             if kind == "cua_di" and width is not None:
-                arcs = [(c, m) for c, r, m in geo["arcs"] if r >= 0.25 * width]
+                arcs = [(c, m) for c, r, m, _e1, _e2 in geo["arcs"] if r >= 0.25 * width]
                 if arcs:
                     hinges, sides = [], []
                     for c, m in arcs:
@@ -1156,61 +1398,130 @@ class _DxfReader:
                     self.issue(SEV_DOUBT, "CUA_CHIEU_MO_CHUA_RO",
                                f"{label} #{h} (block '{bname}'): không có cung mở trong block — số cánh, bản lề, chiều "
                                f"mở để mặc định (1 cánh, 'dau', 'trai'); kiểm tra bản vẽ.", [h], P)
-            counters[kind] += 1
-            oid = f"{'CD' if kind == 'cua_di' else 'CS'}{counters[kind]}"
-            while oid in used_ids:
-                counters[kind] += 1
-                oid = f"{'CD' if kind == 'cua_di' else 'CS'}{counters[kind]}"
-            used_ids.add(oid)
             mark = next((a_.plain_text().strip() for a_ in e.attribs if a_.plain_text().strip()), "")
             ref = (f"{self.fname}: INSERT #{h} block '{bname}' layer {layer}; tường {wall.id}; vị trí, bề rộng đo bao "
                    f"hình block dọc tim tường; chiều cao/bậu không có trong mặt bằng DXF")
+            if wall_note:
+                ref += f"; {wall_note}"
             if swing:
                 ref += f"; {swing}"
             self.store.openings.append(Opening(id=oid, wall_id=wall.id, kind=kind, offset=offset, width=width,
                                                hinge=hinge, opens_to=opens_to, leaves=leaves, mark=mark,
                                                prov=Provenance(SRC_DXF, ref)))
 
+    def _pick_wall(self, cands: List[Tuple[float, int, Wall]], geo: Dict[str, Any], label: str, bname: str, h: str,
+                   P: Pt) -> Tuple[Wall, str]:
+        """Tường cho một INSERT cửa: tường gần nhất. Khi trong ngưỡng có tường thuộc hai phương trở lên (điểm chèn ở
+        chỗ giao tường), chọn tường song song vị trí cánh ĐÓNG đọc từ block (đầu cung mở không trùng đầu nét cánh);
+        không phân định được → tường gần nhất + NGHI_VAN "CUA_NHIEU_TUONG". Trả (tường, ghi chú nguồn gốc)."""
+        def wdir(w: Wall) -> Pt:
+            d = _sub(tuple(w.end), tuple(w.start))
+            L = math.hypot(*d)
+            return (d[0] / L, d[1] / L)
+
+        nearest = min(cands, key=lambda c: (c[0], c[1]))
+        dirs: List[Pt] = []
+        for _d, _k, w in cands:
+            if not any(abs(_cross(wdir(w), d)) <= 1e-6 for d in dirs):
+                dirs.append(wdir(w))
+        if len(dirs) < 2:
+            return nearest[2], ""
+        ids = ", ".join(w.id for _, _, w in sorted(cands, key=lambda c: c[1]))
+        closed = _closed_leaf_dirs(geo, self.tol)
+        match = [c for c in cands if closed and all(abs(_cross(wdir(c[2]), cd)) <= 0.02 for cd in closed)]
+        match_dirs: List[Pt] = []
+        for _d, _k, w in match:
+            if not any(abs(_cross(wdir(w), d)) <= 1e-6 for d in match_dirs):
+                match_dirs.append(wdir(w))
+        if len(match_dirs) == 1:
+            wall = min(match, key=lambda c: (c[0], c[1]))[2]
+            return wall, (f"điểm chèn ở chỗ giao tường {ids} — chọn {wall.id} song song vị trí cánh đóng (đầu cung mở "
+                          f"không trùng nét cánh trong block)")
+        wall = nearest[2]
+        self.issue(SEV_DOUBT, "CUA_NHIEU_TUONG",
+                   f"{label} block '{bname}' #{h} tại ({_fmt(P[0])}, {_fmt(P[1])}): điểm chèn nằm trong ngưỡng của các "
+                   f"tường không song song ({ids}) và block không cho biết vị trí cánh đóng — tạm gán tường gần nhất "
+                   f"{wall.id}; kiểm tra bản vẽ.", [h], P)
+        return wall, f"điểm chèn ở chỗ giao tường {ids}, chưa phân định được — tạm gán tường gần nhất {wall.id}"
+
     # ── thực thể chưa xử lý ──────────────────────────────────────────────────
 
     def _report_leftovers(self) -> None:
-        by_role: Dict[str, Dict[str, Any]] = {}
-        unknown: Dict[str, Counter] = {}
-        unknown_handles: List[str] = []
+        """Thực thể chưa đọc thành dữ liệu. Mức độ: hình học trên layer trục/cột/tường/cửa, hoặc đa tuyến kín / INSERT /
+        MLINE trên layer không nhận diện → NGHI_VAN (có thể là cột/tường/cửa bị mất — chặn kết luận ĐẠT); chữ, hatch,
+        nét tô, nét kích thước đã phá khối, layer "bo_qua" / "dim" → CANH_BAO."""
+        by_role: Dict[Tuple[str, str], Dict[str, Any]] = {}
+        unknown: Dict[str, Dict[str, Counter]] = {SEV_DOUBT: {}, SEV_WARN: {}}
+        unknown_handles: Dict[str, List[str]] = {SEV_DOUBT: [], SEV_WARN: []}
         for e in self.entities:
             h = self.h(e)
             if h in self.used:
                 continue
             layer = str(e.dxf.get("layer", "0"))
             role = self.layer_roles.get(layer)
+            t = e.dxftype()
             if role:
-                slot = by_role.setdefault(role, {"count": Counter(), "handles": [], "layers": set()})
-                slot["count"][e.dxftype()] += 1
+                sev = SEV_DOUBT if role in STRUCT_ROLES and t not in _ANNOTATION_TYPES else SEV_WARN
+                slot = by_role.setdefault((role, sev), {"count": Counter(), "handles": [], "layers": set()})
+                slot["count"][t] += 1
                 slot["handles"].append(h)
                 slot["layers"].add(layer)
             else:
-                unknown.setdefault(layer, Counter())[e.dxftype()] += 1
-                unknown_handles.append(h)
+                sev = SEV_DOUBT if _maybe_lost_object(e, self.tol) else SEV_WARN
+                unknown[sev].setdefault(layer, Counter())[t] += 1
+                unknown_handles[sev].append(h)
         for role in DXF_ROLE_PRIORITY:
-            slot = by_role.get(role)
-            if not slot:
+            for sev in (SEV_DOUBT, SEV_WARN):
+                slot = by_role.get((role, sev))
+                if not slot:
+                    continue
+                eids, extra = _capped(slot["handles"])
+                counts = ", ".join(f"{t} {n}" for t, n in sorted(slot["count"].items()))
+                lost = (f" — có thể thiếu {_ROLE_THING[role]} so với bản vẽ gốc; vẽ lại đối tượng theo cách đọc được "
+                        f"hoặc nhập tay vào đề bài JSON") if sev == SEV_DOUBT else ""
+                self.issue(sev, "THUC_THE_CHUA_XU_LY",
+                           f"Layer vai trò '{role}' ({', '.join(sorted(slot['layers']))}) có {len(slot['handles'])} "
+                           f"thực thể {'hình học ' if sev == SEV_DOUBT else ''}chưa đọc thành dữ liệu: {counts}"
+                           f"{_LEFTOVER_HINTS.get(role, '')}{lost}.{extra}", eids)
+        for sev in (SEV_DOUBT, SEV_WARN):
+            if not unknown[sev]:
                 continue
-            eids, extra = _capped(slot["handles"])
-            counts = ", ".join(f"{t} {n}" for t, n in sorted(slot["count"].items()))
-            self.issue(SEV_WARN, "THUC_THE_CHUA_XU_LY",
-                       f"Layer vai trò '{role}' ({', '.join(sorted(slot['layers']))}) có {len(slot['handles'])} thực thể "
-                       f"chưa đọc thành dữ liệu: {counts}{_LEFTOVER_HINTS.get(role, '')}.{extra}", eids)
-        if unknown:
-            eids, extra = _capped(unknown_handles)
+            eids, extra = _capped(unknown_handles[sev])
             detail = "; ".join(f"{layer} ({', '.join(f'{t} {n}' for t, n in sorted(c.items()))})"
-                               for layer, c in sorted(unknown.items()))
-            self.issue(SEV_WARN, "LAYER_KHONG_NHAN_DIEN",
-                       f"{len(unknown_handles)} thực thể trên {len(unknown)} layer không khớp mẫu vai trò "
-                       f"(DEFAULT_ROLE_PATTERNS) — không đọc: {detail}. Nếu là trục/tường/cột/cửa, truyền "
-                       f"role_patterns.{extra}", eids)
+                               for layer, c in sorted(unknown[sev].items()))
+            what = ("đa tuyến kín / block INSERT / MLINE — có thể là cột, tường, cửa trên layer đặt tên khác (vd tên "
+                    "TCVN3) bị mất" if sev == SEV_DOUBT else "không đọc")
+            self.issue(sev, "LAYER_KHONG_NHAN_DIEN",
+                       f"{len(unknown_handles[sev])} thực thể trên {len(unknown[sev])} layer không khớp mẫu vai trò "
+                       f"(DEFAULT_ROLE_PATTERNS), {what}: {detail}. Nếu là trục/tường/cột/cửa, truyền role_patterns; "
+                       f"nếu cố ý không đọc (nội thất, khung tên...), khai báo layer đó trong mẫu 'bo_qua'.{extra}", eids)
+
+
+# loại thực thể không phải hình học đối tượng: chữ, tô, ghi chú, kích thước — còn sót thì chỉ CANH_BAO
+_ANNOTATION_TYPES = frozenset({
+    "TEXT", "MTEXT", "ATTDEF", "ATTRIB", "HATCH", "MPOLYGON", "SOLID", "TRACE", "3DFACE", "WIPEOUT", "IMAGE",
+    "DIMENSION", "ARC_DIMENSION", "LARGE_RADIAL_DIMENSION", "LEADER", "MULTILEADER", "MLEADER", "TOLERANCE", "POINT",
+    "VIEWPORT"})
+_ROLE_THING = {"truc": "trục", "cot": "cột", "tuong": "tường", "cua_di": "cửa đi", "cua_so": "cửa sổ"}
+
+
+def _maybe_lost_object(e: Any, tol: float) -> bool:
+    """Thực thể trên layer không nhận diện có dạng của đối tượng reader đọc (cột, tường, cửa): INSERT, MLINE, đa tuyến
+    kín — không đoán nó là gì, chỉ nâng mức báo lên NGHI_VAN."""
+    t = e.dxftype()
+    if t in ("INSERT", "MLINE"):
+        return True
+    if t in ("LWPOLYLINE", "POLYLINE"):
+        try:
+            return _poly_vertices(e, tol)[2]
+        except _Unsupported:
+            return False
+    return False
 
 
 _LEFTOVER_HINTS = {
+    "bo_qua": " (layer khớp mẫu 'bo_qua' — cố ý không đọc, vd ký hiệu cao độ; nếu là trục/tường/cột/cửa, truyền "
+              "role_patterns)",
     "truc": " (chỉ đọc LINE làm trục; CIRCLE/TEXT/INSERT chỉ dùng khi là vòng tròn tên ở đầu trục)",
     "tuong": " (chỉ đọc LINE / cạnh thẳng của đa tuyến; tường cong, HATCH không đọc)",
     "cot": " (chỉ đọc đa tuyến kín hình chữ nhật; cột tròn, HATCH không đọc)",
@@ -1243,9 +1554,11 @@ def _override_differs(text: str, measurement: Optional[float]) -> Tuple[bool, st
 
 
 def _insert_geometry(e: Any) -> Dict[str, Any]:
-    """Điểm hình học (WCS) của một INSERT (kể cả block lồng, bỏ chữ) và các cung (tâm, bán kính, trung điểm cung)."""
+    """Hình học (WCS) của một INSERT (kể cả block lồng, bỏ chữ): points = mọi điểm; arcs = (tâm, bán kính, trung điểm
+    cung, đầu cung, cuối cung); segments = đoạn thẳng (LINE, cạnh thẳng đa tuyến) — để nhận nét cánh cửa."""
     points: List[Pt] = []
-    arcs: List[Tuple[Pt, float, Pt]] = []
+    arcs: List[Tuple[Pt, float, Pt, Pt, Pt]] = []
+    segments: List[Tuple[Pt, Pt]] = []
     try:
         flat = [v for v in disassemble.recursive_decompose([e])
                 if v.dxftype() not in ("TEXT", "MTEXT", "ATTRIB", "ATTDEF", "POINT")]
@@ -1254,18 +1567,52 @@ def _insert_geometry(e: Any) -> Dict[str, Any]:
     for prim in disassemble.to_primitives(flat):
         points.extend(_xy(v) for v in prim.vertices())
     for v in flat:
-        if v.dxftype() == "ARC":
+        t = v.dxftype()
+        if t == "ARC":
             r = float(v.dxf.radius)
             pts = [_xy(p) for p in v.flattening(max(r / 200.0, 0.01))]
             if len(pts) >= 2:
-                arcs.append((_wcs(v, v.dxf.center), r, pts[len(pts) // 2]))
-    return {"points": points, "arcs": arcs}
+                arcs.append((_wcs(v, v.dxf.center), r, pts[len(pts) // 2], pts[0], pts[-1]))
+        elif t == "LINE":
+            segments.append((_xy(v.dxf.start), _xy(v.dxf.end)))
+        elif t in ("LWPOLYLINE", "POLYLINE"):
+            try:
+                pv, bulges, closed = _poly_vertices(v, 1e-9)
+            except _Unsupported:
+                continue
+            for i in range(len(pv) if closed else len(pv) - 1):
+                if abs(bulges[i]) <= 1e-9:
+                    segments.append((pv[i], pv[(i + 1) % len(pv)]))
+    return {"points": points, "arcs": arcs, "segments": segments}
+
+
+def _closed_leaf_dirs(geo: Dict[str, Any], tol: float) -> List[Pt]:
+    """Hướng (từ bản lề) của vị trí cánh ĐÓNG cho từng cung mở trong block cửa: nét cánh vẽ ở vị trí mở là đoạn thẳng
+    từ tâm cung dài bằng bán kính; đầu cung trùng đầu nét cánh là vị trí mở, đầu cung còn lại là vị trí đóng (nằm dọc
+    tường). Cung không có nét cánh, hoặc cả hai đầu đều trùng nét cánh → không kết luận (bỏ qua)."""
+    out: List[Pt] = []
+    for c, r, _m, e1, e2 in geo.get("arcs", []):
+        if r <= tol:
+            continue
+        et = max(tol, 0.01 * r)
+        tips = [q for p0, p1 in geo.get("segments", []) for p, q in ((p0, p1), (p1, p0))
+                if math.hypot(*_sub(p, c)) <= et and abs(math.hypot(*_sub(q, c)) - r) <= et]
+        is_open = [any(math.hypot(*_sub(end, tip)) <= et for tip in tips) for end in (e1, e2)]
+        if is_open.count(True) != 1:
+            continue
+        closed = e2 if is_open[0] else e1
+        d = _sub(closed, c)
+        L = math.hypot(*d)
+        if L > 1e-9:
+            out.append((d[0] / L, d[1] / L))
+    return out
 
 
 def read_dxf(path: str, role_patterns: Optional[Dict[str, Any]] = None, tol: float = 1.0) -> ProjectStore:
     """Đọc bản vẽ DXF (model space) thành ProjectStore. Nhận diện theo tên layer: DEFAULT_ROLE_PATTERNS, có thể
-    thay từng vai trò bằng `role_patterns` ({vai_trò: regex | re.Pattern | None để tắt}). `tol` (mm): dung sai coi
-    hai toạ độ trùng nhau. Mọi vấn đề phát hiện ghi vào store.issues (skill "00")."""
+    thay từng vai trò bằng `role_patterns` ({vai_trò: regex | re.Pattern | None để tắt}); vai trò "bo_qua" khai báo
+    layer cố ý không đọc (thay mẫu mặc định — muốn giữ ký hiệu cao độ thì ghép lại DEFAULT_ROLE_PATTERNS["bo_qua"]).
+    `tol` (mm): dung sai coi hai toạ độ trùng nhau. Mọi vấn đề phát hiện ghi vào store.issues (skill "00")."""
     path = _require_file(path, "read_dxf")
     try:
         tol = float(tol)
@@ -1482,7 +1829,6 @@ def read_template(store: ProjectStore, path: str, role_map: Optional[Dict[str, s
     replaced: List[str] = []
     skipped: Dict[str, Dict[str, int]] = {}
     empty: List[str] = []
-    off_origin: List[str] = []
     for blk in doc.blocks:
         name = str(blk.name)
         if name.startswith("*") or blk.is_any_layout:
@@ -1505,10 +1851,8 @@ def read_template(store: ProjectStore, path: str, role_map: Optional[Dict[str, s
         if name in store.blocks:
             replaced.append(name)
         store.blocks[name] = BlockDef(name=name, ops=ops, size=[_r(xmax - xmin), _r(ymax - ymin)],
-                                      description=desc, source="mau")
+                                      description=desc, source="mau", origin=[_r(xmin), _r(ymin)])
         blocks_added.append(name)
-        if abs(xmin) > 1.0 or abs(ymin) > 1.0:
-            off_origin.append(f"{name} (góc dưới-trái tại {_fmt(xmin)}, {_fmt(ymin)})")
     if skipped:
         _add_issue(store, SEV_WARN, "TEMPLATE_BO_QUA_THUC_THE",
                    f"{fname}: thực thể trong block không chuyển được sang hình học block (chỉ line/pline/circle/arc/text) "
@@ -1517,10 +1861,6 @@ def read_template(store: ProjectStore, path: str, role_map: Optional[Dict[str, s
     if empty:
         _add_issue(store, SEV_WARN, "TEMPLATE_BLOCK_RONG",
                    f"{fname}: block không còn hình học nào sau khi chuyển — không nạp: {', '.join(empty)}.")
-    if off_origin:
-        _add_issue(store, SEV_WARN, "TEMPLATE_BLOCK_GOC_LECH",
-                   f"{fname}: block có bao hình không bắt đầu tại điểm chèn — vết chiếm chỗ (geom.footprint giả định "
-                   f"góc dưới-trái tại điểm chèn) sẽ lệch: {', '.join(off_origin)}.")
     if replaced:
         notes.append(f"block ghi đè block cùng tên đã có trong dữ liệu: {', '.join(replaced)}")
     store.sources.append(SourceFile(name=fname, kind="template", sha256=_sha256(path), used_for="mau",
@@ -1579,7 +1919,13 @@ def attach_reference(store: ProjectStore, path: str, insert: Sequence[float] = (
         with open(path, "rb") as f:
             if f.read(5) != b"%PDF-":
                 raise ReaderError(f"{fname}: không phải file PDF")
-    sf = SourceFile(name=fname, kind=kind, sha256=_sha256(path), used_for="anh_nen",
+    sha = _sha256(path)
+    clash = [s for s in store.sources if s.used_for == "anh_nen" and s.name == fname and s.sha256 != sha]
+    if clash:
+        # SourceFile chỉ ghi tên file và kết quả chép ảnh nền theo tên → hai ảnh khác nhau cùng tên sẽ ghi đè nhau
+        raise ReaderError(f"{fname}: đã có một ảnh nền KHÁC cùng tên (nội dung khác, sha256 {clash[0].sha256[:12]}… ≠ "
+                          f"{sha[:12]}…) — đổi tên một trong hai file rồi gắn lại")
+    sf = SourceFile(name=fname, kind=kind, sha256=sha, used_for="anh_nen",
                     note="ảnh nền tham chiếu (layer vai trò 'anh_nen', không in) — không nhận dạng số liệu",
                     underlay=underlay)
     store.sources.append(sf)
@@ -1622,12 +1968,56 @@ def _field_name(key: str) -> str:
     return re.sub(r"\[\d+\]$", "", key.rsplit(".", 1)[-1])
 
 
+def _canon_key(key: str) -> str:
+    """Khoá chuẩn để so trùng: store hiểu "axes:V.spans[01]" và "axes:V.spans[1]" là cùng một số liệu."""
+    return re.sub(r"\[(\d+)\]", lambda m: f"[{int(m.group(1))}]", str(key))
+
+
+_DATA_KEY_RE = re.compile(r"^(axes|columns|walls|openings|stairs|furniture|rooms|measured_dims):[^.]+\..+$")
+
+
+def _gap_filled(store: ProjectStore, key: str) -> bool:
+    """Khoá số liệu đã có giá trị do người nhập / đọc được / nội suy ĐÃ xác nhận (nội suy chưa xác nhận: chưa)."""
+    try:
+        if store.get_value(key) is None:
+            return False
+        prov = store.get_provenance(key)
+    except StoreError:
+        return False
+    return not (prov.source == SRC_INTERP and not prov.confirmed)
+
+
+def _drop_resolved_gap_issues(store: ProjectStore) -> List[Issue]:
+    """Gỡ Issue của Skill 00 gắn với chỗ thiếu số liệu (eids có khoá số liệu) khi MỌI khoá đó đã có giá trị — điều kiện
+    của Issue không còn (trạng thái được TÍNH lại, như set_reference_scale). Issue không có khoá số liệu giữ nguyên.
+    Trả các Issue đã gỡ."""
+    keep, dropped = [], []
+    for i in store.issues:
+        keys = [e for e in i.eids if _DATA_KEY_RE.match(e)]
+        if i.skill == SKILL_CODE and keys and all(_gap_filled(store, k) for k in keys):
+            dropped.append(i)
+        else:
+            keep.append(i)
+    store.issues = keep
+    return dropped
+
+
+def _write_user_values(store: ProjectStore, values: List[Tuple[str, float]], confirms: List[Tuple[str, str, str]],
+                       nguon: str) -> None:
+    for key, val in values:
+        store.set_value(key, val, Provenance(SRC_USER, nguon))
+    for key, by, note in confirms:
+        store.confirm(key, by, note)
+
+
 def apply_user_values(store: ProjectStore, path: str) -> List[str]:
     """Phương án A "Tôi nhập". File JSON:
         {"nguon": "[Trang 2] KT-01", "gia_tri": {khoá: số},
          "xac_nhan": [{"key": khoá_nội_suy, "by": "tên người", "ghi_chu": "..."}]}
     gia_tri → store.set_value(khoá, số, Provenance("nguoi_nhap", nguon)); xac_nhan → store.confirm(...).
-    Kiểm tra toàn bộ file trước rồi mới ghi (sai một mục → ReaderError, không ghi mục nào).
+    Chỉ nhận trường KÍCH THƯỚC (USER_VALUE_FIELDS) — không nhận số cánh, toạ độ điểm, kích thước đo từ DXF...
+    Kiểm tra toàn bộ file và chạy thử trên bản sao trước rồi mới ghi (sai một mục → ReaderError, không ghi mục nào).
+    Sau khi ghi, gỡ Issue của Skill 00 có khoá số liệu trong eids mà mọi khoá đã có giá trị (_drop_resolved_gap_issues).
     Trả danh sách khoá đã ghi (giá trị nhập trước, khoá xác nhận sau)."""
     path = _require_file(path, "apply_user_values")
     fname = os.path.basename(path)
@@ -1651,12 +2041,23 @@ def apply_user_values(store: ProjectStore, path: str) -> List[str]:
 
     errors: List[str] = []
     values: List[Tuple[str, float]] = []
+    canon_vals: Dict[str, str] = {}
     for key, val in gia_tri.items():
         try:
             cur = store.get_value(key)
         except StoreError as e:
             errors.append(f"khoá sai '{key}': {e}")
             continue
+        coll, fld = key.split(":", 1)[0], _field_name(key)
+        if fld not in USER_VALUE_FIELDS.get(coll, ()) or (coll == "stairs" and not _STAIR_FLIGHT_KEY.match(key)):
+            errors.append(f"'{key}': trường '{fld}' không nhập được qua file kích thước — chỉ nhận số liệu kích thước: "
+                          + "; ".join(f"{c}: {', '.join(fs)}" for c, fs in USER_VALUE_FIELDS.items()))
+            continue
+        ck = _canon_key(key)
+        if ck in canon_vals:
+            errors.append(f"'{key}' và '{canon_vals[ck]}' là cùng một số liệu — chỉ ghi một lần")
+            continue
+        canon_vals[ck] = key
         if cur is not None and (isinstance(cur, bool) or not isinstance(cur, (int, float))):
             errors.append(f"'{key}' không phải số liệu kích thước (giá trị hiện tại {cur!r})")
             continue
@@ -1690,10 +2091,11 @@ def apply_user_values(store: ProjectStore, path: str) -> List[str]:
         if not by:
             errors.append(f"xac_nhan[{i}] ('{key}'): phải ghi người xác nhận 'by'")
             continue
-        if key in gia_tri:
-            errors.append(f"'{key}' vừa có trong gia_tri vừa xác nhận nội suy — chọn một")
+        ck = _canon_key(key)
+        if ck in canon_vals:
+            errors.append(f"'{key}' vừa có trong gia_tri ('{canon_vals[ck]}') vừa xác nhận nội suy — chọn một")
             continue
-        if key in seen:
+        if ck in seen:
             errors.append(f"'{key}' xác nhận hai lần")
             continue
         try:
@@ -1708,15 +2110,17 @@ def apply_user_values(store: ProjectStore, path: str) -> List[str]:
         if cur is None:
             errors.append(f"'{key}' chưa có giá trị để xác nhận")
             continue
-        seen.add(key)
+        seen.add(ck)
         confirms.append((key, by, note))
     if errors:
         raise ReaderError(f"{fname}: " + "; ".join(errors))
 
-    for key, val in values:
-        store.set_value(key, val, Provenance(SRC_USER, nguon))
-    for key, by, note in confirms:
-        store.confirm(key, by, note)
+    try:                                       # chạy thử trên bản sao: lỗi lúc ghi cũng không để store sửa dở
+        _write_user_values(copy.deepcopy(store), values, confirms, nguon)
+    except StoreError as e:
+        raise ReaderError(f"{fname}: {e} — không ghi mục nào") from e
+    _write_user_values(store, values, confirms, nguon)
+    _drop_resolved_gap_issues(store)
     if not re.search(r"\[\s*trang\s+\d+\s*\]", nguon, re.IGNORECASE):
         _add_issue(store, SEV_WARN, "NGUON_NHAP_THIEU_TRANG",
                    f"{fname}: nguồn nhập tay '{nguon}' chưa ghi trang dạng [Trang N] kèm số hiệu bản vẽ (quy ước repo "
@@ -1753,9 +2157,10 @@ def _interp_span(store: ProjectStore, o: str, i: int, key: str) -> Dict[str, Any
     else:
         formula = f"{_fmt(g.overall)} = kích thước tổng trục {o} ({span_names}), nhóm chỉ có một nhịp"
     if value <= 0:
+        # khoá số liệu trong eids: nhịp được nhập tay thì Issue này được gỡ (Validator vẫn kiểm tra tổng nhịp ↔ tổng)
         _add_issue(store, SEV_ERROR, "NOI_SUY_NHIP_KHONG_DUONG",
                    f"Nội suy nhịp {label} nhóm trục {o}: {formula} = {_fmt(value)} ≤ 0 — kích thước tổng mâu thuẫn với "
-                   f"các nhịp đã biết; không nội suy, cần kiểm tra bản vẽ.")
+                   f"các nhịp đã biết; không nội suy, cần kiểm tra bản vẽ.", [key])
         return _not_interpolated(key, f"{formula} = {_fmt(value)} ≤ 0 — kích thước tổng mâu thuẫn với các nhịp đã biết")
     store.set_value(key, _r(value), Provenance.interpolated(formula))
     return {"key": key, "value": _r(value), "method": "tong_tru_nhip", "reason": formula}
@@ -1826,9 +2231,10 @@ def _as_list(x: Any) -> List[Any]:
 
 
 def load_inputs(paths: Any, template: Any = None, user_values: Any = None, interpolate: bool = False,
-                references: Any = None) -> ProjectStore:
-    """Đọc đầu vào theo đuôi file: .json → read_spec; .dxf → read_dxf; .pdf/.jpg/.jpeg/.png → attach_reference
-    (ảnh nền, cần thêm đúng MỘT nguồn dữ liệu JSON hoặc DXF); .dwg → ReaderError.
+                references: Any = None, role_patterns: Optional[Dict[str, Any]] = None) -> ProjectStore:
+    """Đọc đầu vào theo đuôi file: .json → read_spec; .dxf → read_dxf (role_patterns như read_dxf, vd khai báo layer
+    "bo_qua"); .pdf/.jpg/.jpeg/.png → attach_reference (ảnh nền, cần thêm đúng MỘT nguồn dữ liệu JSON hoặc DXF);
+    .dwg → ReaderError.
     Sau đó lần lượt: references (ảnh nền thêm, mỗi mục là đường dẫn hoặc {"path", "insert", "scale", "page"}),
     template (đường dẫn hoặc {"path", "role_map"}), user_values (một hoặc nhiều file kích thước nhập), interpolate.
     Lưu ý: nội suy chạy SAU file nhập tay, nên xác nhận nội suy phải nằm trong một file nhập ở lần gọi sau."""
@@ -1867,7 +2273,7 @@ def load_inputs(paths: Any, template: Any = None, user_values: Any = None, inter
         raise ReaderError(f"chưa hỗ trợ gộp nhiều nguồn dữ liệu ({', '.join(os.path.basename(p) for p in data_src)}) — "
                           f"chọn MỘT đề bài JSON hoặc MỘT bản vẽ DXF; số liệu bổ sung đưa qua file kích thước nhập tay")
     src = data_src[0]
-    store = read_spec(src) if src.lower().endswith(".json") else read_dxf(src)
+    store = read_spec(src) if src.lower().endswith(".json") else read_dxf(src, role_patterns=role_patterns)
     for r in refs:
         attach_reference(store, r["path"], insert=r.get("insert", (0.0, 0.0)), scale=r.get("scale"),
                          page=r.get("page", 1))

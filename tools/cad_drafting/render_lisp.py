@@ -265,6 +265,10 @@ _HELPERS = r"""
     (princ (strcat "\n23HG: khong nap duoc kieu duong " ltype " - layer " name " dung Continuous")))
   (vl-catch-all-apply 'vla-put-Lineweight (list lay lw))
   (vla-put-Plottable lay (if plot :vlax-true :vlax-false))
+  ;; layer da co trong ban ve dich co the dang tat / dong bang / khoa: bat lai de doi tuong tao ra nhin thay, sua duoc
+  (vl-catch-all-apply 'vla-put-LayerOn (list lay :vlax-true))
+  (vl-catch-all-apply 'vla-put-Freeze (list lay :vlax-false))
+  (vl-catch-all-apply 'vla-put-Lock (list lay :vlax-false))
   (if (/= desc "") (vl-catch-all-apply 'vla-put-Description (list lay desc)))
   lay)
 
@@ -272,6 +276,9 @@ _HELPERS = r"""
   (setq st (vla-add (vla-get-TextStyles hg23:doc) name))
   (if (vl-catch-all-error-p (vl-catch-all-apply 'vla-put-FontFile (list st font)))
     (princ (strcat "\n23HG: khong dat duoc font " font " cho kieu chu " name)))
+  ;; kieu chu co chieu cao co dinh se lam kich thuoc bo qua DIMTXT: dat chieu cao 0, he so rong 1
+  (vl-catch-all-apply 'vla-put-Height (list st 0.0))
+  (vl-catch-all-apply 'vla-put-Width (list st 1.0))
   st)
 
 (defun hg23:dimstyle (name vars)

@@ -53,6 +53,12 @@ def _frame_scale(frame: Sequence[float], paper_mm: Sequence[float]) -> Dict[str,
     return {"sx": sx, "sy": sy, "dung_ty_le": bool(same)}
 
 
+# Backend matplotlib của ezdxf dùng thẳng lineweight (mm) làm linewidth (pt) và chặn dưới ở 72/dpi pt (≈ 0,25 mm),
+# làm mọi nét ≤ 0,7 mm in ra như nhau. Quy đổi mm → pt để PDF giữ đúng phân cấp nét (0,09 … 0,5 mm).
+MM_TO_PT = 72.0 / 25.4
+MIN_LINEWEIGHT_MM = 0.05
+
+
 def render_preview(dxf_path: str, out_path: str, frame: Optional[Sequence[float]] = None,
                    paper_mm: Optional[Sequence[float]] = None, dpi: int = 200, monochrome: bool = True,
                    hide_layers: Iterable[str] = (), show_layers: Iterable[str] = ()) -> Dict[str, Any]:
@@ -93,9 +99,11 @@ def render_preview(dxf_path: str, out_path: str, frame: Optional[Sequence[float]
 
     ctx.set_layer_properties_override(_override)
     if monochrome:
-        config = Configuration(color_policy=ColorPolicy.BLACK, background_policy=BackgroundPolicy.WHITE)
+        config = Configuration(color_policy=ColorPolicy.BLACK, background_policy=BackgroundPolicy.WHITE,
+                               lineweight_scaling=MM_TO_PT, min_lineweight=MIN_LINEWEIGHT_MM * MM_TO_PT)
     else:
-        config = Configuration(background_policy=BackgroundPolicy.WHITE)
+        config = Configuration(background_policy=BackgroundPolicy.WHITE,
+                               lineweight_scaling=MM_TO_PT, min_lineweight=MIN_LINEWEIGHT_MM * MM_TO_PT)
 
     scale_info: Optional[Dict[str, Any]] = None
     if frame is not None and paper_mm is not None:

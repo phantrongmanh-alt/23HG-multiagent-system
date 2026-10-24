@@ -43,6 +43,10 @@
     (princ (strcat "\n23HG: khong nap duoc kieu duong " ltype " - layer " name " dung Continuous")))
   (vl-catch-all-apply 'vla-put-Lineweight (list lay lw))
   (vla-put-Plottable lay (if plot :vlax-true :vlax-false))
+  ;; layer da co trong ban ve dich co the dang tat / dong bang / khoa: bat lai de doi tuong tao ra nhin thay, sua duoc
+  (vl-catch-all-apply 'vla-put-LayerOn (list lay :vlax-true))
+  (vl-catch-all-apply 'vla-put-Freeze (list lay :vlax-false))
+  (vl-catch-all-apply 'vla-put-Lock (list lay :vlax-false))
   (if (/= desc "") (vl-catch-all-apply 'vla-put-Description (list lay desc)))
   lay)
 
@@ -50,6 +54,9 @@
   (setq st (vla-add (vla-get-TextStyles hg23:doc) name))
   (if (vl-catch-all-error-p (vl-catch-all-apply 'vla-put-FontFile (list st font)))
     (princ (strcat "\n23HG: khong dat duoc font " font " cho kieu chu " name)))
+  ;; kieu chu co chieu cao co dinh se lam kich thuoc bo qua DIMTXT: dat chieu cao 0, he so rong 1
+  (vl-catch-all-apply 'vla-put-Height (list st 0.0))
+  (vl-catch-all-apply 'vla-put-Width (list st 1.0))
   st)
 
 (defun hg23:dimstyle (name vars)
@@ -140,7 +147,7 @@
   (hg23:layer "KT-KHUNG-TEN" 7 "Continuous" 35 T "Khung t\U+00EAn, khung b\U+1EA3n v\U+1EBD") ; khung_ten
   (hg23:layer "KT-KIEM-TRA" 1 "Continuous" 25 nil "\U+0110\U+00E1nh d\U+1EA5u l\U+1ED7i c\U+1EE7a Validator (kh\U+00F4ng in)") ; kiem_tra
   (hg23:style "VN_ARIAL" "arial.ttf")
-  (hg23:dimstyle "TCVN_KT_100" '(("DIMBLK" . "_ARCHTICK") ("DIMTAD" . 1) ("DIMEXO" . 2.0) ("DIMEXE" . 1.5) ("DIMTXT" . 2.2) ("DIMASZ" . 1.5) ("DIMGAP" . 0.8) ("DIMDEC" . 0) ("DIMLUNIT" . 2) ("DIMZIN" . 8) ("DIMTIH" . 0) ("DIMTOH" . 0) ("DIMTXSTY" . "VN_ARIAL") ("DIMCLRD" . 3) ("DIMCLRE" . 3) ("DIMCLRT" . 7) ("DIMSCALE" . 100.0)))
+  (hg23:dimstyle "TCVN_KT_100" '(("DIMBLK" . "_ARCHTICK") ("DIMTAD" . 1) ("DIMEXO" . 2.0) ("DIMEXE" . 1.5) ("DIMTXT" . 2.2) ("DIMASZ" . 1.5) ("DIMGAP" . 0.8) ("DIMDEC" . 0) ("DIMLUNIT" . 2) ("DIMZIN" . 8) ("DIMTIH" . 0) ("DIMTOH" . 0) ("DIMTXSTY" . "VN_ARIAL") ("DIMCLRD" . 3) ("DIMCLRE" . 3) ("DIMCLRT" . 7) ("DIMSCALE" . 100.0) ("DIMLFAC" . 1.0) ("DIMRND" . 0.0) ("DIMALT" . 0) ("DIMSE1" . 0) ("DIMSE2" . 0) ("DIMTSZ" . 0.0) ("DIMSAH" . 0) ("DIMDLE" . 0.0) ("DIMTFAC" . 1.0) ("DIMTVP" . 0.0) ("DIMJUST" . 0)))
   (if (not (tblsearch "BLOCK" "GIUONG_DOI"))
     (progn
       (entmake '((0 . "BLOCK") (2 . "GIUONG_DOI") (70 . 0) (10 0.0 0.0 0.0)))
@@ -385,7 +392,7 @@
   (hg23:try "07/hatch/cot/C-2C" 'hg23:hatch1 (list "07/hatch/cot/C-2C" "07" "KT-HATCH" "SOLID" 1.0 0.0 nil nil nil '(((3490.0 8290.0) (3710.0 8290.0) (3710.0 8510.0) (3490.0 8510.0)))))
   (hg23:try "07/hatch/cot/C-3C" 'hg23:hatch1 (list "07/hatch/cot/C-3C" "07" "KT-HATCH" "SOLID" 1.0 0.0 nil nil nil '(((7090.0 8290.0) (7310.0 8290.0) (7310.0 8510.0) (7090.0 8510.0)))))
   (hg23:try "07/hatch/cot/C-4C" 'hg23:hatch1 (list "07/hatch/cot/C-4C" "07" "KT-HATCH" "SOLID" 1.0 0.0 nil nil nil '(((10690.0 8290.0) (10910.0 8290.0) (10910.0 8510.0) (10690.0 8510.0)))))
-  (hg23:try "07/hatch/tuong/xay/0" 'hg23:hatch1 (list "07/hatch/tuong/xay/0" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((110.0 110.0) (110.0 4090.0) (-110.0 4090.0) (-110.0 110.0)))))
+  (hg23:try "07/hatch/tuong/xay/0" 'hg23:hatch1 (list "07/hatch/tuong/xay/0" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((-110.0 4090.0) (-110.0 110.0) (110.0 110.0) (110.0 4090.0)))))
   (hg23:try "07/hatch/tuong/xay/1" 'hg23:hatch1 (list "07/hatch/tuong/xay/1" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((-110.0 5700.0) (-110.0 4310.0) (110.0 4310.0) (110.0 5700.0)))))
   (princ))
 
@@ -393,20 +400,20 @@
   (hg23:try "07/hatch/tuong/xay/2" 'hg23:hatch1 (list "07/hatch/tuong/xay/2" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((110.0 6900.0) (110.0 8290.0) (-110.0 8290.0) (-110.0 6900.0)))))
   (hg23:try "07/hatch/tuong/xay/3" 'hg23:hatch1 (list "07/hatch/tuong/xay/3" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((1000.0 110.0) (110.0 110.0) (110.0 -110.0) (1000.0 -110.0)))))
   (hg23:try "07/hatch/tuong/xay/4" 'hg23:hatch1 (list "07/hatch/tuong/xay/4" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((2400.0 4255.0) (110.0 4255.0) (110.0 4145.0) (2400.0 4145.0)))))
-  (hg23:try "07/hatch/tuong/xay/5" 'hg23:hatch1 (list "07/hatch/tuong/xay/5" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((3490.0 8510.0) (110.0 8510.0) (110.0 8290.0) (3490.0 8290.0)))))
-  (hg23:try "07/hatch/tuong/xay/6" 'hg23:hatch1 (list "07/hatch/tuong/xay/6" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((2600.0 110.0) (2600.0 -110.0) (3490.0 -110.0) (3490.0 110.0)))))
+  (hg23:try "07/hatch/tuong/xay/5" 'hg23:hatch1 (list "07/hatch/tuong/xay/5" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((110.0 8290.0) (3490.0 8290.0) (3490.0 8510.0) (110.0 8510.0)))))
+  (hg23:try "07/hatch/tuong/xay/6" 'hg23:hatch1 (list "07/hatch/tuong/xay/6" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((2600.0 -110.0) (3490.0 -110.0) (3490.0 110.0) (2600.0 110.0)))))
   (hg23:try "07/hatch/tuong/xay/7" 'hg23:hatch1 (list "07/hatch/tuong/xay/7" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((3300.0 4145.0) (3490.0 4145.0) (3490.0 4255.0) (3300.0 4255.0)))))
-  (hg23:try "07/hatch/tuong/xay/8" 'hg23:hatch1 (list "07/hatch/tuong/xay/8" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((3655.0 4310.0) (3655.0 8290.0) (3545.0 8290.0) (3545.0 4310.0)))))
-  (hg23:try "07/hatch/tuong/xay/9" 'hg23:hatch1 (list "07/hatch/tuong/xay/9" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((4600.0 110.0) (3710.0 110.0) (3710.0 -110.0) (4600.0 -110.0)))))
+  (hg23:try "07/hatch/tuong/xay/8" 'hg23:hatch1 (list "07/hatch/tuong/xay/8" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((3545.0 8290.0) (3545.0 4310.0) (3655.0 4310.0) (3655.0 8290.0)))))
+  (hg23:try "07/hatch/tuong/xay/9" 'hg23:hatch1 (list "07/hatch/tuong/xay/9" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((4600.0 -110.0) (4600.0 110.0) (3710.0 110.0) (3710.0 -110.0)))))
   (hg23:try "07/hatch/tuong/xay/10" 'hg23:hatch1 (list "07/hatch/tuong/xay/10" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((4800.0 8510.0) (3710.0 8510.0) (3710.0 8290.0) (4800.0 8290.0)))))
   (hg23:try "07/hatch/tuong/xay/11" 'hg23:hatch1 (list "07/hatch/tuong/xay/11" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((6000.0 8290.0) (7090.0 8290.0) (7090.0 8510.0) (6000.0 8510.0)))))
-  (hg23:try "07/hatch/tuong/xay/12" 'hg23:hatch1 (list "07/hatch/tuong/xay/12" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((6400.0 110.0) (6400.0 -110.0) (7090.0 -110.0) (7090.0 110.0)))))
+  (hg23:try "07/hatch/tuong/xay/12" 'hg23:hatch1 (list "07/hatch/tuong/xay/12" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((6400.0 -110.0) (7090.0 -110.0) (7090.0 110.0) (6400.0 110.0)))))
   (hg23:try "07/hatch/tuong/xay/13" 'hg23:hatch1 (list "07/hatch/tuong/xay/13" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((7145.0 4800.0) (7145.0 4310.0) (7255.0 4310.0) (7255.0 4800.0)))))
-  (hg23:try "07/hatch/tuong/xay/14" 'hg23:hatch1 (list "07/hatch/tuong/xay/14" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((10910.0 6255.0) (10910.0 8290.0) (10690.0 8290.0) (10690.0 6255.0) (7255.0 6255.0) (7255.0 6800.0) (7145.0 6800.0) (7145.0 6255.0) (7145.0 6145.0) (7145.0 5500.0) (7255.0 5500.0) (7255.0 6145.0) (10690.0 6145.0) (10690.0 4310.0) (10910.0 4310.0) (10910.0 6145.0)))))
+  (hg23:try "07/hatch/tuong/xay/14" 'hg23:hatch1 (list "07/hatch/tuong/xay/14" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((10690.0 6145.0) (10690.0 4310.0) (10910.0 4310.0) (10910.0 6145.0) (10910.0 6255.0) (10910.0 8290.0) (10690.0 8290.0) (10690.0 6255.0) (7255.0 6255.0) (7255.0 6800.0) (7145.0 6800.0) (7145.0 6255.0) (7145.0 6145.0) (7145.0 5500.0) (7255.0 5500.0) (7255.0 6145.0)))))
   (hg23:try "07/hatch/tuong/xay/15" 'hg23:hatch1 (list "07/hatch/tuong/xay/15" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((7255.0 7700.0) (7255.0 8290.0) (7145.0 8290.0) (7145.0 7700.0)))))
-  (hg23:try "07/hatch/tuong/xay/16" 'hg23:hatch1 (list "07/hatch/tuong/xay/16" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((8100.0 110.0) (7310.0 110.0) (7310.0 -110.0) (8100.0 -110.0)))))
-  (hg23:try "07/hatch/tuong/xay/17" 'hg23:hatch1 (list "07/hatch/tuong/xay/17" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((7310.0 4145.0) (10690.0 4145.0) (10690.0 4255.0) (7310.0 4255.0)))))
-  (hg23:try "07/hatch/tuong/xay/18" 'hg23:hatch1 (list "07/hatch/tuong/xay/18" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((10690.0 8510.0) (7310.0 8510.0) (7310.0 8290.0) (10690.0 8290.0)))))
+  (hg23:try "07/hatch/tuong/xay/16" 'hg23:hatch1 (list "07/hatch/tuong/xay/16" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((8100.0 -110.0) (8100.0 110.0) (7310.0 110.0) (7310.0 -110.0)))))
+  (hg23:try "07/hatch/tuong/xay/17" 'hg23:hatch1 (list "07/hatch/tuong/xay/17" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((10690.0 4255.0) (7310.0 4255.0) (7310.0 4145.0) (10690.0 4145.0)))))
+  (hg23:try "07/hatch/tuong/xay/18" 'hg23:hatch1 (list "07/hatch/tuong/xay/18" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((7310.0 8290.0) (10690.0 8290.0) (10690.0 8510.0) (7310.0 8510.0)))))
   (hg23:try "07/hatch/tuong/xay/19" 'hg23:hatch1 (list "07/hatch/tuong/xay/19" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((9600.0 -110.0) (10690.0 -110.0) (10690.0 110.0) (9600.0 110.0)))))
   (hg23:try "07/hatch/tuong/xay/20" 'hg23:hatch1 (list "07/hatch/tuong/xay/20" "07" "KT-HATCH" "ANSI31" 31.496063 0.0 nil nil nil '(((10910.0 110.0) (10910.0 4090.0) (10690.0 4090.0) (10690.0 110.0)))))
   (hg23:try "07/hatch/san/P1/0" 'hg23:hatch1 (list "07/hatch/san/P1/0" "07" "KT-HATCH" "NET" 188.976378 0.0 nil nil nil '(((7200.0 110.0) (7200.0 4090.0) (7090.0 4090.0) (7090.0 4200.0) (3710.0 4200.0) (3710.0 4090.0) (3490.0 4090.0) (3490.0 4145.0) (110.0 4145.0) (110.0 4090.0) (110.0 110.0) (3490.0 110.0) (3710.0 110.0) (7090.0 110.0)) ((2150.0 2800.0) (2150.0 2200.0) (1150.0 2200.0) (1150.0 2800.0)) ((2700.0 3200.0) (600.0 3200.0) (600.0 4050.0) (2700.0 4050.0)))))

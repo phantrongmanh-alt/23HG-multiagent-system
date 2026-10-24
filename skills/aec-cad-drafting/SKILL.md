@@ -20,23 +20,39 @@ Không dùng để: đoán số từ ảnh mờ (repo cấm), sinh DWG trực ti
 # Đề bài mẫu, cho phép nội suy (B) — kết quả CHƯA ĐẠT vì còn số liệu nội suy chưa xác nhận
 python -m tools.cad_drafting --dau-vao examples/DUNG_CAD_NHA_MAU/de_bai_mat_bang_tang1.json --noi-suy --ra out/
 
-# Người dùng nhập / xác nhận kích thước (A)
+# Người dùng nhập kích thước thiếu (A)
 python -m tools.cad_drafting --dau-vao de_bai.json --kich-thuoc-nhap nhap.json --ra out/
+
+# Xác nhận số liệu đã nội suy: chạy TIẾP trên dữ liệu đã lưu của lần --noi-suy, file chỉ có mục xac_nhan
+python -m tools.cad_drafting --dau-vao out/KT-01_du_lieu_du_an.json --kich-thuoc-nhap xac_nhan.json --ra out/ --cap-nhat
+
+# Phê duyệt (chỉ ghi được khi bản vẽ ĐẠT kiểm tra tự động; khung tên vẽ lại thành ĐÃ DUYỆT)
+python -m tools.cad_drafting --dau-vao out/KT-01_du_lieu_du_an.json --ra out/ --cap-nhat --duyet "<người duyệt>" --ngay 2026-10-24
 
 # DXF có sẵn + template layer/block của đơn vị + ảnh scan làm nền (chỉ làm nền, không nhận dạng)
 python -m tools.cad_drafting --dau-vao ban_ve.dxf anh_scan.png --anh-nen-ty-le 10 --template mau.dxf --ra out/
+# DXF có layer không phải trục/tường/cột/cửa/dim (nội thất, khung tên...): khai báo để không bị NGHI_VAN "layer lạ"
+python -m tools.cad_drafting --dau-vao ban_ve.dxf --vai-tro-layer vai_tro.json --ra out/
+#   vai_tro.json: {"bo_qua": "noi.?that|khung|cao.?do|cote|elev|c[ốỐ]t", "tuong": "^A-WALL$"}  (thay mẫu mặc định cùng vai trò)
 
 # Sửa dữ liệu rồi chỉ chạy lại skill bị ảnh hưởng
 python -m tools.cad_drafting --dau-vao out/KT-01_du_lieu_du_an.json --ra out/ --cap-nhat
 ```
 
-Mã thoát: 0 = đạt kiểm tra tự động (vẫn chờ kỹ sư duyệt), 2 = đã xuất nhưng chưa đạt, 1 = lỗi đầu vào.
+Mã thoát: 0 = đạt kiểm tra tự động (vẫn chờ kỹ sư duyệt), 2 = đã xuất nhưng chưa đạt (hoặc từ chối phê duyệt vì chưa
+đạt), 1 = lỗi đầu vào / không ghi được kết quả. `--cap-nhat` / `--chi-chay` tự chạy lại thêm mọi skill có dữ liệu đầu vào đã
+đổi hoặc có lệnh vẽ lần trước bị sửa; khung tên luôn vẽ lại.
 
-File nhập tay (A) — khoá số liệu theo `tools/cad_drafting/store.py`:
+File nhập tay (A) — khoá số liệu theo `tools/cad_drafting/store.py` (một khoá chỉ nằm ở MỘT mục):
+
+```json
+{"nguon": "[Trang 2] KT-01", "gia_tri": {"axes:V.spans[1]": 3600, "openings:CD4.width": 900}}
+```
+
+File xác nhận nội suy (dùng ở lần chạy sau, trên `<tên>_du_lieu_du_an.json` đã có số liệu nội suy):
 
 ```json
 {"nguon": "[Trang 2] KT-01",
- "gia_tri": {"axes:V.spans[1]": 3600, "openings:CD4.width": 900},
  "xac_nhan": [{"key": "axes:V.spans[1]", "by": "<người xác nhận>", "ghi_chu": "đã đối chiếu bản vẽ"}]}
 ```
 
@@ -66,5 +82,6 @@ Mỗi skill chỉ được ghi vào layer (vai trò) của mình — `layers.ROL
 
 1. Không tự coi kích thước nội suy là đã xác nhận: chỉ `store.confirm(khoá, người)` (mục `xac_nhan` của file nhập) mới đổi.
 2. Không bỏ đối tượng im lặng: đối tượng thiếu số liệu vào mục "Đối tượng chưa vẽ (kèm lý do)" của báo cáo.
-3. Không gõ tay trạng thái: kết luận, khung tên, báo cáo đều tính từ dữ liệu và kết quả Validator.
+3. Không gõ tay trạng thái: kết luận và báo cáo tính từ dữ liệu + kết quả Validator; khung tên ghi trạng thái số liệu
+   tính từ `store.status()`; phê duyệt chỉ ghi được khi kết luận đã ĐẠT và hết hiệu lực khi dữ liệu đổi.
 4. PDF/ảnh chỉ làm nền tham chiếu; số liệu trích từ bản vẽ ghi `[Trang N]` và số hiệu bản vẽ vào `nguon_mac_dinh` / `nguon`.
