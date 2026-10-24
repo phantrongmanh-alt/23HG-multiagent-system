@@ -1,0 +1,386 @@
+{
+ "schema": "23hg-cad-report/1",
+ "base": "KT-01_NHAP_TAY",
+ "ket_luan": "ĐẠT KIỂM TRA TỰ ĐỘNG — CHỜ KỸ SƯ DUYỆT",
+ "dat": true,
+ "dem": {
+  "LOI": 0,
+  "NGHI_VAN": 0,
+  "CANH_BAO": 2,
+  "doi_tuong_chua_ve": 0
+ },
+ "trang_thai_du_lieu": {
+  "trang_thai": "CHO_DUYET",
+  "so_lieu_thieu": 0,
+  "noi_suy_chua_xac_nhan": 0,
+  "duyet_boi": "",
+  "data_hash": "d704a09dfe437ea48e432c3e97b3de9e6ff52960772bfa1c75c297d5daf239df"
+ },
+ "noi_suy": [],
+ "kiem_tra_truoc_khi_ve": [
+  {
+   "severity": "CANH_BAO",
+   "code": "NGUON_NHAP_THIEU_TRANG",
+   "message": "kich_thuoc_nhap.json: nguồn nhập tay 'Đề bài minh hoạ — giá trị người dùng nhập để chạy thử, không phải hồ sơ thật (hồ sơ thật phải ghi số trang và số hiệu bản vẽ)' chưa ghi trang dạng [Trang N] kèm số hiệu bản vẽ (quy ước repo cho số liệu trích từ bản vẽ).",
+   "skill": "00",
+   "eids": [],
+   "where": null
+  }
+ ],
+ "cac_buoc": [
+  {
+   "code": "01",
+   "name": "Lưới trục",
+   "ran": true,
+   "ops": 35,
+   "skipped": [],
+   "notes": [
+    "trục đứng (V): đã vẽ 4/4 trục",
+    "trục ngang (H): đã vẽ 3/3 trục"
+   ],
+   "issues": []
+  },
+  {
+   "code": "02",
+   "name": "Cột",
+   "ran": true,
+   "ops": 12,
+   "skipped": [],
+   "notes": [
+    "đã vẽ 12/12 cột"
+   ],
+   "issues": []
+  },
+  {
+   "code": "03",
+   "name": "Tường",
+   "ran": true,
+   "ops": 24,
+   "skipped": [],
+   "notes": [
+    "đã vẽ 9/9 tường",
+    "đường bao thân tường: 24 đường (0 đường kín)"
+   ],
+   "issues": []
+  },
+  {
+   "code": "04",
+   "name": "Cửa",
+   "ran": true,
+   "ops": 42,
+   "skipped": [],
+   "notes": [
+    "đã vẽ 8/8 ô cửa (cửa đi: 4/4, cửa sổ: 4/4)"
+   ],
+   "issues": []
+  },
+  {
+   "code": "05",
+   "name": "Cầu thang",
+   "ran": true,
+   "ops": 15,
+   "skipped": [],
+   "notes": [
+    "ST1 vế 1: bậc: 11 × 260, cao bậc 170",
+    "đã vẽ 1/1 vế thang, 0/0 chiếu nghỉ (1 thang)"
+   ],
+   "issues": []
+  },
+  {
+   "code": "06",
+   "name": "Nội thất",
+   "ran": true,
+   "ops": 8,
+   "skipped": [],
+   "notes": [
+    "đã chèn 8/8 đồ vật nội thất"
+   ],
+   "issues": []
+  },
+  {
+   "code": "07",
+   "name": "Hatch",
+   "ran": true,
+   "ops": 39,
+   "skipped": [],
+   "notes": [
+    "hatch cột: 12/12 cột",
+    "hatch tường: 9/9 tường — 21 vùng tường xây, 0 vùng tường BTCT",
+    "hatch sàn: 6/6 phòng"
+   ],
+   "issues": []
+  },
+  {
+   "code": "08",
+   "name": "Kích thước",
+   "ran": true,
+   "ops": 42,
+   "skipped": [],
+   "notes": [
+    "đã ghi 42 kích thước DIMENSION (kiểu TCVN_KT_100): cấp 1: 28, cấp 2: 10, cấp 3: 4; không có text_override"
+   ],
+   "issues": []
+  },
+  {
+   "code": "09",
+   "name": "Hoàn thiện",
+   "ran": true,
+   "ops": 97,
+   "skipped": [],
+   "notes": [
+    "đã ghi nhãn (tên, diện tích, cote) 6/6 phòng",
+    "CẢNH BÁO không còn chỗ trống đủ cho nhãn, nhãn đè lên nội thất/thang/cửa (vẫn trong sàn) — đặt room.label_at để chỉnh: P4",
+    "diện tích tính theo đường bao nhập; 6/6 phòng có đường bao trùng tim trục/tim tường — chưa trừ chiều dày tường, KHÔNG phải diện tích thông thủy.",
+    "bảng hoàn thiện: 6 hàng phòng, góc trên-trái (16800, 12200); tổng diện tích 90,72 m² (tính 6/6 phòng)"
+   ],
+   "issues": [
+    {
+     "severity": "CANH_BAO",
+     "code": "SKILL_CANH_BAO",
+     "message": "CẢNH BÁO không còn chỗ trống đủ cho nhãn, nhãn đè lên nội thất/thang/cửa (vẫn trong sàn) — đặt room.label_at để chỉnh: P4",
+     "skill": "09",
+     "eids": [],
+     "where": null
+    }
+   ]
+  },
+  {
+   "code": "10",
+   "name": "Kiểm tra & xuất",
+   "ran": true,
+   "ops": 29,
+   "skipped": [],
+   "notes": [
+    "khổ A3 1:100: khung giấy 42000 × 29700 mm (model); khối nội dung + tên bản vẽ 376 × 192 mm giấy đặt trên khung tên",
+    "khung tên: trạng thái số liệu TÍNH từ store.status() = CHO_DUYET → \"CHỜ DUYỆT\"",
+    "khung tên: để trống ô THIẾT KẾ, KIỂM TRA, NGÀY vì ProjectInfo chưa có số liệu (không tự điền)",
+    "đánh dấu kiểm tra (layer không in): 0 số liệu thiếu định vị được, 0 thiếu chưa định vị (liệt kê ở góc khung), 0 số liệu nội suy chưa xác nhận, 0 phát hiện của Validator"
+   ],
+   "issues": []
+  }
+ ],
+ "kiem_tra_cuoi": [],
+ "kiem_tra_xuat": [],
+ "skill_chay_lai": [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10"
+ ],
+ "skill_giu_nguyen": [],
+ "section_hashes": {
+  "project": "974ef02c892fde6f763490136afbafa3c76d6766791a2ea9512dbab621e2b469",
+  "axes": "c40112ad7997c498a4214deea90fb9ada2924d724925abf9d164934f5f7252c9",
+  "columns": "1a0d4e71aed09388f348b6100717b3faa8c6bd7619b12248b34bae6b459b9a0d",
+  "walls": "c4ba4d2c92bc94dd0f545d6c81060980ac7da1dbd5d53105b5aedcd8e19d8483",
+  "openings": "9472cce7a27a5075605ea7c692f56f0ccd3f22905130d988ac6ac673c2d80407",
+  "stairs": "a123db760d4225254896862a436db39adbe83e30b6fdc70aca58a3e5ab0264ce",
+  "furniture": "b55ddde18742dca412e1cfb4f8fd26d5bf8cb6553e63285c9a7a78e0ef407754",
+  "rooms": "df0017811c3534124c5c1e9e3f2c0f4859b173d3a40024f9f243f940623f89e8",
+  "measured_dims": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "layers": "a3cf936dcf4665ee9ef3ca6f7861d9af738844092a3a0c45460b2da7c6c903d7",
+  "blocks": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+ },
+ "hash_dau_vao": {
+  "01": "4f83752f305917186825fcb72f504efe30c085521fd1a9076e8aa07c26a25aaf",
+  "02": "989721eeccc57719da0f809ae16f122181fc30f6b280e333150f9737e8d8d177",
+  "03": "48e0924d1f6d2003b77333ee90f0a42d9c7e5b0dc3d3a50ac2b4540bec7f8fbe",
+  "04": "56a87d7d531c20f11789da564e61061b09cb02419b731ff11f480b87e83836eb",
+  "05": "c60218a5224cbfde52a6f602e4f2aaae192479bc0b1c678509c402bafb60d3f2",
+  "06": "47547c2648f46de3236c035d866c425b8e886f1cb657aa404915fd25f05e9ba7",
+  "07": "4d238a545f3ad8e20b9cb425177b368f48f094960f125d4dc594d900c6814d49",
+  "08": "48e0924d1f6d2003b77333ee90f0a42d9c7e5b0dc3d3a50ac2b4540bec7f8fbe",
+  "09": "4d238a545f3ad8e20b9cb425177b368f48f094960f125d4dc594d900c6814d49",
+  "10": "e98e3f3ba4df37ccf7301c4d77e83a2b4925610b6214abf48e75c44745683153"
+ },
+ "dau_van_tay": {
+  "01": "729d9c1b88a33c4c4df86cae3f999109a813bc82e85020237cecc1263f60231c",
+  "02": "164c0169825ff8efab734f71c8d5f8b53bb5ec39caa3d9f588330106528408eb",
+  "03": "5a4fafb4f6c785a31815de48830b03f5fa24e01d967d87efd0f5b33800d846cd",
+  "04": "6bbe96e7bc29db371b0486f3203605a1a317eb75efea8863308577d139a1829e",
+  "05": "1565e48e6f355737bb3338c05d863ec02152c68c5e847b57a260bf1fc13100d4",
+  "06": "2c11af2c229b4a69214a2b7656c3cd653a2758b402ea216f12317c8d486f44e7",
+  "07": "85b25fb6ec3fa6606be5dc1f31fd0980c84b5421e113059c7eb9cb671f4bde85",
+  "08": "9cf12b42d16a1363d3bc1e21456350b3438f53be00cb7425f851bf8679661134",
+  "09": "843b8d7d4fee44e3191e36aaae57fe84d801c0a492a0b85b014537e2da52bbb1",
+  "10": "28b962e5df80f910f632f1d287bb18f56c373c44b669129507d198b7b70f9a5b"
+ },
+ "dau_ra": {
+  "lenh_ve_json": {
+   "file": "KT-01_NHAP_TAY_lenh_ve.json",
+   "bytes": 118749
+  },
+  "du_lieu_du_an": {
+   "file": "KT-01_NHAP_TAY_du_lieu_du_an.json",
+   "bytes": 27701
+  },
+  "dxf": {
+   "file": "KT-01_NHAP_TAY.dxf",
+   "tom_tat": {
+    "file": "KT-01_NHAP_TAY.dxf",
+    "dxfversion": "AC1032",
+    "insunits": 4,
+    "ltscale": 50.0,
+    "so_lenh": 343,
+    "da_ve": 343,
+    "so_thuc_the": 343,
+    "theo_loai": {
+     "ARC": 5,
+     "CIRCLE": 14,
+     "DIMENSION": 42,
+     "HATCH": 39,
+     "INSERT": 8,
+     "LINE": 69,
+     "LWPOLYLINE": 44,
+     "TEXT": 122
+    },
+    "theo_layer": {
+     "KC-COT": 12,
+     "KT-CUA": 34,
+     "KT-CUA-KH": 8,
+     "KT-DIM": 42,
+     "KT-HATCH": 39,
+     "KT-HOAN-THIEN": 97,
+     "KT-KHUNG-TEN": 29,
+     "KT-NOI-THAT": 8,
+     "KT-THANG": 15,
+     "KT-TRUC": 7,
+     "KT-TRUC-KH": 28,
+     "KT-TUONG": 24
+    },
+    "layers": 14,
+    "blocks": [
+     "GIUONG_DOI",
+     "TU_AO",
+     "SOFA_3",
+     "BAN_TRA",
+     "BAN_AN_4",
+     "TU_BEP",
+     "BON_CAU",
+     "LAVABO"
+    ],
+    "dimstyles": [
+     "TCVN_KT_100"
+    ],
+    "underlays": [],
+    "bo_qua": [],
+    "canh_bao": [],
+    "audit_errors": 0,
+    "audit_fixes": 0,
+    "audit_chi_tiet": []
+   }
+  },
+  "lisp": {
+   "file": "KT-01_NHAP_TAY.lsp",
+   "tom_tat": {
+    "file": "KT-01_NHAP_TAY.lsp",
+    "lenh": "23HG_VE",
+    "so_lenh": 343,
+    "theo_loai": {
+     "arc": 5,
+     "circle": 14,
+     "dim_linear": 42,
+     "hatch": 39,
+     "insert": 8,
+     "line": 69,
+     "pline": 44,
+     "text": 122
+    },
+    "layers": 14,
+    "blocks": [
+     "BAN_AN_4",
+     "BAN_TRA",
+     "BON_CAU",
+     "GIUONG_DOI",
+     "LAVABO",
+     "SOFA_3",
+     "TU_AO",
+     "TU_BEP"
+    ],
+    "dimstyles": [
+     "TCVN_KT_100"
+    ],
+    "ltscale": 50.0,
+    "bytes": 98925,
+    "thuan_ascii": true,
+    "loi_cu_phap_tinh": [],
+    "canh_bao": [],
+    "bo_qua": [],
+    "chay_tren_autocad": "CHƯA chạy thử — chỉ kiểm tra cú pháp tĩnh"
+   },
+   "kiem_tra_tinh": "không phát hiện lỗi cú pháp tĩnh",
+   "chay_tren_autocad": "CHƯA chạy thử",
+   "bytes": 98925
+  },
+  "pdf": {
+   "file": "KT-01_NHAP_TAY.pdf",
+   "tom_tat": {
+    "file": "KT-01_NHAP_TAY.pdf",
+    "dinh_dang": "pdf",
+    "dung_ty_le": true,
+    "ty_le_in": 100.0,
+    "paper_mm": [
+     420.0,
+     297.0
+    ],
+    "frame": [
+     -7900.0,
+     -13400.0,
+     34100.0,
+     16300.0
+    ],
+    "dpi": 300,
+    "monochrome": true,
+    "an_layer": [
+     "00-ANH-NEN",
+     "DEFPOINTS",
+     "KT-KIEM-TRA"
+    ],
+    "canh_bao": []
+   }
+  },
+  "png": {
+   "file": "KT-01_NHAP_TAY.png",
+   "tom_tat": {
+    "file": "KT-01_NHAP_TAY.png",
+    "dinh_dang": "png",
+    "dung_ty_le": true,
+    "ty_le_in": 100.0,
+    "paper_mm": [
+     420.0,
+     297.0
+    ],
+    "frame": [
+     -7900.0,
+     -13400.0,
+     34100.0,
+     16300.0
+    ],
+    "dpi": 200,
+    "monochrome": true,
+    "an_layer": [
+     "00-ANH-NEN",
+     "DEFPOINTS"
+    ],
+    "canh_bao": [],
+    "kich_thuoc_px": [
+     3307,
+     2338
+    ]
+   }
+  },
+  "dwg": {
+   "file": "",
+   "ghi_chu": "Không sinh DWG: cần AutoCAD (mở DXF → SAVEAS, hoặc máy chủ cad-mcp)."
+  },
+  "bao_cao": {
+   "file": "KT-01_NHAP_TAY_BAO_CAO_KIEM_TRA.md"
+  }
+ }
+}

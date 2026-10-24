@@ -403,6 +403,18 @@ python examples/BOC_TACH_THOAT_NUOC_THAI_B9_CAD_TAKEOFF/generate_cad_takeoff_mas
 python examples/run_pipeline.py
 ```
 
+#### g. Agent dựng bản vẽ CAD mặt bằng (Skill 00 + 10 skill + Validator):
+```powershell
+# Đề bài mẫu, nội suy kích thước thiếu (đánh dấu CHƯA XÁC NHẬN → kết luận CHƯA ĐẠT)
+python -m tools.cad_drafting --dau-vao examples/DUNG_CAD_NHA_MAU/de_bai_mat_bang_tang1.json --noi-suy --ra out/
+# Người dùng nhập kích thước thiếu → đạt kiểm tra tự động, chờ kỹ sư duyệt
+python -m tools.cad_drafting --dau-vao examples/DUNG_CAD_NHA_MAU/de_bai_mat_bang_tang1.json --kich-thuoc-nhap examples/DUNG_CAD_NHA_MAU/kich_thuoc_nhap.json --ra out/
+```
+> - Đọc DXF hoặc đề bài JSON nhập tay một lần vào kho dữ liệu dự án → 10 skill (lưới trục, cột, tường, cửa, cầu thang, nội thất, hatch,
+>   kích thước 3 cấp, hoàn thiện, khung tên) → Validator sau mỗi bước → DXF, PDF/PNG đúng tỷ lệ, AutoLISP, JSON lệnh vẽ cho máy chủ MCP, báo cáo.
+> - PDF/ảnh chỉ làm nền tham chiếu (không đoán số OCR); AutoLISP mới kiểm tra cú pháp tĩnh, chưa chạy trên AutoCAD; không sinh DWG trực tiếp.
+> - Quy trình: [workflows/16_QUY_TRINH_DUNG_BAN_VE_CAD_TU_DONG.md](workflows/16_QUY_TRINH_DUNG_BAN_VE_CAD_TU_DONG.md) · Kết quả mẫu: [examples/DUNG_CAD_NHA_MAU/](examples/DUNG_CAD_NHA_MAU/)
+
 ---
 
 ## 🏆 6. Chuẩn Đóng Gói Hồ Sơ: Từ Macro/Micro đến Mô hình Thực chiến "Hub & Spoke" Phân Quyền 5 Gói
